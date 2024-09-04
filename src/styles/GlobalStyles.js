@@ -2,8 +2,11 @@ import { createGlobalStyle } from "styled-components"
 
 const GlobalStyles = createGlobalStyle`
 :root {
-  /* Test */
-  --primary-color: #eef2ff;
+  /* Brand Color */
+  --primary-color: #16423C;
+  --secondary-color: #6A9C89;
+  --third-color: #C4DAD2;
+  --fourth-color: #E9EFEC;
 
 
   /* Indigo */
@@ -140,9 +143,6 @@ h6 {
 
 img {
   max-width: 100%;
-
-  /* For dark mode */
-  filter: grayscale(var(--image-grayscale)) opacity(var(--image-opacity));
 }
 
 //Resonsive

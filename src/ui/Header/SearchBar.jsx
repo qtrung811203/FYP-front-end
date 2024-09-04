@@ -1,6 +1,8 @@
+import { FaSearch } from "react-icons/fa"
 import styled from "styled-components"
 
 const SearchStyled = styled.div`
+  position: relative;
   display: flex;
   height: 100%;
   color: black;
@@ -14,7 +16,7 @@ const InputStyled = styled.input`
   width: 30rem;
   border-radius: 999px;
   border: solid 1px var(--color-grey-400);
-  padding-left: 15px;
+  padding-left: 3rem;
   font-size: 1.2rem;
   transition: height 0.3s, width 0.3s;
 
@@ -28,11 +30,21 @@ const InputStyled = styled.input`
   }
 `
 
+const IconStyled = styled(FaSearch)`
+  font-size: 1.8rem;
+  color: var(--color-grey-500);
+  position: absolute;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+`
+
 function Search() {
   return (
     <SearchStyled>
       <form>
         <InputStyled type="text" placeholder="Search" />
+        <IconStyled />
       </form>
     </SearchStyled>
   )

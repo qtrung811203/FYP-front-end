@@ -18,10 +18,7 @@ function Logo() {
   return (
     <StyledDiv>
       <Link to="/">
-        <LogoStyled
-          src="https://shop.hololivepro.com/cdn/shop/t/104/assets/logo_officialshop.png?v=49470815954276103671720404261"
-          alt="logo"
-        />
+        <LogoStyled src="" alt="logo" />
       </Link>
     </StyledDiv>
   )

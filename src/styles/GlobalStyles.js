@@ -2,6 +2,10 @@ import { createGlobalStyle } from "styled-components"
 
 const GlobalStyles = createGlobalStyle`
 :root {
+  /* Test */
+  --primary-color: #eef2ff;
+
+
   /* Indigo */
   --color-brand-50: #eef2ff;
   --color-brand-100: #e0e7ff;
@@ -51,9 +55,11 @@ const GlobalStyles = createGlobalStyle`
   --border-radius-md: 7px;
   --border-radius-lg: 9px;
 
-  /* For dark mode */
-  --image-grayscale: 0;
-  --image-opacity: 100%;
+  /* FontSize */
+  --font-size-xs: 1rem;
+  --font-size-sm: 1.2rem;
+  --font-size-md: 1.4rem;
+  --font-size-lg: 1.6rem;
 }
 
 *,
@@ -62,9 +68,6 @@ const GlobalStyles = createGlobalStyle`
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-
-  /* Creating animations for dark mode */
-  transition: background-color 0.3s, border 0.3s;
 }
 
 html {
@@ -72,13 +75,12 @@ html {
 }
 
 body {
-  font-family: "Poppins", sans-serif;
-  color: var(--color-grey-700);
-
+  font-family: "Montserrat", sans-serif;
+  color: black;
   transition: color 0.3s, background-color 0.3s;
   min-height: 100vh;
   line-height: 1.5;
-  font-size: 1.6rem;
+  font-size: var(--font-size-md);
 }
 
 input,
@@ -143,6 +145,42 @@ img {
   filter: grayscale(var(--image-grayscale)) opacity(var(--image-opacity));
 }
 
+//Resonsive
+@media (max-width: 480px) {
+  :root {
+  --font-size-xs: 0.3rem;
+  --font-size-sm: 0.5rem;
+  --font-size-md: 0.8rem;
+  --font-size-lg: 1rem;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  :root {
+  --font-size-xs: 0.5rem;
+  --font-size-sm: 0.8rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.2rem;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  :root {
+  --font-size-xs: 0.8rem;
+  --font-size-sm: 1rem;
+  --font-size-md: 1.2rem;
+  --font-size-lg: 1.4rem;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1280px) {
+  :root {
+  --font-size-xs: 1rem;
+  --font-size-sm: 1.2rem;
+  --font-size-md: 1.4rem;
+  --font-size-lg: 1.6rem;
+  }
+}
 `
 
 export default GlobalStyles

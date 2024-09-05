@@ -1,5 +1,7 @@
+import MainSlider from "../ui/Slider/MainSlider"
+
 function MainMenu() {
-  return <div>Tôi là main menu</div>
+  return <MainSlider />
 }
 
 export default MainMenu

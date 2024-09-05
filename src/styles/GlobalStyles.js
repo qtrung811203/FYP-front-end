@@ -80,8 +80,7 @@ html {
 body {
   font-family: "Montserrat", sans-serif;
   color: black;
-  transition: color 0.3s, background-color 0.3s;
-  min-height: 100vh;
+  min-height: 200vh;
   line-height: 1.5;
   font-size: var(--font-size-md);
 }
@@ -140,11 +139,6 @@ h6 {
   overflow-wrap: break-word;
   hyphens: auto;
 }
-
-img {
-  max-width: 100%;
-}
-
 //Resonsive
 @media (max-width: 480px) {
   :root {
@@ -181,6 +175,34 @@ img {
   --font-size-lg: 1.6rem;
   }
 }
-`
 
+
+${"" /* SLIDER */}
+.slick-slide {
+  min-width: 625px;
+  padding: 0 1rem;
+}
+
+.slick-list {
+  height: 100%;
+}
+
+.slick-track{
+  display: flex;
+}
+
+@media (max-width: 600px) {
+  .slick-slide {
+    min-width: 300px;
+  }
+}
+
+* {
+  ${
+    "" /* background: #000 !important;
+  color: #0f0 !important;
+  outline: solid #f00 1px !important; */
+  }
+} 
+`
 export default GlobalStyles

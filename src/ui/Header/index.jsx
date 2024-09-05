@@ -1,6 +1,6 @@
 import styled from "styled-components"
 
-import Logo from "../Logo"
+import Logo from "./Logo"
 import NavMenu from "./NavMenu"
 import SearchBar from "./SearchBar"
 import CartIcon from "./CartIcon"

@@ -12,7 +12,7 @@ function SwiperSub({ setSwiper }) {
   return (
     <Swiper
       modules={[Thumbs]}
-      loop={true}
+      //   loop={true}
       onSwiper={setSwiper}
       speed={600}
       spaceBetween={20}
@@ -58,7 +58,7 @@ const SubSlideStyle = styled(SwiperSlide)`
   }
 
   &.swiper-slide-visible {
-    filter: brightness(70%);
+    filter: brightness(40%);
   }
 
   &.swiper-slide-thumb-active {

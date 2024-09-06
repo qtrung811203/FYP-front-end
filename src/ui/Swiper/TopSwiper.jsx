@@ -5,11 +5,12 @@ import SwiperSub from "./SwiperSub"
 
 function TopSwiper() {
   const [secondSwiper, setSecondSwiper] = useState(null)
+  const [mainSwiper, setMainSwiper] = useState(null)
 
   return (
     <TopContainer>
-      <SwiperMain thumbRef={secondSwiper} />
-      <SwiperSub setSwiper={setSecondSwiper} />
+      <SwiperMain thumbRef={secondSwiper} setSwiper={setMainSwiper} />
+      <SwiperSub setSwiper={setSecondSwiper} controlledSwiper={mainSwiper} />
     </TopContainer>
   )
 }

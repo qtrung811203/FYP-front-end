@@ -7,13 +7,14 @@ import "swiper/css/thumbs"
 
 //data
 import data from "./data"
+import { Link } from "react-router-dom"
 
 function SwiperMain({ thumbRef }) {
   return (
     <Swiper
       modules={[Thumbs]}
       loop={true}
-      rewind={true}
+      //   rewind={true}
       speed={600}
       slidesPerView={3}
       slidesPerGroup={1}
@@ -25,7 +26,9 @@ function SwiperMain({ thumbRef }) {
     >
       {data.map((item) => (
         <MainSlideStyle key={item.id}>
-          <img src={item.img} />
+          <LinkStyled to="/product">
+            <img src={item.img} />
+          </LinkStyled>
         </MainSlideStyle>
       ))}
     </Swiper>
@@ -34,11 +37,18 @@ function SwiperMain({ thumbRef }) {
 
 export default SwiperMain
 
+const LinkStyled = styled(Link)`
+  text-decoration: none;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+`
+
 const MainSlideStyle = styled(SwiperSlide)`
   height: 35.1rem;
   border-radius: 1rem;
-  display: flex;
-  align-items: center;
+
   cursor: pointer;
 
   &:hover {

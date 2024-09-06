@@ -4,13 +4,12 @@ import SwiperMain from "./SwiperMain"
 import SwiperSub from "./SwiperSub"
 
 function TopSwiper() {
-  const [secondSwiper, setSecondSwiper] = useState(null)
-  const [mainSwiper, setMainSwiper] = useState(null)
+  const [subSwiper, setSubSwiper] = useState(null)
 
   return (
     <TopContainer>
-      <SwiperMain thumbRef={secondSwiper} setSwiper={setMainSwiper} />
-      <SwiperSub setSwiper={setSecondSwiper} controlledSwiper={mainSwiper} />
+      <SwiperMain thumbRef={subSwiper} />
+      <SwiperSub setSwiper={setSubSwiper} />
     </TopContainer>
   )
 }
@@ -21,6 +20,4 @@ const TopContainer = styled.div`
   height: 553px;
   padding-top: 33px;
   background-color: var(--primary-color);
-  /* background: url("./banner.jpg") no-repeat center center; */
-  /* background-size: cover; */
 `

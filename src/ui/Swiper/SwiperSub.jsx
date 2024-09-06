@@ -8,19 +8,32 @@ import styled, { keyframes } from "styled-components"
 //data
 import data from "./data"
 
+const settings = {
+  loop: true,
+  speed: 2000,
+  slidesPerView: 3,
+  slidesPerGroup: 1,
+  spaceBetween: 20,
+  watchSlidesProgress: true,
+  breakpoints: {
+    576: {
+      slidesPerView: 3,
+      spaceBetween: 20,
+    },
+    768: {
+      slidesPerView: 5,
+      spaceBetween: 20,
+    },
+    1024: {
+      slidesPerView: 7,
+      spaceBetween: 20,
+    },
+  },
+}
+
 function SwiperSub({ setSwiper }) {
   return (
-    <Swiper
-      modules={[Thumbs]}
-      //   loop={true}
-      onSwiper={setSwiper}
-      speed={600}
-      spaceBetween={20}
-      slidesPerView={7}
-      slidesPerGroup={1}
-      initialSlide={data.length / 2}
-      watchSlidesProgress={true}
-    >
+    <Swiper {...settings} modules={[Thumbs]} onSwiper={setSwiper} initialSlide={data.length / 2}>
       {data.map((item) => (
         <SubSlideStyle key={item.id}>
           <img src={item.img} />
@@ -32,6 +45,7 @@ function SwiperSub({ setSwiper }) {
 
 export default SwiperSub
 
+//styles
 const anime = keyframes`
   0% {
     transform: rotate(0);

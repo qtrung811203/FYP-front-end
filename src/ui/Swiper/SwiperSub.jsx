@@ -10,7 +10,7 @@ import data from "./data"
 
 const settings = {
   loop: true,
-  speed: 2000,
+  speed: 1000,
   slidesPerView: 3,
   slidesPerGroup: 1,
   spaceBetween: 20,
@@ -89,7 +89,7 @@ const SubSlideStyle = styled(SwiperSlide)`
       width: 100%;
       height: 100%;
       pointer-events: none;
-      transform: rotate(-7deg);
+      transform: rotate(-5deg);
       animation: ${anime} 0.5s linear;
     }
   }

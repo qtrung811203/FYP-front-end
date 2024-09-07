@@ -91,7 +91,7 @@ const SwiperStyled = styled(Swiper)`
   .swiper-scrollbar {
     opacity: 1 !important;
     height: var(--swiper-scrollbar-size, 2px);
-    width: 70%;
+    width: 90%;
     bottom: 35px;
     left: auto;
     right: 0px;

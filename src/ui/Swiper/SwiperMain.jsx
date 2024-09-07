@@ -13,7 +13,7 @@ import data from "./data"
 
 const settings = {
   loop: true,
-  speed: 2000,
+  speed: 1000,
   slidesPerView: 1,
   slidesPerGroup: 1,
   centeredSlides: true,

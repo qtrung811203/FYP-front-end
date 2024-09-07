@@ -7,9 +7,9 @@ import "swiper/css/navigation"
 import styled from "styled-components"
 
 import HeaderSwiper from "./HeaderSwiper"
-import CustomSlider from "./CustomSlider"
+import CustomSlider from "../CustomSlider"
 import LinkAllProduct from "./LinkAllProduct"
-import data from "./data"
+import data from "../data2"
 import { Link } from "react-router-dom"
 // import data from "../Swiper/data"
 

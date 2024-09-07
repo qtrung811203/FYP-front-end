@@ -10,6 +10,7 @@ import HeaderSwiper from "./HeaderSwiper"
 import CustomSlider from "./CustomSlider"
 import LinkAllProduct from "./LinkAllProduct"
 import data from "./data"
+import { Link } from "react-router-dom"
 // import data from "../Swiper/data"
 
 /* 
@@ -36,7 +37,9 @@ function FeatureSwiper({ children, mainColor, isNew }) {
         >
           {data.map((item) => (
             <SwiperSlide key={item.id}>
-              <CustomSlider data={item} isNew={isNew} />
+              <Link to={`/product/hehe`}>
+                <CustomSlider data={item} isNew={isNew} />
+              </Link>
             </SwiperSlide>
           ))}
         </SwiperStyled>

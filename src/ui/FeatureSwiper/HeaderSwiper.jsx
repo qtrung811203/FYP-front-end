@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import { BsBoxFill } from "react-icons/bs"
-import { BsArrowRightCircle } from "react-icons/bs"
-import { Link } from "react-router-dom"
+
+import LinkAllProduct from "./LinkAllProduct"
 
 function HeaderSwiper() {
   return (
@@ -11,8 +11,7 @@ function HeaderSwiper() {
         <p>NEW MERCH</p>
       </TitleStyled>
       <ProductStyled>
-        <Link to="/all">All product</Link>
-        <BsArrowRightCircle />
+        <LinkAllProduct />
       </ProductStyled>
     </HeaderStyled>
   )
@@ -27,6 +26,10 @@ const HeaderStyled = styled.div`
   margin: 0 auto;
   margin-bottom: 2rem;
   justify-content: space-between;
+
+  @media screen and (max-width: 768px) {
+    justify-content: center;
+  }
 `
 const TitleStyled = styled.div`
   display: flex;
@@ -38,13 +41,7 @@ const TitleStyled = styled.div`
 `
 
 const ProductStyled = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  font-size: var(--font-size-lg);
-  font-weight: 650;
-  color: #516677;
-  svg {
-    font-size: 2.8rem;
+  @media screen and (max-width: 768px) {
+    display: none;
   }
 `

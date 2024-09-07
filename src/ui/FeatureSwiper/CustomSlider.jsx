@@ -9,10 +9,7 @@ function CustomSlider({ data }) {
       </ImgCard>
       <Content>
         <h3>
-          <p>
-            {data.title ||
-              "hololivex9090 collab merch hololivex9090 collab merch hololivex9090 collab merch hololivex9090 collab merch"}
-          </p>
+          <p>{data.title || "Hololivex9090 COLLAB MERCH hololivex9090"}</p>
         </h3>
         <Price>{data.description || "~ 500.000 VND"}</Price>
       </Content>
@@ -22,12 +19,10 @@ function CustomSlider({ data }) {
 
 export default CustomSlider
 
-//260 = 240 + padding8 + border10 + space 10
 const CustomCard = styled.div`
-  /* width: 26rem; */
-  background-color: #fff;
   height: 37.8rem;
   width: 29rem;
+  background-color: #fff;
   padding: 1rem;
   display: flex;
   flex-direction: column;
@@ -36,6 +31,11 @@ const CustomCard = styled.div`
   border: 0.3rem solid transparent;
   cursor: pointer;
   transition: all 0.3s ease;
+
+  @media screen and (max-width: 768px) {
+    width: 17rem;
+    height: 25rem;
+  }
 
   &:hover {
     border: 0.3rem solid var(--primary-color);
@@ -62,7 +62,7 @@ const Content = styled.div`
   padding: 1rem;
 
   h3 {
-    font-size: var(--font-size-md);
+    font-size: 1.5rem;
     font-weight: 450;
     color: black;
     line-height: 1.5;
@@ -77,7 +77,8 @@ const Content = styled.div`
 `
 
 const Price = styled.p`
-  font-size: var(--font-size-lg);
-  font-weight: 600;
+  font-size: 1.8rem;
+  font-weight: 500;
   color: var(--primary-color);
+  font-family: "Viga", sans-serif;
 `

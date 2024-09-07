@@ -18,8 +18,8 @@ function FeatureSwiper() {
           draggable: true,
         }}
         modules={[Scrollbar]}
-        spaceBetween={30}
-        slidesPerView={4}
+        spaceBetween={20}
+        slidesPerView="auto"
       >
         {data.map((item) => (
           <SwiperSlide key={item.id}>
@@ -38,7 +38,29 @@ const ContainerStyled = styled.div`
   height: 70rem;
   padding: 10rem 0;
   background-color: #fcfcfc;
+
+  .swiper-slide {
+    width: auto;
+  }
 `
 const SwiperStyled = styled(Swiper)`
   width: 90%;
+
+  .swiper-wrapper {
+    margin-bottom: 3rem;
+  }
+
+  .swiper-scrollbar {
+    opacity: 1 !important;
+    height: var(--swiper-scrollbar-size, 2px);
+
+    .swiper-scrollbar-drag {
+      position: absolute;
+      top: -2px;
+      cursor: pointer;
+      border-radius: 0.5rem;
+      background-color: var(--secondary-color);
+      height: 8px;
+    }
+  }
 `

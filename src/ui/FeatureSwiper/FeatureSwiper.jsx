@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Scrollbar, Navigation } from "swiper/modules"
 import "swiper/css"
@@ -8,13 +9,20 @@ import styled from "styled-components"
 import HeaderSwiper from "./HeaderSwiper"
 import CustomSlider from "./CustomSlider"
 import LinkAllProduct from "./LinkAllProduct"
-// import data from "./data"
-import data from "../Swiper/data"
+import data from "./data"
+// import data from "../Swiper/data"
 
-function FeatureSwiper() {
+/* 
+<FeatureSwiper data={data} mainColor={color}>
+  <icon></icon>
+  <p>TITLE</p>
+</FeatureSwiper>
+*/
+
+function FeatureSwiper({ children, mainColor, isNew }) {
   return (
     <ContainerStyled>
-      <HeaderSwiper />
+      <HeaderSwiper color={mainColor}>{children}</HeaderSwiper>
       <SwiperContainerStyled>
         <SwiperStyled
           scrollbar={{
@@ -28,7 +36,7 @@ function FeatureSwiper() {
         >
           {data.map((item) => (
             <SwiperSlide key={item.id}>
-              <CustomSlider data={item} />
+              <CustomSlider data={item} isNew={isNew} />
             </SwiperSlide>
           ))}
         </SwiperStyled>
@@ -42,10 +50,12 @@ function FeatureSwiper() {
 
 export default FeatureSwiper
 
+//CSS
 //Container
 const ContainerStyled = styled.div`
   padding: 10rem 0;
   background-color: #fcfcfc;
+  border-bottom: 0.1rem solid #e0e0e0;
 
   .swiper-slide {
     width: auto;

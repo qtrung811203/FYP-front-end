@@ -1,15 +1,12 @@
+/* eslint-disable react/prop-types */
 import styled from "styled-components"
-import { BsBoxFill } from "react-icons/bs"
 
 import LinkAllProduct from "./LinkAllProduct"
 
-function HeaderSwiper() {
+function HeaderSwiper({ children, color }) {
   return (
     <HeaderStyled>
-      <TitleStyled>
-        <BsBoxFill />
-        <p>NEW MERCH</p>
-      </TitleStyled>
+      <TitleStyled color={color}>{children}</TitleStyled>
       <ProductStyled>
         <LinkAllProduct />
       </ProductStyled>
@@ -19,6 +16,7 @@ function HeaderSwiper() {
 
 export default HeaderSwiper
 
+//CSS
 const HeaderStyled = styled.div`
   display: flex;
   align-items: center;
@@ -35,9 +33,10 @@ const TitleStyled = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
+  text-transform: uppercase;
   font-size: 4.5rem;
   font-weight: 700;
-  color: var(--primary-color);
+  color: ${(props) => props.color};
 `
 
 const ProductStyled = styled.div`

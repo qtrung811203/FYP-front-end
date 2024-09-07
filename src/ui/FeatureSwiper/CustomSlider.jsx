@@ -1,7 +1,7 @@
 import styled from "styled-components"
 
 /* eslint-disable react/prop-types */
-function CustomSlider({ data }) {
+function CustomSlider({ data, isNew }) {
   return (
     <CustomCard>
       <ImgCard>
@@ -13,6 +13,7 @@ function CustomSlider({ data }) {
         </h3>
         <Price>{data.description || "~ 500.000 VND"}</Price>
       </Content>
+      {isNew && <NewStyled>new</NewStyled>}
     </CustomCard>
   )
 }
@@ -20,6 +21,7 @@ function CustomSlider({ data }) {
 export default CustomSlider
 
 const CustomCard = styled.div`
+  position: relative;
   height: 37.8rem;
   width: 29rem;
   background-color: #fff;
@@ -80,5 +82,18 @@ const Price = styled.p`
   font-size: 1.8rem;
   font-weight: 500;
   color: var(--primary-color);
+  font-family: "Viga", sans-serif;
+`
+
+const NewStyled = styled.div`
+  position: absolute;
+  padding: 3px 8px;
+  top: -2px;
+  left: -2px;
+  background-color: black;
+  color: white;
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  font-weight: 500;
   font-family: "Viga", sans-serif;
 `

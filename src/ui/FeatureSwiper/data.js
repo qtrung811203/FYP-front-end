@@ -2,42 +2,62 @@ const data = [
   {
     id: 1,
     img: "https://furfresh.com.au/cdn/shop/articles/Corgi.jpg?v=1687923583",
+    secondImage:
+      "https://otakuusamagazine.com/wp-content/uploads/2020/12/kuma-kuma-kuma-bearS2announce.jpg",
   },
   {
     id: 2,
     img: "https://countzeroor.com/wp-content/uploads/2020/12/Kuma-Kuma-Kuma-Bear-01-Large-09.jpg",
+    secondImage:
+      "https://otakuusamagazine.com/wp-content/uploads/2020/12/kuma-kuma-kuma-bearS2announce.jpg",
   },
   {
     id: 3,
     img: "https://pbs.twimg.com/media/Fyjd1xPaIAEXYuR?format=jpg&name=large",
+    secondImage:
+      "https://otakuusamagazine.com/wp-content/uploads/2020/12/kuma-kuma-kuma-bearS2announce.jpg",
   },
   {
     id: 4,
     img: "https://countzeroor.com/wp-content/uploads/2020/12/Kuma-Kuma-Kuma-Bear-01-Large-09.jpg",
+    secondImage:
+      "https://otakuusamagazine.com/wp-content/uploads/2020/12/kuma-kuma-kuma-bearS2announce.jpg",
   },
   {
     id: 5,
     img: "https://furfresh.com.au/cdn/shop/articles/Corgi.jpg?v=1687923583",
+    secondImage:
+      "https://otakuusamagazine.com/wp-content/uploads/2020/12/kuma-kuma-kuma-bearS2announce.jpg",
   },
   {
     id: 6,
     img: "https://pbs.twimg.com/media/Fyjd1xPaIAEXYuR?format=jpg&name=large",
+    secondImage:
+      "https://otakuusamagazine.com/wp-content/uploads/2020/12/kuma-kuma-kuma-bearS2announce.jpg",
   },
   {
     id: 7,
     img: "https://furfresh.com.au/cdn/shop/articles/Corgi.jpg?v=1687923583",
+    secondImage:
+      "https://otakuusamagazine.com/wp-content/uploads/2020/12/kuma-kuma-kuma-bearS2announce.jpg",
   },
   {
     id: 8,
     img: "https://countzeroor.com/wp-content/uploads/2020/12/Kuma-Kuma-Kuma-Bear-01-Large-09.jpg",
+    secondImage:
+      "https://otakuusamagazine.com/wp-content/uploads/2020/12/kuma-kuma-kuma-bearS2announce.jpg",
   },
   {
     id: 9,
     img: "https://pbs.twimg.com/media/Fyjd1xPaIAEXYuR?format=jpg&name=large",
+    secondImage:
+      "https://otakuusamagazine.com/wp-content/uploads/2020/12/kuma-kuma-kuma-bearS2announce.jpg",
   },
   {
     id: 10,
     img: "https://countzeroor.com/wp-content/uploads/2020/12/Kuma-Kuma-Kuma-Bear-01-Large-09.jpg",
+    secondImage:
+      "https://otakuusamagazine.com/wp-content/uploads/2020/12/kuma-kuma-kuma-bearS2announce.jpg",
   },
 ]
 

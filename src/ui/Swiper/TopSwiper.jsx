@@ -19,5 +19,7 @@ export default TopSwiper
 const TopContainer = styled.div`
   height: 553px;
   padding-top: 33px;
-  background-color: var(--primary-color);
+  background: url("./banner.jpg") no-repeat center;
+  background-size: cover;
+  /* background-color: var(--primary-color); */
 `

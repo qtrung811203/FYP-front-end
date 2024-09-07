@@ -6,6 +6,7 @@ function CustomSlider({ data, isNew }) {
     <CustomCard>
       <ImgCard>
         <img src={data.img} alt={data.id} />
+        <img src={data.secondImage} alt={data.id} />
       </ImgCard>
       <Content>
         <h3>
@@ -45,14 +46,29 @@ const CustomCard = styled.div`
 `
 
 const ImgCard = styled.div`
+  position: relative;
   height: 24rem;
   border-radius: 0.5rem;
   overflow: hidden;
 
   img {
+    position: absolute;
     height: 100%;
     width: 100%;
     object-fit: cover;
+    transition: opacity 0.5s ease;
+  }
+
+  img:last-child {
+    opacity: 0;
+  }
+
+  &:hover img:first-child {
+    opacity: 0;
+  }
+
+  &:hover img:last-child {
+    opacity: 1;
   }
 `
 

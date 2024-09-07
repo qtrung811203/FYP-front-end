@@ -19,6 +19,7 @@ function MainMenu() {
         <BsBoxFill />
         <p>new merch</p>
       </FeatureSwiper> */}
+      {/* END SWIPER */}
     </>
   )
 }

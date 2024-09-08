@@ -1,9 +1,9 @@
 import styled from "styled-components"
 
 /* eslint-disable react/prop-types */
-function CustomSlider({ data, isNew }) {
+function CustomSlider({ data, isNew, border }) {
   return (
-    <CustomCard>
+    <CustomCard $border={border}>
       <ImgCard>
         <img src={data.img} alt={data.id} />
         <img src={data.secondImage} alt={data.id} />
@@ -41,7 +41,7 @@ const CustomCard = styled.div`
   }
 
   &:hover {
-    border: 0.3rem solid var(--primary-color);
+    border: 0.3rem solid ${(props) => (props.$border ? props.$border : "var(--primary-color)")};
   }
 `
 

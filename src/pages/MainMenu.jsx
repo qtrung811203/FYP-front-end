@@ -1,5 +1,6 @@
-import TopSwiper from "../ui/Swiper/TopSwiper"
-import FeatureSwiper from "../ui/FeatureSwiper/FeatureSwiper"
+import TopSwiper from "../ui/Swiper/SwiperTop/TopSwiper"
+import FeatureSwiper from "../ui/Swiper/FeatureSwiper/FeatureSwiper"
+import EndSwiper from "../ui/Swiper/EndSwiper/EndSwiper"
 
 //icon
 import { BsBoxFill } from "react-icons/bs"
@@ -20,6 +21,7 @@ function MainMenu() {
         <p>new merch</p>
       </FeatureSwiper> */}
       {/* END SWIPER */}
+      <EndSwiper />
     </>
   )
 }

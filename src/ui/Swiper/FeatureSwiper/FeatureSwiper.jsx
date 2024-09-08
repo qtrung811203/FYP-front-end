@@ -7,9 +7,9 @@ import "swiper/css/navigation"
 import styled from "styled-components"
 
 import HeaderSwiper from "./HeaderSwiper"
-import CustomSlider from "./CustomSlider"
+import CustomSlider from "../CustomSlider"
 import LinkAllProduct from "./LinkAllProduct"
-import data from "./data"
+import data from "../data"
 import { Link } from "react-router-dom"
 // import data from "../Swiper/data"
 
@@ -98,7 +98,7 @@ const SwiperStyled = styled(Swiper)`
 
     .swiper-scrollbar-drag {
       position: absolute;
-      top: -2px;
+      top: -3px;
       cursor: pointer;
       border-radius: 0.5rem;
       background-color: var(--secondary-color);

@@ -13,9 +13,9 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route element={<AppLayout />}>
-            <Route index element={<Navigate replace to="homepage" />} />
-            <Route path="/homepage" element={<MainMenu />} />
-            <Route path="/all" element={<AllProduct />} />
+            <Route index element={<Navigate replace to="home" />} />
+            <Route path="/home" element={<MainMenu />} />
+            <Route path="/collections/all" element={<AllProduct />} />
             <Route path="/product/:id" element={<ProductDetail />} />
             {/*Handle Not Found Path*/}
             <Route path="*" element={<div>Not Found</div>} />

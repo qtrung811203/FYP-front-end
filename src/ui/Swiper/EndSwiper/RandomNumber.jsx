@@ -27,8 +27,8 @@ export default RandomNumber
 
 const RandomNumberStyled = styled.div`
   color: white;
+  z-index: 1;
   position: absolute;
-  /* top: -110px; */
   font-size: 30rem;
   opacity: 0.18;
   font-family: "Viga", sans-serif;

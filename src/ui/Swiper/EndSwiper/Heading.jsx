@@ -24,6 +24,7 @@ export default Heading
 const HeadingStyled = styled.div`
   display: flex;
   margin: 0 10rem;
+  z-index: 9;
   justify-content: space-between;
   align-items: center;
   color: #ff0;
@@ -49,6 +50,7 @@ const Title = styled.div`
   @media screen and (max-width: 768px) {
     width: 100%;
     justify-content: space-between;
+    gap: 0;
   }
 `
 

@@ -7,7 +7,7 @@ import Heading from "./Heading"
 import CustomSlider from "../CustomSlider"
 import RandomNumber from "./RandomNumber"
 
-import data from "../data2"
+import data from "../data"
 
 function EndSwiper() {
   return (
@@ -28,7 +28,7 @@ function EndSwiper() {
         >
           {data.map((item) => (
             <SwiperSlide key={item.id}>
-              <CustomSlider data={item} />
+              <CustomSlider data={item} border="#ff0" />
             </SwiperSlide>
           ))}
         </SwiperContainer>
@@ -45,7 +45,8 @@ export default EndSwiper
 const EndContainer = styled.div`
   position: relative;
   height: 62rem;
-  background: linear-gradient(#be0000, #890000);
+  /* background: linear-gradient(#be0000, #890000); */
+  background: linear-gradient(#c96868, #5e2d2d);
   overflow: hidden;
 
   &::before {

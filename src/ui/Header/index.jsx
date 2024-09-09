@@ -5,6 +5,24 @@ import NavMenu from "./NavMenu"
 import SearchBar from "./SearchBar"
 import CartIcon from "./CartIcon"
 import LoginButton from "./LoginButton"
+import MobileMenu from "./MobileMenu"
+
+function Header() {
+  return (
+    <StyledHeader>
+      <Logo />
+      <NavMenu />
+      <PcStyled>
+        <SearchBar />
+        <CartIcon />
+        <LoginButton />
+      </PcStyled>
+      <MobileMenu />
+    </StyledHeader>
+  )
+}
+
+export default Header
 
 const StyledHeader = styled.header`
   background-color: var(--fourth-color);
@@ -13,18 +31,21 @@ const StyledHeader = styled.header`
   display: flex;
   align-items: center;
   border-bottom: 3px solid var(--primary-color);
+
+  @media (max-width: 768px) {
+    height: 6.3rem;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+  }
 `
 
-function Header() {
-  return (
-    <StyledHeader>
-      <Logo />
-      <NavMenu />
-      <SearchBar />
-      <CartIcon />
-      <LoginButton />
-    </StyledHeader>
-  )
-}
+const PcStyled = styled.div`
+  display: flex;
+  align-items: center;
+  height: 100%;
 
-export default Header
+  @media (max-width: 768px) {
+    display: none;
+  }
+`

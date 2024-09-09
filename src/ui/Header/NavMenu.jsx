@@ -1,6 +1,21 @@
 import { Link } from "react-router-dom"
 import styled from "styled-components"
 
+function NavMenu() {
+  return (
+    <NavListStyle>
+      <ListItemStyle>
+        <Link to="/all">All Products</Link>
+      </ListItemStyle>
+      <ListItemStyle>
+        <Link to="/notYet">Category</Link>
+      </ListItemStyle>
+    </NavListStyle>
+  )
+}
+
+export default NavMenu
+
 const NavListStyle = styled.ul`
   display: flex;
   position: relative;
@@ -11,6 +26,10 @@ const NavListStyle = styled.ul`
   height: 100%;
   align-items: center;
   font-size: var(--font-size-md);
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `
 
 const ListItemStyle = styled.li`
@@ -43,18 +62,3 @@ const ListItemStyle = styled.li`
     opacity: 0.5;
   }
 `
-
-function NavMenu() {
-  return (
-    <NavListStyle>
-      <ListItemStyle>
-        <Link to="/all">All Products</Link>
-      </ListItemStyle>
-      <ListItemStyle>
-        <Link to="/notYet">Category</Link>
-      </ListItemStyle>
-    </NavListStyle>
-  )
-}
-
-export default NavMenu

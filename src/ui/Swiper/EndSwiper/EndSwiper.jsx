@@ -7,7 +7,7 @@ import Heading from "./Heading"
 import CustomSlider from "../CustomSlider"
 import RandomNumber from "./RandomNumber"
 
-import data from "../data"
+import data from "../../../data/data"
 
 function EndSwiper() {
   return (
@@ -69,6 +69,7 @@ const MainContainer = styled.div`
 const SwiperContainer = styled(Swiper)`
   width: 100%;
   margin-top: 2rem;
+  z-index: 9;
 
   .swiper-slide {
     width: auto;

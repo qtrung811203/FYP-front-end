@@ -2,6 +2,7 @@
 import styled from "styled-components"
 import ImageSwiper from "../ui/Swiper/ImageSwiper/ImageSwiper"
 import ProductDetail from "../ui/ProductDetail/ProductDetail"
+import FeatureSwiper from "../ui/Swiper/FeatureSwiper/FeatureSwiper"
 
 /*
 div
@@ -18,8 +19,11 @@ function Product() {
   // const { id } = useParams()
   return (
     <ProductContainer>
-      <ImageSwiper />
-      <ProductDetail />
+      <MainContainer>
+        <ImageSwiper />
+        <ProductDetail />
+      </MainContainer>
+      <FeatureSwiper />
     </ProductContainer>
   )
 }
@@ -27,11 +31,13 @@ function Product() {
 export default Product
 
 const ProductContainer = styled.div`
+  margin-top: 5rem;
+`
+
+const MainContainer = styled.div`
+  width: min(128rem, 100%);
+  margin: 0 auto;
   display: flex;
-  max-width: 140rem;
-  padding-top: 7rem;
-  margin-right: auto;
-  margin-left: auto;
   justify-content: space-between;
   gap: 5rem;
 `

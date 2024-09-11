@@ -1,7 +1,7 @@
 const data = [
   {
     id: 1,
-    img: "https://furfresh.com.au/cdn/shop/articles/Corgi.jpg?v=1687923583",
+    img: "https://mfiles.alphacoders.com/100/1007238.jpeg",
     secondImage:
       "https://otakuusamagazine.com/wp-content/uploads/2020/12/kuma-kuma-kuma-bearS2announce.jpg",
   },

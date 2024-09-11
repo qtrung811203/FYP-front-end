@@ -8,5 +8,5 @@ export default ProductDetail
 
 const ProductDetailContainer = styled.div`
   width: 100%;
-  background-color: red;
+  background-color: green;
 `

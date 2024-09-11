@@ -23,7 +23,7 @@ function Product() {
         <ImageSwiper />
         <ProductDetail />
       </MainContainer>
-      <FeatureSwiper />
+      {/* <FeatureSwiper /> */}
     </ProductContainer>
   )
 }

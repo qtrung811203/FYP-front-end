@@ -24,7 +24,7 @@ export default CustomSlider
 const CustomCard = styled.div`
   position: relative;
   height: 37.8rem;
-  width: 29rem;
+  width: 27rem;
   background-color: #fff;
   padding: 1rem;
   display: flex;

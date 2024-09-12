@@ -6,6 +6,7 @@ import MainMenu from "./pages/MainMenu"
 import AllProduct from "./pages/AllProduct"
 import Product from "./pages/Product"
 import PageNotFound from "./pages/PageNotFound"
+import LoginPage from "./pages/LoginPage"
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route path="/home" element={<MainMenu />} />
             <Route path="/collections/all" element={<AllProduct />} />
             <Route path="/product/:id" element={<Product />} />
+            <Route path="/login" element={<LoginPage />} />
             {/*Handle Not Found Path*/}
             <Route path="*" element={<PageNotFound />} />
           </Route>

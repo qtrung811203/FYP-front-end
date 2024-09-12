@@ -51,6 +51,5 @@ const Title = styled.div`
     line-height: 1.5;
     margin-top: 16px;
     padding-bottom: 30px;
-    border-bottom: 1px solid #e2e2e2;
   }
 `

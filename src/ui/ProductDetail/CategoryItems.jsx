@@ -72,7 +72,7 @@ const ItemStyled = styled.div`
   }
 
   &:hover {
-    border-color: #bcedda;
+    border-color: var(--primary-color);
     background: #eaf9ff;
   }
 `
@@ -83,7 +83,7 @@ const PriceEnd = styled.div`
 
   p {
     font-size: 1.8rem;
-    color: #d60000;
+    color: var(--color-danger);
     font-family: Viga, sans-serif;
   }
 `

@@ -8,6 +8,8 @@ const GlobalStyles = createGlobalStyle`
   --third-color: #C4DAD2;
   --fourth-color: #E9EFEC;
 
+  --color-danger: #ff4d4f;
+
 
   /* Indigo */
   --color-brand-50: #eef2ff;

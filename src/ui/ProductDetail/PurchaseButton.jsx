@@ -26,7 +26,7 @@ const LinkStyled = styled(Link)`
   font-weight: 700;
   color: #fff;
   padding: 22px 135px;
-  background: #52c936;
+  background: var(--secondary-color);
   border-radius: 40px;
   display: inline-block;
 `

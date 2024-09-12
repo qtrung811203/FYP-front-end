@@ -9,7 +9,7 @@ import "swiper/css/thumbs"
 import "swiper/css/navigation"
 
 //data
-import data from "../data2"
+import data from "../../../data/data2"
 
 const settings = {
   loop: true,

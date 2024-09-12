@@ -6,7 +6,7 @@ import "swiper/css/thumbs"
 import styled, { keyframes } from "styled-components"
 
 //data
-import data from "../data2"
+import data from "../../../data/data2"
 
 const settings = {
   loop: true,

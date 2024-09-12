@@ -4,7 +4,8 @@ import GlobalStyles from "./styles/GlobalStyles"
 import AppLayout from "./ui/AppLayout"
 import MainMenu from "./pages/MainMenu"
 import AllProduct from "./pages/AllProduct"
-import ProductDetail from "./pages/ProductDetail"
+import Product from "./pages/Product"
+import PageNotFound from "./pages/PageNotFound"
 
 function App() {
   return (
@@ -16,9 +17,9 @@ function App() {
             <Route index element={<Navigate replace to="home" />} />
             <Route path="/home" element={<MainMenu />} />
             <Route path="/collections/all" element={<AllProduct />} />
-            <Route path="/product/:id" element={<ProductDetail />} />
+            <Route path="/product/:id" element={<Product />} />
             {/*Handle Not Found Path*/}
-            <Route path="*" element={<div>Not Found</div>} />
+            <Route path="*" element={<PageNotFound />} />
           </Route>
         </Routes>
       </BrowserRouter>

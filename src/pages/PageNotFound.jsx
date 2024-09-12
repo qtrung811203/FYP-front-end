@@ -3,10 +3,12 @@ import styled from "styled-components"
 
 const Container = styled.div`
   display: flex;
+  position: fixed;
+  width: 100%;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: 60vh;
   background-color: white;
   font-family: Arial, sans-serif;
 `
@@ -23,7 +25,7 @@ const Subtitle = styled.p`
   margin-bottom: 2rem;
 `
 
-const StyledLink = styled.a`
+const StyledLink = styled(Link)`
   text-decoration: none;
   color: var(--primary-color);
   font-size: 1.2rem;
@@ -44,9 +46,7 @@ export default function Custom404() {
       <Container>
         <Title>404</Title>
         <Subtitle>Oops! Page not found</Subtitle>
-        <Link to="/">
-          <StyledLink>Go back home</StyledLink>
-        </Link>
+        <StyledLink to="/home">Go back home</StyledLink>
       </Container>
     </>
   )

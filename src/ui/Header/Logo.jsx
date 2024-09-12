@@ -5,7 +5,7 @@ function Logo() {
   return (
     <StyledDiv>
       <Link to="/">
-        <LogoStyled src="" alt="logo" />
+        <LogoStyled src="./logo.png" alt="logo" />
       </Link>
     </StyledDiv>
   )

@@ -55,7 +55,7 @@ const PageContainer = styled.div`
   width: 100%;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: 60vh;
   background-color: var(--pale-mint);
   font-size: 1.6rem;
 `

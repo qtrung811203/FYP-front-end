@@ -25,12 +25,16 @@ function Header() {
 export default Header
 
 const StyledHeader = styled.header`
-  background-color: var(--fourth-color);
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background-color: var(--off-white);
   color: var(--color-grey-600);
   height: 9.3rem;
   display: flex;
   align-items: center;
   border-bottom: 3px solid var(--primary-color);
+  z-index: 999999;
 
   @media (max-width: 768px) {
     height: 6.3rem;

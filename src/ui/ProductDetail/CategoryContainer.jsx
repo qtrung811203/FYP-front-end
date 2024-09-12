@@ -12,7 +12,7 @@ CategoryBox
 
 */
 
-function CategoryBox() {
+function CategoryContainer() {
   return (
     <CategoryBoxStyled>
       <h3>Category</h3>
@@ -22,7 +22,7 @@ function CategoryBox() {
   )
 }
 
-export default CategoryBox
+export default CategoryContainer
 
 const CategoryBoxStyled = styled.div`
   background: #f7f7f7;

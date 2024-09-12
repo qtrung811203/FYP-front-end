@@ -1,11 +1,11 @@
-import TopSwiper from "../ui/Swiper/SwiperTop/TopSwiper"
+import TopSwiper from "../ui/Swiper/TopSwiper/TopSwiper"
 import FeatureSwiper from "../ui/Swiper/FeatureSwiper/FeatureSwiper"
 import EndSwiper from "../ui/Swiper/EndSwiper/EndSwiper"
 
 //icon
 import { BsBoxFill } from "react-icons/bs"
 
-function MainMenu() {
+function HomePage() {
   return (
     <>
       {/* TOP SWIPER */}
@@ -25,4 +25,4 @@ function MainMenu() {
     </>
   )
 }
-export default MainMenu
+export default HomePage

@@ -8,18 +8,33 @@ const GlobalStyles = createGlobalStyle`
   --third-color: #C4DAD2;
   --fourth-color: #E9EFEC;
 
-  --color-danger: #ff4d4f;
+/* Primary Color Family */
+  --darkest-teal: #0B211E;
+  --dark-teal: #16423C;
+  --medium-teal: #1E5750;
+  --light-teal: #267264;
 
+  /* Secondary Color Family */
+  --dark-sage: #4A6D5F;
+  --medium-sage: #6A9C89;
+  --light-sage: #8ABBA8;
+  --pale-sage: #A9D0C3;
 
-  /* Indigo */
-  --color-brand-50: #eef2ff;
-  --color-brand-100: #e0e7ff;
-  --color-brand-200: #c7d2fe;
-  --color-brand-500: #6366f1;
-  --color-brand-600: #4f46e5;
-  --color-brand-700: #4338ca;
-  --color-brand-800: #3730a3;
-  --color-brand-900: #312e81;
+  /* Tertiary Color Family */
+  --dark-mint: #9FBEB6;
+  --medium-mint: #C4DAD2;
+  --light-mint: #D6E6E0;
+  --pale-mint: #E9EFEC;
+
+  /* Accent Colors */
+  --warm-accent: #D68060;
+  --cool-accent: #60A1D6;
+
+  /* Neutral Colors */
+  --dark-gray: #333333;
+  --medium-gray: #666666;
+  --light-gray: #999999;
+  --off-white: #F5F5F5;
 
   /* Grey */
   --color-grey-0: #fff;

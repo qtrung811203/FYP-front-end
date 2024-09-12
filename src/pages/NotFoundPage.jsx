@@ -46,7 +46,7 @@ export default function Custom404() {
       <Container>
         <Title>404</Title>
         <Subtitle>Oops! Page not found</Subtitle>
-        <StyledLink to="/home">Go back home</StyledLink>
+        <StyledLink to="/">Go back home</StyledLink>
       </Container>
     </>
   )

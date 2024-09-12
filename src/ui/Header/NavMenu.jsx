@@ -50,7 +50,7 @@ const ListItemStyle = styled.li`
     height: 10px;
     width: 10px;
     position: absolute;
-    background: url(./arrow-menu.png);
+    background: url(/arrow-menu.png);
     background-size: contain;
     background-repeat: no-repeat;
     right: 0;

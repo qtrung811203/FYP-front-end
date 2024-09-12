@@ -1,6 +1,6 @@
 import styled from "styled-components"
 
-import CategoryBox from "./CategoryBox"
+import CategoryContainer from "./CategoryContainer"
 import PurchaseButton from "./PurchaseButton"
 
 /*
@@ -20,7 +20,7 @@ function ProductDetail() {
       <Title>
         <h1>This is a Title This is a Title This is a Title This is a Title This is a Title</h1>
       </Title>
-      <CategoryBox />
+      <CategoryContainer />
       <PurchaseButton />
     </ProductDetailContainer>
   )

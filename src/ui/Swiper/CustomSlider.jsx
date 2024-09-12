@@ -1,9 +1,9 @@
 import styled from "styled-components"
 
 /* eslint-disable react/prop-types */
-function CustomSlider({ data, isNew, border }) {
+function CustomSlider({ data, isNew, border, small }) {
   return (
-    <CustomCard $border={border}>
+    <CustomCard $border={border} className={small ? "small" : undefined}>
       <ImgCard>
         <img src={data.img} alt={data.id} />
         <img src={data.secondImage} alt={data.id} />
@@ -34,6 +34,11 @@ const CustomCard = styled.div`
   border: 0.3rem solid transparent;
   cursor: pointer;
   transition: all 0.3s ease;
+
+  &.small {
+    width: 100%;
+    height: 29rem;
+  }
 
   @media screen and (max-width: 768px) {
     width: 17rem;
@@ -95,6 +100,7 @@ const Content = styled.div`
 `
 
 const Price = styled.p`
+  margin-top: 1rem;
   font-size: 1.8rem;
   font-weight: 500;
   color: var(--primary-color);

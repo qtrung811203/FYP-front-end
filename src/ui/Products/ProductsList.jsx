@@ -1,0 +1,35 @@
+import styled from "styled-components"
+
+import CustomSlider from "../Swiper/CustomSlider"
+
+import data from "../../data/data"
+import { Link } from "react-router-dom"
+
+function ProductsList() {
+  return (
+    <ProductsContainer>
+      {data.map((item) => (
+        <Link to={`/product/hehe`} key={item.id}>
+          <CustomSlider small={true} data={item} />
+        </Link>
+      ))}
+    </ProductsContainer>
+  )
+}
+
+export default ProductsList
+
+const ProductsContainer = styled.div`
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 20px;
+
+  @media screen and (max-width: 1200px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  @media screen and (max-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+`

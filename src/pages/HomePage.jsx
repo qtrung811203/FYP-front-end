@@ -1,34 +1,21 @@
-import { useEffect } from "react"
-
+//ui
 import TopSwiper from "../ui/Swiper/TopSwiper/TopSwiper"
 import FeatureSwiper from "../ui/Swiper/FeatureSwiper/FeatureSwiper"
 import EndSwiper from "../ui/Swiper/EndSwiper/EndSwiper"
 
-import axiosInstance from "../services/axiosConfig"
-
 //icon
 import { BsBoxFill } from "react-icons/bs"
+import { useHomeProducts } from "../features/useHomeProducts"
 
 function HomePage() {
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axiosInstance.get("/products/home")
-        console.log(response)
-      } catch (error) {
-        console.error(error)
-      }
-    }
-
-    fetchData()
-  }, [])
+  const { newMerch } = useHomeProducts()
 
   return (
     <>
       {/* TOP SWIPER */}
       <TopSwiper />
       {/* NEW MERCH */}
-      <FeatureSwiper mainColor={"var(--primary-color)"} isNew={true}>
+      <FeatureSwiper mainColor={"var(--primary-color)"} isNew={true} data={newMerch}>
         <BsBoxFill />
         <p>new merch</p>
       </FeatureSwiper>

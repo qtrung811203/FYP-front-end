@@ -34,7 +34,7 @@ const StyledHeader = styled.header`
   display: flex;
   align-items: center;
   border-bottom: 3px solid var(--primary-color);
-  z-index: 999999;
+  z-index: 20;
 
   @media (max-width: 768px) {
     height: 6.3rem;

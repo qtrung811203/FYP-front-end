@@ -9,7 +9,7 @@ import styled from "styled-components"
 import HeaderSwiper from "./HeaderSwiper"
 import CustomSlider from "../CustomSlider"
 import LinkAllProduct from "./LinkAllProduct"
-import data from "../../../data/data"
+// import data from "../../../data/data"
 import { Link } from "react-router-dom"
 // import data from "../Swiper/data"
 
@@ -20,7 +20,8 @@ import { Link } from "react-router-dom"
 </FeatureSwiper>
 */
 
-function FeatureSwiper({ children, mainColor, isNew }) {
+function FeatureSwiper({ children, mainColor, isNew, data }) {
+  console.log(data)
   return (
     <ContainerStyled>
       <HeaderSwiper color={mainColor}>{children}</HeaderSwiper>
@@ -35,13 +36,15 @@ function FeatureSwiper({ children, mainColor, isNew }) {
           spaceBetween={20}
           slidesPerView="auto"
         >
-          {data.map((item) => (
-            <SwiperSlide key={item.id}>
-              <Link to={`/product/hehe`}>
-                <CustomSlider data={item} isNew={isNew} />
-              </Link>
-            </SwiperSlide>
-          ))}
+          {data
+            ? data.map((item) => (
+                <SwiperSlide key={item._id}>
+                  <Link to={`/product/${item.slug}`}>
+                    <CustomSlider data={item} isNew={isNew} />
+                  </Link>
+                </SwiperSlide>
+              ))
+            : null}
         </SwiperStyled>
       </SwiperContainerStyled>
       <ResponsiveLinkEndStyled>

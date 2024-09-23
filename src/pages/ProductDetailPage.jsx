@@ -1,7 +1,7 @@
 // import { useParams } from "react-router-dom"
 import styled from "styled-components"
-import ImageSwiper from "../ui/Swiper/ImageSwiper/ImageSwiper"
-import ProductDetail from "../ui/ProductDetail/ProductDetail"
+import ImageSwiper from "../components/Swiper/ImageSwiper/ImageSwiper"
+import ProductDetail from "../components/ProductDetail/ProductDetail"
 // import FeatureSwiper from "../ui/Swiper/FeatureSwiper/FeatureSwiper"
 
 /*

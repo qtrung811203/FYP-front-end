@@ -1,7 +1,7 @@
 import styled from "styled-components"
-import FilterSidebar from "../ui/Products/FilterSidebar"
-import ProductsList from "../ui/Products/ProductsList"
-import Title from "../ui/Products/Title"
+import FilterSidebar from "../components/Products/FilterSidebar"
+import ProductsList from "../components/Products/ProductsList"
+import Title from "../components/Products/Title"
 
 /*
   PageContainer

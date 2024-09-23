@@ -5,14 +5,14 @@ function CustomSlider({ data, isNew, border, small }) {
   return (
     <CustomCard $border={border} className={small ? "small" : undefined}>
       <ImgCard>
-        <img src={data.img} alt={data.id} />
-        <img src={data.secondImage} alt={data.id} />
+        <img src={data.imageCover} alt={data.id} />
+        <img src={data.secondImage ? data.secondImage : data.imageCover} alt={data.id} />
       </ImgCard>
       <Content>
         <h3>
-          <p>{data.title || "Hololivex9090 COLLAB MERCH hololivex9090"}</p>
+          <p>{data.name || "Hololivex9090 COLLAB MERCH hololivex9090"}</p>
         </h3>
-        <Price>{data.description || "~ 500.000 VND"}</Price>
+        <Price>{"~ 500.000 VND"}</Price>
       </Content>
       {isNew && <NewStyled>new</NewStyled>}
     </CustomCard>
@@ -110,8 +110,8 @@ const Price = styled.p`
 const NewStyled = styled.div`
   position: absolute;
   padding: 3px 8px;
-  top: -2px;
-  left: -2px;
+  top: -3px;
+  left: -3px;
   background-color: black;
   color: white;
   font-size: 1.3rem;

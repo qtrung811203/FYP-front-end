@@ -1,17 +1,21 @@
-import TopSwiper from "../ui/Swiper/TopSwiper/TopSwiper"
-import FeatureSwiper from "../ui/Swiper/FeatureSwiper/FeatureSwiper"
-import EndSwiper from "../ui/Swiper/EndSwiper/EndSwiper"
+//ui
+import TopSwiper from "../components/Swiper/TopSwiper/TopSwiper"
+import FeatureSwiper from "../components/Swiper/FeatureSwiper/FeatureSwiper"
+import EndSwiper from "../components/Swiper/EndSwiper/EndSwiper"
 
 //icon
 import { BsBoxFill } from "react-icons/bs"
+import { useHomeProducts } from "../hooks/useHomeProducts"
 
 function HomePage() {
+  const { newMerch } = useHomeProducts()
+
   return (
     <>
       {/* TOP SWIPER */}
       <TopSwiper />
       {/* NEW MERCH */}
-      <FeatureSwiper mainColor={"var(--primary-color)"} isNew={true}>
+      <FeatureSwiper mainColor={"var(--primary-color)"} isNew={true} data={newMerch}>
         <BsBoxFill />
         <p>new merch</p>
       </FeatureSwiper>

@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 
 import GlobalStyles from "./styles/GlobalStyles"
-import AppLayout from "./ui/AppLayout"
+import AppLayout from "./layout/AppLayout"
 import HomePage from "./pages/HomePage"
 import ProductsPage from "./pages/ProductsPage"
 import ProductDetailPage from "./pages/ProductDetailPage"

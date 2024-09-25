@@ -98,7 +98,6 @@ html {
 body {
   font-family: "Montserrat", sans-serif;
   color: #516677;
-  transition: color 0.3s, background-color 0.3s;
   min-height: 100vh;
   line-height: 1.5;
   font-size: var(--font-size-md);
@@ -157,10 +156,6 @@ h5,
 h6 {
   overflow-wrap: break-word;
   hyphens: auto;
-}
-
-img {
-  max-width: 100%;
 }
 
 //Resonsive

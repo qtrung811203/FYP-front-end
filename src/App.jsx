@@ -7,8 +7,9 @@ import AppLayout from "./layout/AppLayout"
 import HomePage from "./pages/HomePage"
 import ProductsPage from "./pages/ProductsPage"
 import ProductDetailPage from "./pages/ProductDetailPage"
-import PageNotFound from "./pages/NotFoundPage"
+import CartPage from "./pages/CartPage"
 import LoginPage from "./pages/LoginPage"
+import PageNotFound from "./pages/NotFoundPage"
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,6 +33,7 @@ function App() {
             <Route path="/all" element={<ProductsPage />} />
             <Route path="/product/:id" element={<ProductDetailPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/cart" element={<CartPage />} />
             {/*Handle Not Found Path*/}
             <Route path="*" element={<PageNotFound />} />
           </Route>

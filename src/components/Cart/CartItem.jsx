@@ -7,7 +7,7 @@ function CartItem() {
     <Item>
       <Thumbnail>
         <img
-          src="https://i1.sndcdn.com/artworks-Ly6oMdoj6JeXe7Bz-20jjYg-t1080x1080.jpg"
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9y4qVTWRdcPqIyq244Vg286eMw_fOY1Pisw&s"
           alt="Product"
         />
       </Thumbnail>
@@ -43,7 +43,8 @@ const Item = styled.tr`
 const Thumbnail = styled.td`
   img {
     width: 12rem;
-    height: auto;
+    height: 12rem;
+    object-fit: cover;
   }
 `
 const Detail = styled.td`
@@ -52,7 +53,7 @@ const Detail = styled.td`
 `
 
 const Type = styled.p`
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 600;
   color: var(--secondary-color);
 `
@@ -61,7 +62,7 @@ const ProductName = styled.p`
   font-size: 1.5rem;
 `
 const ItemName = styled.p`
-  font-size: 1.3rem;
+  font-size: 1.5rem;
 `
 
 const Price = styled.p`
@@ -76,7 +77,7 @@ const Remove = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   color: #d60000;
   border-bottom: 1px solid #d60000;
   margin-left: auto;

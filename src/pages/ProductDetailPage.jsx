@@ -2,7 +2,7 @@
 import styled from "styled-components"
 import ImageSwiper from "../components/Swiper/ImageSwiper/ImageSwiper"
 import ProductDetail from "../components/ProductDetail/ProductDetail"
-// import FeatureSwiper from "../ui/Swiper/FeatureSwiper/FeatureSwiper"
+import FeatureSwiper from "../components/Swiper/FeatureSwiper/FeatureSwiper"
 
 /*
 div
@@ -23,7 +23,7 @@ function Product() {
         <ImageSwiper />
         <ProductDetail />
       </MainContainer>
-      {/* <FeatureSwiper /> */}
+      <FeatureSwiper />
     </ProductContainer>
   )
 }

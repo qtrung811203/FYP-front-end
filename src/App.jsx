@@ -10,6 +10,7 @@ import ProductDetailPage from "./pages/ProductDetailPage"
 import CartPage from "./pages/CartPage"
 import LoginPage from "./pages/LoginPage"
 import PageNotFound from "./pages/NotFoundPage"
+import ScrollToTop from "./utils/scrollToTop"
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,6 +27,7 @@ function App() {
       <ReactQueryDevtools initialIsOpen={false} />
       <GlobalStyles />
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route element={<AppLayout />}>
             <Route index element={<Navigate replace to="home" />} />

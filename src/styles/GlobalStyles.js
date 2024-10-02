@@ -81,6 +81,10 @@ const GlobalStyles = createGlobalStyle`
   --font-size-sm: 1.2rem;
   --font-size-md: 1.4rem;
   --font-size-lg: 1.6rem;
+
+  /* color danger and success */
+  --color-danger: #d60000;
+  --color-success: #00a600;
 }
 
 *,

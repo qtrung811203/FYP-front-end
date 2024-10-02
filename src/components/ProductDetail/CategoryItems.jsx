@@ -1,6 +1,8 @@
 import styled from "styled-components"
 
 import { FaCartPlus } from "react-icons/fa"
+import { FaMinus } from "react-icons/fa"
+import { FaPlus } from "react-icons/fa"
 
 function CategoryItems() {
   return (
@@ -18,27 +20,18 @@ function CategoryItems() {
         <h4>Category 1</h4>
         <PriceEnd>
           <p>500.000 VND</p>
-          <CartIcon>
-            <FaCartPlus />
-          </CartIcon>
+          <Quantity>
+            <FaMinus />
+            <span>1</span>
+            <FaPlus />
+          </Quantity>
         </PriceEnd>
       </ItemStyled>
       <ItemStyled>
-        <h4>Category 1</h4>
+        <h4>Category 1 Category 1 Category 1 Category 1 Category 1 </h4>
         <PriceEnd>
           <p>500.000 VND</p>
-          <CartIcon>
-            <FaCartPlus />
-          </CartIcon>
-        </PriceEnd>
-      </ItemStyled>
-      <ItemStyled>
-        <h4>Category 1</h4>
-        <PriceEnd>
-          <p>500.000 VND</p>
-          <CartIcon>
-            <FaCartPlus />
-          </CartIcon>
+          <SoldOut>Sold Out</SoldOut>
         </PriceEnd>
       </ItemStyled>
     </CategoryItemsStyled>
@@ -48,11 +41,28 @@ function CategoryItems() {
 export default CategoryItems
 
 const CategoryItemsStyled = styled.div`
+  max-height: 500px;
+  overflow-y: auto;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+  padding-right: 2rem;
   gap: 10px;
   margin-top: 2rem;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    margin-left: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--primary-color);
+    border-radius: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
 `
 
 const ItemStyled = styled.div`
@@ -62,7 +72,6 @@ const ItemStyled = styled.div`
   justify-content: space-between;
   padding: 10px;
   width: calc(50% - 5px);
-  cursor: pointer;
   border: 1px solid transparent;
 
   h4 {
@@ -97,4 +106,32 @@ const CartIcon = styled.div`
   height: 30px;
   background: var(--secondary-color);
   border-radius: 50%;
+`
+
+//Quantity for each item
+const Quantity = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--secondary-color);
+  padding: 8px 9px;
+  border-radius: 14px;
+  height: 28px;
+  width: 92px;
+  background: #fff;
+
+  svg {
+    color: var(--secondary-color);
+  }
+`
+
+//Sold out
+const SoldOut = styled.div`
+  color: white;
+  font-size: 1.5rem;
+  background-color: #aaaaaa;
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: 30px;
+  text-transform: uppercase;
 `

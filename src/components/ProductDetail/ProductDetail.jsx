@@ -7,8 +7,6 @@ import PurchaseButton from "./PurchaseButton"
   SalePreiod
   Title
   CategoryBox
-
-
 */
 
 function ProductDetail() {

@@ -9,7 +9,9 @@ import ProductsPage from "./pages/ProductsPage"
 import ProductDetailPage from "./pages/ProductDetailPage"
 import CartPage from "./pages/CartPage"
 import LoginPage from "./pages/LoginPage"
+import SignupPage from "./pages/SignupPage"
 import PageNotFound from "./pages/NotFoundPage"
+
 import ScrollToTop from "./utils/scrollToTop"
 
 const queryClient = new QueryClient({
@@ -36,6 +38,7 @@ function App() {
             <Route path="/product/:id" element={<ProductDetailPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/cart" element={<CartPage />} />
+            <Route path="signup" element={<SignupPage />} />
             {/*Handle Not Found Path*/}
             <Route path="*" element={<PageNotFound />} />
           </Route>

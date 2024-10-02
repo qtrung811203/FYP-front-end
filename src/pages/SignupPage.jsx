@@ -1,22 +1,35 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
 import styled from "styled-components"
+import { Link } from "react-router-dom"
 
-export default function LoginPage() {
+export default function SignUpPage() {
+  const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    // Here you would typically handle the login logic
-    console.log("Login attempt with:", { email, password })
+    // Here you would typically handle the sign-up logic
+    console.log("Sign-up attempt with:", { name, email, password, confirmPassword })
   }
 
   return (
     <PageContainer>
-      <LoginCard>
-        <Title>Log In</Title>
+      <SignUpCard>
+        <Title>Sign Up</Title>
         <Form onSubmit={handleSubmit}>
+          <div>
+            <Label htmlFor="name">Name</Label>
+            <Input
+              id="name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              placeholder="Enter your name"
+            />
+          </div>
           <div>
             <Label htmlFor="email">Email</Label>
             <Input
@@ -36,16 +49,26 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              placeholder="Enter your password"
+              placeholder="Create a password"
             />
           </div>
-          <ForgotPassword href="/forgot-password">Forgot password?</ForgotPassword>
-          <Button type="submit">Log In</Button>
+          <div>
+            <Label htmlFor="confirmPassword">Confirm Password</Label>
+            <Input
+              id="confirmPassword"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              placeholder="Confirm your password"
+            />
+          </div>
+          <Button type="submit">Sign Up</Button>
         </Form>
-        <SignUpPrompt>
-          Don&apos;t have an account? <SignUpLink to="/signup">Sign up</SignUpLink>
-        </SignUpPrompt>
-      </LoginCard>
+        <LoginPrompt>
+          Already have an account? <LoginLink to="/login">Log in</LoginLink>
+        </LoginPrompt>
+      </SignUpCard>
     </PageContainer>
   )
 }
@@ -54,6 +77,7 @@ const PageContainer = styled.div`
   display: flex;
   position: fixed;
   width: 100%;
+  padding: 50px 0;
   justify-content: center;
   align-items: center;
   min-height: 60vh;
@@ -61,7 +85,7 @@ const PageContainer = styled.div`
   font-size: 1.6rem;
 `
 
-const LoginCard = styled.div`
+const SignUpCard = styled.div`
   background-color: var(--off-white);
   border-radius: 12px;
   padding: 2.5rem;
@@ -112,7 +136,7 @@ const Button = styled.button`
   border: none;
   padding: 1rem;
   border-radius: 6px;
-  font-size: 1.6rem; // 20px
+  font-size: 1.6rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
 
@@ -126,25 +150,14 @@ const Button = styled.button`
   }
 `
 
-const ForgotPassword = styled.a`
-  color: var(--medium-sage);
-  text-align: right;
-  font-size: 1.4rem; // 16px
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-  }
-`
-
-const SignUpPrompt = styled.p`
+const LoginPrompt = styled.p`
   color: var(--medium-gray);
   text-align: center;
   margin-top: 1.5rem;
-  font-size: 1.4rem; // 16px
+  font-size: 1.4rem;
 `
 
-const SignUpLink = styled(Link)`
+const LoginLink = styled(Link)`
   color: var(--warm-accent);
   text-decoration: none;
   font-weight: bold;

@@ -9,7 +9,7 @@ import Sub from "./Sub"
 // import product from "../../../data/productDetail"
 // import data from "../../../data/data"
 
-function ImageSwiper({ data }) {
+function ImageSwiper({ images: data }) {
   const [thumbsSwiper, setThumbsSwiper] = useState(null)
   return (
     <SwiperContainer>

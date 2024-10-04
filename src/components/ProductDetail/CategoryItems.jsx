@@ -1,21 +1,34 @@
+/* eslint-disable react/prop-types */
 import styled from "styled-components"
 
 import { FaCartPlus } from "react-icons/fa"
 import { FaMinus } from "react-icons/fa"
 import { FaPlus } from "react-icons/fa"
 
-function CategoryItems() {
+import { formatCurrency } from "../../utils/formatCurrency"
+
+function CategoryItems({ items }) {
+  if (!items) return null
   return (
     <CategoryItemsStyled>
-      <ItemStyled>
-        <h4>Category 1 Category 1 Category 1 Category 1 Category 1 </h4>
-        <PriceEnd>
-          <p>500.000 VND</p>
-          <CartIcon>
-            <FaCartPlus />
-          </CartIcon>
-        </PriceEnd>
-      </ItemStyled>
+      {items.items.map((item, index) => {
+        return (
+          <ItemStyled key={index}>
+            <h4>{item.name}</h4>
+            <PriceEnd>
+              <p>{formatCurrency(item.price)}</p>
+              {item.stock === 0 ? (
+                <SoldOut>Sold Out</SoldOut>
+              ) : (
+                <CartIcon>
+                  <FaCartPlus />
+                </CartIcon>
+              )}
+            </PriceEnd>
+          </ItemStyled>
+        )
+      })}
+      {/* Test If HAVE QUANTITY*/}
       <ItemStyled>
         <h4>Category 1</h4>
         <PriceEnd>
@@ -25,13 +38,6 @@ function CategoryItems() {
             <span>1</span>
             <FaPlus />
           </Quantity>
-        </PriceEnd>
-      </ItemStyled>
-      <ItemStyled>
-        <h4>Category 1 Category 1 Category 1 Category 1 Category 1 </h4>
-        <PriceEnd>
-          <p>500.000 VND</p>
-          <SoldOut>Sold Out</SoldOut>
         </PriceEnd>
       </ItemStyled>
     </CategoryItemsStyled>

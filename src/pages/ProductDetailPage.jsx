@@ -9,17 +9,6 @@ import ProductDetail from "../components/ProductDetail/ProductDetail"
 //API
 import { getProductBySlug } from "../services/apiProduct"
 
-/*
-div
-- imageDiv
-- detailDiv
-  - timeDiv
-  - titleDiv
-  - description
-  - CategoryDiv
-    - CategoryItem
-*/
-
 function Product() {
   const { slug } = useParams()
   const [product, setProduct] = useState(null)
@@ -40,7 +29,7 @@ function Product() {
   return (
     <ProductContainer>
       <MainContainer>
-        <ImageSwiper data={images} />
+        <ImageSwiper images={images} />
         <ProductDetail data={product} />
       </MainContainer>
       {/* <FeatureSwiper /> */}
@@ -50,6 +39,7 @@ function Product() {
 
 export default Product
 
+//CSS
 const ProductContainer = styled.div`
   margin-top: 5rem;
 `

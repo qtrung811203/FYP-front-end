@@ -1,16 +1,25 @@
+/* eslint-disable react/prop-types */
 import styled from "styled-components"
 
-function CategoryList() {
+function CategoryList({ items, category, setCategory }) {
+  const handleClick = (category) => {
+    setCategory(category)
+  }
+
   return (
     <CategoryListStyled>
       <CategoryUl>
-        <li className="isActive">Category 1</li>
-        <li>Category 2</li>
-        <li>Category 3</li>
-        <li>Category </li>
-        <li>Category </li>
-        <li>d</li>
-        <li>Category Super Longgggggggggggggg</li>
+        {items.map((item, index) => {
+          return (
+            <li
+              key={index}
+              className={category === item.category ? "isActive" : null}
+              onClick={() => handleClick(item.category)}
+            >
+              {item.category}
+            </li>
+          )
+        })}
       </CategoryUl>
     </CategoryListStyled>
   )

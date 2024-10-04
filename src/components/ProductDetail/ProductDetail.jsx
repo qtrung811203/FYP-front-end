@@ -11,7 +11,7 @@ import PurchaseButton from "./PurchaseButton"
 */
 
 function ProductDetail({ data }) {
-  console.log(data)
+  // console.log(data)
   if (!data) return null
   return (
     <ProductDetailContainer>
@@ -21,7 +21,7 @@ function ProductDetail({ data }) {
       <Title>
         <h1>{data.productInfo.name}</h1>
       </Title>
-      <CategoryContainer data={data.items} />
+      <CategoryContainer items={data.items} />
       <PurchaseButton />
     </ProductDetailContainer>
   )

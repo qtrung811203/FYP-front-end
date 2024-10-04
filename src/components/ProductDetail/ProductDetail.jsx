@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import styled from "styled-components"
 
 import CategoryContainer from "./CategoryContainer"
@@ -9,16 +10,18 @@ import PurchaseButton from "./PurchaseButton"
   CategoryBox
 */
 
-function ProductDetail() {
+function ProductDetail({ data }) {
+  console.log(data)
+  if (!data) return null
   return (
     <ProductDetailContainer>
       <SalePreiod>
-        <p>Sale</p>
+        <p>{data.productInfo.openTime}</p>
       </SalePreiod>
       <Title>
-        <h1>This is a Title This is a Title This is a Title This is a Title This is a Title</h1>
+        <h1>{data.productInfo.name}</h1>
       </Title>
-      <CategoryContainer />
+      <CategoryContainer data={data.items} />
       <PurchaseButton />
     </ProductDetailContainer>
   )

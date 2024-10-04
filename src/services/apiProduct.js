@@ -8,3 +8,12 @@ export async function getHomeProducts() {
     console.error(error)
   }
 }
+
+export async function getProductBySlug(slug) {
+  try {
+    const response = await axiosInstance.get(`/products/${slug}`)
+    return response.data
+  } catch (error) {
+    console.error(error)
+  }
+}

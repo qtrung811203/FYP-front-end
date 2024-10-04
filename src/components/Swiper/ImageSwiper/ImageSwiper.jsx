@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react"
 import styled from "styled-components"
 
@@ -6,9 +7,9 @@ import Sub from "./Sub"
 
 //Import Data
 // import product from "../../../data/productDetail"
-import data from "../../../data/data"
+// import data from "../../../data/data"
 
-function ImageSwiper() {
+function ImageSwiper({ data }) {
   const [thumbsSwiper, setThumbsSwiper] = useState(null)
   return (
     <SwiperContainer>

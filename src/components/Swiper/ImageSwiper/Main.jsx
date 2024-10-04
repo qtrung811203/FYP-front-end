@@ -4,6 +4,7 @@ import { FreeMode, Scrollbar, Thumbs } from "swiper/modules"
 import { Swiper, SwiperSlide } from "swiper/react"
 
 function Main({ thumbsSwiper, data }) {
+  if (!data) return null
   return (
     <SwiperStyled
       thumbs={thumbsSwiper ? { swiper: thumbsSwiper } : undefined}
@@ -14,9 +15,9 @@ function Main({ thumbsSwiper, data }) {
         draggable: true,
       }}
     >
-      {data.map((item) => (
-        <SwiperSlide key={item.id}>
-          <img src={item.img} />
+      {data.map((item, index) => (
+        <SwiperSlide key={index}>
+          <img src={item} />
         </SwiperSlide>
       ))}
     </SwiperStyled>
@@ -42,7 +43,8 @@ const SwiperStyled = styled(Swiper)`
   .swiper-scrollbar {
     position: absolute;
     height: var(--swiper-scrollbar-size, 2px);
-    width: 100%;
+    width: 90%;
+    left: 3rem;
 
     .swiper-scrollbar-drag {
       position: absolute;

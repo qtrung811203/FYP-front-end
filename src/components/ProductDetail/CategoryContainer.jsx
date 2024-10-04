@@ -12,7 +12,8 @@ CategoryBox
 
 */
 
-function CategoryContainer() {
+function CategoryContainer({ data }) {
+  console.log(data)
   return (
     <CategoryBoxStyled>
       <h3>Category</h3>

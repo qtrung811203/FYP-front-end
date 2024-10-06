@@ -30,7 +30,7 @@ function Product() {
     <ProductContainer>
       <MainContainer>
         <ImageSwiper images={images} />
-        <ProductDetail data={product} />
+        <ProductDetail product={product} />
       </MainContainer>
       {/* <FeatureSwiper /> */}
     </ProductContainer>

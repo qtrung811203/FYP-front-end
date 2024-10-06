@@ -1,17 +1,35 @@
 /* eslint-disable react/prop-types */
 import styled from "styled-components"
+import { useSelector, useDispatch } from "react-redux"
 
 import { FaCartPlus } from "react-icons/fa"
 import { FaMinus } from "react-icons/fa"
 import { FaPlus } from "react-icons/fa"
 
 import { formatCurrency } from "../../utils/formatCurrency"
+import { addToCart, removeFromCart } from "../../features/cartSlice"
 
-function CategoryItems({ items }) {
-  if (!items) return null
+function CategoryItems({ categoryItems }) {
+  const cart = useSelector((state) => state.cart)
+  const dispatch = useDispatch()
+
+  const handleAddToCart = (item) => {
+    dispatch(addToCart(item))
+  }
+
+  const handleRemoveFromCart = (id) => {
+    dispatch(removeFromCart(id))
+  }
+
+  const findItemInCart = (id) => {
+    return cart.items.find((item) => item._id === id)
+  }
+
+  if (!categoryItems) return null
   return (
     <CategoryItemsStyled>
-      {items.items.map((item, index) => {
+      {categoryItems.items.map((item, index) => {
+        const cartItem = findItemInCart(item._id)
         return (
           <ItemStyled key={index}>
             <h4>{item.name}</h4>
@@ -19,8 +37,14 @@ function CategoryItems({ items }) {
               <p>{formatCurrency(item.price)}</p>
               {item.stock === 0 ? (
                 <SoldOut>Sold Out</SoldOut>
+              ) : cartItem ? (
+                <Quantity>
+                  <MinusIcon onClick={() => handleRemoveFromCart(cartItem._id)} />
+                  <span>{cartItem.quantity}</span>
+                  <AddIcon onClick={() => handleAddToCart(item)} />
+                </Quantity>
               ) : (
-                <CartIcon>
+                <CartIcon onClick={() => handleAddToCart(item)}>
                   <FaCartPlus />
                 </CartIcon>
               )}
@@ -28,18 +52,6 @@ function CategoryItems({ items }) {
           </ItemStyled>
         )
       })}
-      {/* Test If HAVE QUANTITY*/}
-      <ItemStyled>
-        <h4>Category 1</h4>
-        <PriceEnd>
-          <p>500.000 VND</p>
-          <Quantity>
-            <FaMinus />
-            <span>1</span>
-            <FaPlus />
-          </Quantity>
-        </PriceEnd>
-      </ItemStyled>
     </CategoryItemsStyled>
   )
 }
@@ -104,6 +116,7 @@ const PriceEnd = styled.div`
 `
 const CartIcon = styled.div`
   display: flex;
+  cursor: pointer;
   align-items: center;
   justify-content: center;
   font-size: 1.8rem;
@@ -141,3 +154,13 @@ const SoldOut = styled.div`
   border-radius: 30px;
   text-transform: uppercase;
 `
+
+//Add Icon
+const AddIcon = styled(FaPlus)`
+  cursor: pointer;
+`
+
+const MinusIcon = styled(FaMinus)`
+  cursor: pointer;
+`
+//Remove Icon

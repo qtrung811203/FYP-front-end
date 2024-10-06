@@ -9,6 +9,7 @@ function CategoryContainer({ items }) {
   const [category, setCategory] = useState(items[0].category)
   const [categoryItems, setCategoryItems] = useState()
 
+  //Get items of one category
   useEffect(() => {
     const itemsFiltered = items.filter((item) => item.category === category)
     setCategoryItems(itemsFiltered[0])
@@ -18,7 +19,7 @@ function CategoryContainer({ items }) {
     <CategoryBoxStyled>
       <h3>Category</h3>
       <CategoryList items={items} category={category} setCategory={setCategory} />
-      <CategoryItems items={categoryItems} />
+      <CategoryItems categoryItems={categoryItems} />
     </CategoryBoxStyled>
   )
 }

@@ -10,18 +10,18 @@ import PurchaseButton from "./PurchaseButton"
   CategoryBox
 */
 
-function ProductDetail({ data }) {
-  // console.log(data)
-  if (!data) return null
+function ProductDetail({ product }) {
+  console.log(product)
+  if (!product) return null
   return (
     <ProductDetailContainer>
       <SalePreiod>
-        <p>{data.productInfo.openTime}</p>
+        <p>{product.productInfo.openTime}</p>
       </SalePreiod>
       <Title>
-        <h1>{data.productInfo.name}</h1>
+        <h1>{product.productInfo.name}</h1>
       </Title>
-      <CategoryContainer items={data.items} />
+      <CategoryContainer items={product.items} />
       <PurchaseButton />
     </ProductDetailContainer>
   )

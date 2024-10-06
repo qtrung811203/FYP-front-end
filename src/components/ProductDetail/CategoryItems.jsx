@@ -40,7 +40,7 @@ function CategoryItems({ categoryItems }) {
               ) : cartItem ? (
                 <Quantity>
                   <MinusIcon onClick={() => handleRemoveFromCart(cartItem._id)} />
-                  <span>{cartItem.quantity}</span>
+                  <ItemQuantity>{cartItem.quantity}</ItemQuantity>
                   <AddIcon onClick={() => handleAddToCart(item)} />
                 </Quantity>
               ) : (
@@ -160,7 +160,15 @@ const AddIcon = styled(FaPlus)`
   cursor: pointer;
 `
 
+//Remove Icon
 const MinusIcon = styled(FaMinus)`
   cursor: pointer;
 `
-//Remove Icon
+
+//Item Quantity
+const ItemQuantity = styled.span`
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+`

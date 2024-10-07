@@ -7,7 +7,6 @@ import { useSelector } from "react-redux"
 
 function HeaderCart() {
   const cart = useSelector((state) => state.cart)
-  console.log(cart)
 
   return (
     <LinkStyled to="/cart">

@@ -1,35 +1,38 @@
 import styled from "styled-components"
 
 import { FaRegTrashAlt } from "react-icons/fa"
+import { useSelector, useDispatch } from "react-redux"
+
+import { decreaseQuantity, increaseQuantity, removeFromCart } from "../../features/cartSlice"
 
 function CartItem() {
-  return (
-    <Item>
+  const cart = useSelector((state) => state.cart)
+  const dispatch = useDispatch()
+
+  return cart.items.map((item) => (
+    <Item key={item._id}>
       <Thumbnail>
-        <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9y4qVTWRdcPqIyq244Vg286eMw_fOY1Pisw&s"
-          alt="Product"
-        />
+        <img src={item.imageItem} alt="Product" />
       </Thumbnail>
       <Detail>
-        <Type>Product Type</Type>
-        <ProductName>Product Name</ProductName>
-        <ItemName>Item Name</ItemName>
-        <Price>200.000 VND</Price>
+        <Type>{item.category}</Type>
+        <ProductName>{item.name}</ProductName>
+        <ItemName>{item.name}</ItemName>
+        <Price>{item.price} VND</Price>
       </Detail>
       <Quantity>
-        <Remove>
+        <Remove onClick={() => dispatch(removeFromCart(item._id))}>
           <FaRegTrashAlt />
           Remove
         </Remove>
         <Control>
-          <button>-</button>
-          <ItemQuantity>1</ItemQuantity>
-          <button>+</button>
+          <button onClick={() => dispatch(decreaseQuantity(item._id))}>-</button>
+          <ItemQuantity>{item.quantity}</ItemQuantity>
+          <button onClick={() => dispatch(increaseQuantity(item._id))}>+</button>
         </Control>
       </Quantity>
     </Item>
-  )
+  ))
 }
 
 export default CartItem

@@ -7,7 +7,7 @@ import { FaMinus } from "react-icons/fa"
 import { FaPlus } from "react-icons/fa"
 
 import { formatCurrency } from "../../utils/formatCurrency"
-import { addToCart, removeFromCart } from "../../features/cartSlice"
+import { addToCart, increaseQuantity, decreaseQuantity } from "../../features/cartSlice"
 
 function CategoryItems({ categoryItems }) {
   const cart = useSelector((state) => state.cart)
@@ -17,8 +17,12 @@ function CategoryItems({ categoryItems }) {
     dispatch(addToCart(item))
   }
 
-  const handleRemoveFromCart = (id) => {
-    dispatch(removeFromCart(id))
+  const handleIncreaseQuantity = (id) => {
+    dispatch(increaseQuantity(id))
+  }
+
+  const handleDecreaseQuantity = (id) => {
+    dispatch(decreaseQuantity(id))
   }
 
   const findItemInCart = (id) => {
@@ -39,9 +43,9 @@ function CategoryItems({ categoryItems }) {
                 <SoldOut>Sold Out</SoldOut>
               ) : cartItem ? (
                 <Quantity>
-                  <MinusIcon onClick={() => handleRemoveFromCart(cartItem._id)} />
+                  <MinusIcon onClick={() => handleDecreaseQuantity(cartItem._id)} />
                   <ItemQuantity>{cartItem.quantity}</ItemQuantity>
-                  <AddIcon onClick={() => handleAddToCart(item)} />
+                  <AddIcon onClick={() => handleIncreaseQuantity(cartItem._id)} />
                 </Quantity>
               ) : (
                 <CartIcon onClick={() => handleAddToCart(item)}>
@@ -58,6 +62,7 @@ function CategoryItems({ categoryItems }) {
 
 export default CategoryItems
 
+//Styled Component
 const CategoryItemsStyled = styled.div`
   max-height: 500px;
   overflow-y: auto;

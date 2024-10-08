@@ -1,35 +1,46 @@
-// import { useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
+import { useEffect, useState } from "react"
+
 import styled from "styled-components"
 import ImageSwiper from "../components/Swiper/ImageSwiper/ImageSwiper"
 import ProductDetail from "../components/ProductDetail/ProductDetail"
-import FeatureSwiper from "../components/Swiper/FeatureSwiper/FeatureSwiper"
+// import FeatureSwiper from "../components/Swiper/FeatureSwiper/FeatureSwiper"
 
-/*
-div
-- imageDiv
-- detailDiv
-  - timeDiv
-  - titleDiv
-  - description
-  - CategoryDiv
-    - CategoryItem
-*/
+//API
+import { getProductBySlug } from "../services/apiProduct"
 
 function Product() {
-  // const { id } = useParams()
+  const { slug } = useParams()
+  const [product, setProduct] = useState(null)
+  const [images, setImages] = useState(null)
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const data = await getProductBySlug(slug)
+      console.log(data)
+      const productData = data.data[0]
+      setProduct(productData)
+
+      const combinedImages = [productData.productInfo.imageCover, ...productData.productInfo.images]
+      setImages(combinedImages)
+    }
+    fetchProduct()
+  }, [slug])
+
   return (
     <ProductContainer>
       <MainContainer>
-        <ImageSwiper />
-        <ProductDetail />
+        <ImageSwiper images={images} />
+        <ProductDetail product={product} />
       </MainContainer>
-      <FeatureSwiper />
+      {/* <FeatureSwiper /> */}
     </ProductContainer>
   )
 }
 
 export default Product
 
+//CSS
 const ProductContainer = styled.div`
   margin-top: 5rem;
 `

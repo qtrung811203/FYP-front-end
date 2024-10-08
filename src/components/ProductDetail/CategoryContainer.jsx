@@ -1,23 +1,25 @@
+/* eslint-disable react/prop-types */
 import styled from "styled-components"
 
 import CategoryList from "./CategoryList"
 import CategoryItems from "./CategoryItems"
+import { useEffect, useState } from "react"
 
-/*
+function CategoryContainer({ items }) {
+  const [category, setCategory] = useState(items[0].category)
+  const [categoryItems, setCategoryItems] = useState()
 
-CategoryBox
-- Header: Category
-- CategoryList
-- CategoryItem
+  //Get items of one category
+  useEffect(() => {
+    const itemsFiltered = items.filter((item) => item.category === category)
+    setCategoryItems(itemsFiltered[0])
+  }, [category, items])
 
-*/
-
-function CategoryContainer() {
   return (
     <CategoryBoxStyled>
       <h3>Category</h3>
-      <CategoryList />
-      <CategoryItems />
+      <CategoryList items={items} category={category} setCategory={setCategory} />
+      <CategoryItems categoryItems={categoryItems} />
     </CategoryBoxStyled>
   )
 }

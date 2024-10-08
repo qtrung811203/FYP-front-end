@@ -1,22 +1,28 @@
 import styled from "styled-components"
-
+import { useDispatch, useSelector } from "react-redux"
 import { FaRegTrashAlt } from "react-icons/fa"
 
+import { removeAllFromCart } from "../../features/cartSlice"
+import { formatCurrency } from "../../utils/formatCurrency"
+
 function CartFooter() {
+  const cart = useSelector((state) => state.cart)
+  const dispatch = useDispatch()
+
   return (
     <Footer>
       <CartInfo>
         <p>
-          Total: <span>8</span> items
+          Total: <span>{cart.totalQuantity}</span> items
         </p>
-        <RemoveAllLink>
+        <RemoveAllLink onClick={() => dispatch(removeAllFromCart())}>
           <FaRegTrashAlt />
           <p>Delete all products</p>
         </RemoveAllLink>
       </CartInfo>
       <SubTotal>
         <h3>SUBTOTAL</h3>
-        <p>200.000 VND </p>
+        <p>{formatCurrency(cart.totalPrice)}</p>
       </SubTotal>
       <Checkout>
         <button>Checkout</button>

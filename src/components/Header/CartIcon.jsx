@@ -1,12 +1,19 @@
-import { FaShoppingCart } from "react-icons/fa"
 import { Link } from "react-router-dom"
 import styled from "styled-components"
+import { Badge } from "@mui/material"
+
+import { FaShoppingCart } from "react-icons/fa"
+import { useSelector } from "react-redux"
 
 function HeaderCart() {
+  const cart = useSelector((state) => state.cart)
+
   return (
     <LinkStyled to="/cart">
       <StyledHeaderCart>
-        <FaShoppingCart />
+        <StyledBadge badgeContent={cart.totalQuantity} color="error">
+          <FaShoppingCart />
+        </StyledBadge>
       </StyledHeaderCart>
     </LinkStyled>
   )
@@ -32,5 +39,13 @@ const StyledHeaderCart = styled.div`
   svg {
     height: 5rem;
     width: 2.5rem;
+  }
+`
+
+const StyledBadge = styled(Badge)`
+  & .MuiBadge-badge {
+    top: 12px;
+    padding: 0 8px;
+    font-size: 1.2rem;
   }
 `

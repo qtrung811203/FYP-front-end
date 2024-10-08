@@ -1,45 +1,57 @@
+/* eslint-disable react/prop-types */
 import styled from "styled-components"
+import { useSelector, useDispatch } from "react-redux"
 
 import { FaCartPlus } from "react-icons/fa"
 import { FaMinus } from "react-icons/fa"
 import { FaPlus } from "react-icons/fa"
 
-function CategoryItems() {
+import { formatCurrency } from "../../utils/formatCurrency"
+import { addToCart, increaseQuantity, decreaseQuantity } from "../../features/cartSlice"
+
+function CategoryItems({ categoryItems }) {
+  const cart = useSelector((state) => state.cart)
+  const dispatch = useDispatch()
+
+  const findItemInCart = (id) => {
+    return cart.items.find((item) => item._id === id)
+  }
+
+  if (!categoryItems) return null
+
   return (
     <CategoryItemsStyled>
-      <ItemStyled>
-        <h4>Category 1 Category 1 Category 1 Category 1 Category 1 </h4>
-        <PriceEnd>
-          <p>500.000 VND</p>
-          <CartIcon>
-            <FaCartPlus />
-          </CartIcon>
-        </PriceEnd>
-      </ItemStyled>
-      <ItemStyled>
-        <h4>Category 1</h4>
-        <PriceEnd>
-          <p>500.000 VND</p>
-          <Quantity>
-            <FaMinus />
-            <span>1</span>
-            <FaPlus />
-          </Quantity>
-        </PriceEnd>
-      </ItemStyled>
-      <ItemStyled>
-        <h4>Category 1 Category 1 Category 1 Category 1 Category 1 </h4>
-        <PriceEnd>
-          <p>500.000 VND</p>
-          <SoldOut>Sold Out</SoldOut>
-        </PriceEnd>
-      </ItemStyled>
+      {categoryItems.items.map((item, index) => {
+        const cartItem = findItemInCart(item._id)
+        return (
+          <ItemStyled key={index}>
+            <h4>{item.name}</h4>
+            <PriceEnd>
+              <p>{formatCurrency(item.price)}</p>
+              {item.stock === 0 ? (
+                <SoldOut>Sold Out</SoldOut>
+              ) : cartItem ? (
+                <Quantity>
+                  <MinusIcon onClick={() => dispatch(decreaseQuantity(cartItem._id))} />
+                  <ItemQuantity>{cartItem.quantity}</ItemQuantity>
+                  <AddIcon onClick={() => dispatch(increaseQuantity(cartItem._id))} />
+                </Quantity>
+              ) : (
+                <CartIcon onClick={() => dispatch(addToCart(item))}>
+                  <FaCartPlus />
+                </CartIcon>
+              )}
+            </PriceEnd>
+          </ItemStyled>
+        )
+      })}
     </CategoryItemsStyled>
   )
 }
 
 export default CategoryItems
 
+//Styled Component
 const CategoryItemsStyled = styled.div`
   max-height: 500px;
   overflow-y: auto;
@@ -98,6 +110,7 @@ const PriceEnd = styled.div`
 `
 const CartIcon = styled.div`
   display: flex;
+  cursor: pointer;
   align-items: center;
   justify-content: center;
   font-size: 1.8rem;
@@ -134,4 +147,22 @@ const SoldOut = styled.div`
   padding: 5px 10px;
   border-radius: 30px;
   text-transform: uppercase;
+`
+
+//Add Icon
+const AddIcon = styled(FaPlus)`
+  cursor: pointer;
+`
+
+//Remove Icon
+const MinusIcon = styled(FaMinus)`
+  cursor: pointer;
+`
+
+//Item Quantity
+const ItemQuantity = styled.span`
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 `

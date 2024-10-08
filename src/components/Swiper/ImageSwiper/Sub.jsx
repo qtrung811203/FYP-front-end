@@ -4,6 +4,7 @@ import { FreeMode, Thumbs } from "swiper/modules"
 import { Swiper, SwiperSlide } from "swiper/react"
 
 function Sub({ setThumbsSwiper, data }) {
+  if (!data) return null
   return (
     <SwiperStyled
       onSwiper={setThumbsSwiper}
@@ -13,9 +14,9 @@ function Sub({ setThumbsSwiper, data }) {
       watchSlidesProgress={true}
       modules={[FreeMode, Thumbs]}
     >
-      {data.map((item) => (
-        <SwiperSlideStyled key={item.id}>
-          <img src={item.img} />
+      {data.map((item, index) => (
+        <SwiperSlideStyled key={index}>
+          <img src={item} />
         </SwiperSlideStyled>
       ))}
     </SwiperStyled>

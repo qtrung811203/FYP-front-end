@@ -17,6 +17,7 @@ function Product() {
   useEffect(() => {
     const fetchProduct = async () => {
       const data = await getProductBySlug(slug)
+      console.log(data)
       const productData = data.data[0]
       setProduct(productData)
 

@@ -13,23 +13,12 @@ function CategoryItems({ categoryItems }) {
   const cart = useSelector((state) => state.cart)
   const dispatch = useDispatch()
 
-  const handleAddToCart = (item) => {
-    dispatch(addToCart(item))
-  }
-
-  const handleIncreaseQuantity = (id) => {
-    dispatch(increaseQuantity(id))
-  }
-
-  const handleDecreaseQuantity = (id) => {
-    dispatch(decreaseQuantity(id))
-  }
-
   const findItemInCart = (id) => {
     return cart.items.find((item) => item._id === id)
   }
 
   if (!categoryItems) return null
+
   return (
     <CategoryItemsStyled>
       {categoryItems.items.map((item, index) => {
@@ -43,12 +32,12 @@ function CategoryItems({ categoryItems }) {
                 <SoldOut>Sold Out</SoldOut>
               ) : cartItem ? (
                 <Quantity>
-                  <MinusIcon onClick={() => handleDecreaseQuantity(cartItem._id)} />
+                  <MinusIcon onClick={() => dispatch(decreaseQuantity(cartItem._id))} />
                   <ItemQuantity>{cartItem.quantity}</ItemQuantity>
-                  <AddIcon onClick={() => handleIncreaseQuantity(cartItem._id)} />
+                  <AddIcon onClick={() => dispatch(increaseQuantity(cartItem._id))} />
                 </Quantity>
               ) : (
-                <CartIcon onClick={() => handleAddToCart(item)}>
+                <CartIcon onClick={() => dispatch(addToCart(item))}>
                   <FaCartPlus />
                 </CartIcon>
               )}

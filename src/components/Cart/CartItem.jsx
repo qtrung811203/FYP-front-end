@@ -1,13 +1,22 @@
 import styled from "styled-components"
-
+import { Link } from "react-router-dom"
 import { FaRegTrashAlt } from "react-icons/fa"
 import { useSelector, useDispatch } from "react-redux"
 
+import { formatCurrency } from "../../utils/formatCurrency"
 import { decreaseQuantity, increaseQuantity, removeFromCart } from "../../features/cartSlice"
 
 function CartItem() {
   const cart = useSelector((state) => state.cart)
   const dispatch = useDispatch()
+
+  if (cart.items.length === 0) {
+    return (
+      <tr>
+        <EmptyCart>Your cart is empty</EmptyCart>
+      </tr>
+    )
+  }
 
   return cart.items.map((item) => (
     <Item key={item._id}>
@@ -16,9 +25,9 @@ function CartItem() {
       </Thumbnail>
       <Detail>
         <Type>{item.category}</Type>
-        <ProductName>{item.name}</ProductName>
+        <ProductName to={`/product/${item.slug}`}>{item.productName}</ProductName>
         <ItemName>{item.name}</ItemName>
-        <Price>{item.price} VND</Price>
+        <Price>{formatCurrency(item.price)}</Price>
       </Detail>
       <Quantity>
         <Remove onClick={() => dispatch(removeFromCart(item._id))}>
@@ -59,10 +68,13 @@ const Type = styled.p`
   font-size: 1.3rem;
   font-weight: 600;
   color: var(--secondary-color);
+  text-transform: uppercase;
 `
 
-const ProductName = styled.p`
+const ProductName = styled(Link)`
   font-size: 1.5rem;
+  font-weight: 500;
+  cursor: pointer;
 `
 const ItemName = styled.p`
   font-size: 1.5rem;
@@ -115,4 +127,9 @@ const ItemQuantity = styled.span`
   border-left: 1px solid #e2e2e2;
   color: #516677;
   width: 77px;
+`
+
+const EmptyCart = styled.td`
+  font-size: 1.5rem;
+  text-align: center;
 `

@@ -1,13 +1,30 @@
 import styled from "styled-components"
+import { loadStripe } from "@stripe/stripe-js"
 import { useDispatch, useSelector } from "react-redux"
 import { FaRegTrashAlt } from "react-icons/fa"
 
 import { removeAllFromCart } from "../../features/cartSlice"
 import { formatCurrency } from "../../utils/formatCurrency"
+import { checkout } from "../../services/checkout"
+
+const stripePromise = loadStripe(
+  "pk_test_51Q7T5KHxv792P1FeVX2530832RhslIDMtKZbqcDFOmoCrK76ZUeoJgDvyVgPZaxlzLi1xLKQcH0hMIjkuN6Jqx2D00FleKVO8J"
+)
 
 function CartFooter() {
   const cart = useSelector((state) => state.cart)
   const dispatch = useDispatch()
+
+  //Handle checkout
+  const handleCheckout = async () => {
+    try {
+      const response = await checkout({ items: cart.items })
+      const stripe = await stripePromise
+      stripe.redirectToCheckout({ sessionId: response })
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   return (
     <Footer>
@@ -25,7 +42,13 @@ function CartFooter() {
         <p>{formatCurrency(cart.totalPrice)}</p>
       </SubTotal>
       <Checkout>
-        <button>Checkout</button>
+        <button
+          onClick={() => {
+            handleCheckout()
+          }}
+        >
+          Checkout
+        </button>
       </Checkout>
     </Footer>
   )

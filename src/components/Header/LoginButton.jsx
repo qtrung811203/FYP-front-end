@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom"
 import styled from "styled-components"
+import { Link } from "react-router-dom"
 
 function LoginButton() {
   return (
@@ -11,6 +11,7 @@ function LoginButton() {
 
 export default LoginButton
 
+//Styled Components
 const LoginStyled = styled.div`
   font-family: "Viga", sans-serif;
   width: 12rem;

@@ -25,6 +25,7 @@ function Sub({ setThumbsSwiper, data }) {
 
 export default Sub
 
+//Styled Components
 const SwiperStyled = styled(Swiper)`
   margin-top: -13rem;
 

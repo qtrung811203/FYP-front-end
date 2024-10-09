@@ -24,6 +24,7 @@ function Header() {
 
 export default Header
 
+//Styled Components
 const StyledHeader = styled.header`
   position: sticky;
   top: 0;

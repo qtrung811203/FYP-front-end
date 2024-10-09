@@ -1,12 +1,13 @@
+import styled from "styled-components"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Autoplay, FreeMode } from "swiper/modules"
-import styled from "styled-components"
 import "swiper/css"
 
 import Heading from "./Heading"
 import CustomSlider from "../CustomSlider"
 import RandomNumber from "./RandomNumber"
 
+//Sample data
 import data from "../../../data/data"
 
 function EndSwiper() {
@@ -41,7 +42,7 @@ function EndSwiper() {
 
 export default EndSwiper
 
-//CSS
+//Styled Components
 const EndContainer = styled.div`
   position: relative;
   height: 62rem;

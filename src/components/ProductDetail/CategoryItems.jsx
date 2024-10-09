@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import styled from "styled-components"
 import { useSelector, useDispatch } from "react-redux"
-
 import { FaCartPlus } from "react-icons/fa"
 import { FaMinus } from "react-icons/fa"
 import { FaPlus } from "react-icons/fa"
@@ -13,10 +12,12 @@ function CategoryItems({ categoryItems }) {
   const cart = useSelector((state) => state.cart)
   const dispatch = useDispatch()
 
+  //Find item in cart
   const findItemInCart = (id) => {
     return cart.items.find((item) => item._id === id)
   }
 
+  //If there is no categoryItems return null
   if (!categoryItems) return null
 
   return (

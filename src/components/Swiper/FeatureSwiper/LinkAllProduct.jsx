@@ -13,6 +13,7 @@ function LinkAllProduct() {
 
 export default LinkAllProduct
 
+//Styled Component
 const LinkStyled = styled(Link)`
   display: flex;
   align-items: center;

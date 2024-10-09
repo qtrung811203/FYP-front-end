@@ -4,14 +4,8 @@ import styled from "styled-components"
 import CategoryContainer from "./CategoryContainer"
 import PurchaseButton from "./PurchaseButton"
 
-/*
-  SalePreiod
-  Title
-  CategoryBox
-*/
-
 function ProductDetail({ product }) {
-  console.log(product)
+  //If there is no product return null => maybe change to loading spinner
   if (!product) return null
   return (
     <ProductDetailContainer>
@@ -29,7 +23,7 @@ function ProductDetail({ product }) {
 
 export default ProductDetail
 
-//CSS
+//Styled Components
 const ProductDetailContainer = styled.div`
   width: 100%;
   /* border: 1px solid #e2e2e2; */

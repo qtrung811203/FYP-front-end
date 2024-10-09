@@ -1,27 +1,17 @@
 /* eslint-disable react/prop-types */
+import styled from "styled-components"
+import { Link } from "react-router-dom"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Scrollbar, Navigation } from "swiper/modules"
 import "swiper/css"
 import "swiper/css/scrollbar"
 import "swiper/css/navigation"
-import styled from "styled-components"
 
 import HeaderSwiper from "./HeaderSwiper"
 import CustomSlider from "../CustomSlider"
 import LinkAllProduct from "./LinkAllProduct"
-// import data from "../../../data/data"
-import { Link } from "react-router-dom"
-// import data from "../Swiper/data"
-
-/* 
-<FeatureSwiper data={data} mainColor={color}>
-  <icon></icon>
-  <p>TITLE</p>
-</FeatureSwiper>
-*/
 
 function FeatureSwiper({ children, mainColor, isNew, data }) {
-  console.log(data)
   return (
     <ContainerStyled>
       <HeaderSwiper color={mainColor}>{children}</HeaderSwiper>
@@ -56,7 +46,7 @@ function FeatureSwiper({ children, mainColor, isNew, data }) {
 
 export default FeatureSwiper
 
-//CSS
+//Styled Components
 //Container
 const ContainerStyled = styled.div`
   padding: 10rem 0;

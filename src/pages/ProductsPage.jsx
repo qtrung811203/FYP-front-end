@@ -1,13 +1,8 @@
 import styled from "styled-components"
+
 import FilterSidebar from "../components/Products/FilterSidebar"
 import ProductsList from "../components/Products/ProductsList"
 import Title from "../components/Products/Title"
-
-/*
-  PageContainer
-  - Filter
-  - ProductList
-*/
 
 function ProductsPage() {
   return (
@@ -21,6 +16,7 @@ function ProductsPage() {
 
 export default ProductsPage
 
+//Styled Components
 const PageContainer = styled.div`
   margin-top: 5rem;
   display: grid;

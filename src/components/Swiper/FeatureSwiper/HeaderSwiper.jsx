@@ -16,7 +16,7 @@ function HeaderSwiper({ children, color }) {
 
 export default HeaderSwiper
 
-//CSS
+//Styled Components
 const HeaderStyled = styled.div`
   display: flex;
   align-items: center;

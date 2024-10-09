@@ -1,5 +1,6 @@
-import { useState } from "react"
 import styled from "styled-components"
+import { useState } from "react"
+
 import Main from "./Main"
 import Sub from "./Sub"
 
@@ -16,6 +17,7 @@ function TopSwiper() {
 
 export default TopSwiper
 
+//Styled Components
 const TopContainer = styled.div`
   height: 553px;
   padding-top: 33px;

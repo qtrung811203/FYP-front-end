@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 
 import { getCheckoutSession } from "../services/checkout"
-
 import NotFoundPage from "./NotFoundPage"
 
 function CheckoutSuccessPage() {

@@ -1,6 +1,19 @@
 import { Link } from "react-router-dom"
 import styled from "styled-components"
 
+export default function Custom404() {
+  return (
+    <>
+      <Container>
+        <Title>404</Title>
+        <Subtitle>Oops! Page not found</Subtitle>
+        <StyledLink to="/">Go back home</StyledLink>
+      </Container>
+    </>
+  )
+}
+
+//Styled Components
 const Container = styled.div`
   display: flex;
   position: fixed;
@@ -39,15 +52,3 @@ const StyledLink = styled(Link)`
     color: var(--fourth-color);
   }
 `
-
-export default function Custom404() {
-  return (
-    <>
-      <Container>
-        <Title>404</Title>
-        <Subtitle>Oops! Page not found</Subtitle>
-        <StyledLink to="/">Go back home</StyledLink>
-      </Container>
-    </>
-  )
-}

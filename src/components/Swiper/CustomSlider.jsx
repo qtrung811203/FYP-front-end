@@ -21,6 +21,7 @@ function CustomSlider({ data, isNew, border, small }) {
 
 export default CustomSlider
 
+//Styled Components
 const CustomCard = styled.div`
   position: relative;
   height: 37.8rem;

@@ -12,6 +12,8 @@ import CartPage from "./pages/CartPage"
 import LoginPage from "./pages/LoginPage"
 import SignupPage from "./pages/SignupPage"
 import PageNotFound from "./pages/NotFoundPage"
+import CheckoutSuccessPage from "./pages/CheckoutSuccessPage"
+import CheckoutCancelPage from "./pages/CheckoutCancelPage"
 
 import ScrollToTop from "./utils/scrollToTop"
 
@@ -43,7 +45,9 @@ function App() {
               <Route path="/product/:slug" element={<ProductDetailPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/cart" element={<CartPage />} />
-              <Route path="signup" element={<SignupPage />} />
+              <Route path="/signup" element={<SignupPage />} />
+              <Route path="/sucess/:sessionId" element={<CheckoutSuccessPage />} />
+              <Route path="/cancel" element={<CheckoutCancelPage />} />
               {/*Handle Not Found Path*/}
               <Route path="*" element={<PageNotFound />} />
             </Route>

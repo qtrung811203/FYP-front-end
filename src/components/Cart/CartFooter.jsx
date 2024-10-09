@@ -2,6 +2,8 @@ import styled from "styled-components"
 import { loadStripe } from "@stripe/stripe-js"
 import { useDispatch, useSelector } from "react-redux"
 import { FaRegTrashAlt } from "react-icons/fa"
+import { useState } from "react"
+import CircularProgress from "@mui/material/CircularProgress"
 
 import { removeAllFromCart } from "../../features/cartSlice"
 import { formatCurrency } from "../../utils/formatCurrency"
@@ -14,10 +16,12 @@ const stripePromise = loadStripe(
 function CartFooter() {
   const cart = useSelector((state) => state.cart)
   const dispatch = useDispatch()
+  const [checkoutLoading, setCheckoutLoading] = useState(false)
 
   //Handle checkout
   const handleCheckout = async () => {
     try {
+      setCheckoutLoading(true)
       const response = await checkout({ items: cart.items })
       const stripe = await stripePromise
       stripe.redirectToCheckout({ sessionId: response })
@@ -47,7 +51,7 @@ function CartFooter() {
             handleCheckout()
           }}
         >
-          Checkout
+          {checkoutLoading ? <CircularProgress color="white" /> : "Checkout"}
         </button>
       </Checkout>
     </Footer>

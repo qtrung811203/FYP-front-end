@@ -1,10 +1,10 @@
 import axiosInstance from "../config/axiosConfig"
 
 //Checkout Function
-export async function checkout({ items }) {
+export async function checkout({ user, items }) {
   try {
-    const response = await axiosInstance.post("/checkout/create-checkout-session", { items })
-    return response.data.session.id
+    const response = await axiosInstance.post("/checkout/create-checkout-session", { user, items })
+    return response.data.sessionId
   } catch (error) {
     console.error(error)
   }

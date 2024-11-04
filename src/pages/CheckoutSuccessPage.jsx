@@ -2,7 +2,7 @@ import styled from "styled-components"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 
-import { getCheckoutSession } from "../services/checkout"
+import { getCheckoutSession } from "../services/apiCheckout"
 import successIcon from "../assets/success.svg"
 import NotFoundPage from "./NotFoundPage"
 

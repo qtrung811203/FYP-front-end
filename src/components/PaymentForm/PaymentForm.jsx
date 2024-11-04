@@ -1,6 +1,9 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from "react"
 import styled from "styled-components"
+import { loadStripe } from "@stripe/stripe-js"
+import { useSelector } from "react-redux"
+import CircularProgress from "@mui/material/CircularProgress"
 
 import DropList from "./DropList"
 import {
@@ -8,11 +11,19 @@ import {
   getDistrictsByProvinceId,
   getWardsByDistrictId,
 } from "../../services/apiLocation"
+import { checkout } from "../../services/apiCheckout"
+
+const stripePromise = loadStripe(
+  "pk_test_51Q7T5KHxv792P1FeVX2530832RhslIDMtKZbqcDFOmoCrK76ZUeoJgDvyVgPZaxlzLi1xLKQcH0hMIjkuN6Jqx2D00FleKVO8J"
+)
 
 export default function PaymentForm({ isOpen, onClose }) {
   const [provinces, setProvinces] = useState([])
   const [districts, setDistricts] = useState([])
   const [wards, setWards] = useState([])
+  const [loading, setLoading] = useState(false)
+
+  const cart = useSelector((state) => state.cart)
 
   const [formData, setFormData] = useState({
     email: "",
@@ -26,6 +37,7 @@ export default function PaymentForm({ isOpen, onClose }) {
     paymentMethod: "stripe",
   })
 
+  // Fetch provinces data
   useEffect(() => {
     const fetchData = async () => {
       const data = await getProvinces()
@@ -34,15 +46,16 @@ export default function PaymentForm({ isOpen, onClose }) {
     fetchData()
   }, [])
 
+  // Handle form input change
   const handleChange = (e) => {
     const { name, value } = e.target
-    console.log(name, value)
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }))
   }
 
+  // Handle select change
   const handleSelectChange = async (name, id, value) => {
     setFormData((prevState) => ({
       ...prevState,
@@ -51,6 +64,7 @@ export default function PaymentForm({ isOpen, onClose }) {
       ...(name === "district" && { ward: "" }),
     }))
 
+    // Fetch districts or wards data
     if (name === "province") {
       const fetchedDistricts = await getDistrictsByProvinceId(id)
       setDistricts(fetchedDistricts || [])
@@ -62,17 +76,32 @@ export default function PaymentForm({ isOpen, onClose }) {
     }
   }
 
+  // Handle close modal
   const handleCloseModal = (e) => {
     if (e.target === e.currentTarget) {
       onClose()
     }
   }
 
-  const handleSubmit = (e) => {
+  // Handle form submit
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log("Form data submitted:", formData)
-    // Xử lý gửi dữ liệu form ở đây
-    onClose()
+    if (formData.paymentMethod === "cod") {
+      console.log("Cash on delivery")
+      // Handle cash on delivery
+      onClose()
+    } else {
+      try {
+        setLoading(true)
+        const response = await checkout({ user: formData, items: cart.items })
+        const stripe = await stripePromise
+        stripe.redirectToCheckout({ sessionId: response })
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setLoading(false)
+      }
+    }
   }
 
   if (!isOpen) return null
@@ -163,21 +192,16 @@ export default function PaymentForm({ isOpen, onClose }) {
               Cash on deliverys
             </label>
           </RadioGroup>
-          <Button type="submit">Thanh toán</Button>
+          <Button type="submit">
+            {loading ? <CircularProgress color="white" size={20} /> : "Checkout"}
+          </Button>
         </Form>
       </ModalContent>
     </ModalOverlay>
   )
 }
 
-const colors = {
-  primaryColor: "#16423C",
-  secondaryColor: "#6A9C89",
-  thirdColor: "#C4DAD2",
-  fourthColor: "#E9EFEC",
-  warmAccent: "#D68060",
-}
-
+// Styles Components
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -192,7 +216,7 @@ const ModalOverlay = styled.div`
 `
 
 const ModalContent = styled.div`
-  background-color: ${colors.fourthColor};
+  background-color: var(--fourth-color);
   padding: 20px;
   border-radius: 8px;
   max-width: 500px;
@@ -211,22 +235,22 @@ const Form = styled.form`
 
 const Input = styled.input`
   padding: 10px;
-  border: 1px solid ${colors.thirdColor};
+  border: 1px solid var(--third-color);
   border-radius: 4px;
   &:focus {
     outline: none;
-    border-color: ${colors.secondaryColor};
+    border-color: var(--secondary-color);
   }
 `
 
 const TextArea = styled.textarea`
   padding: 10px;
-  border: 1px solid ${colors.thirdColor};
+  border: 1px solid var(--third-color);
   border-radius: 4px;
   resize: vertical;
   &:focus {
     outline: none;
-    border-color: ${colors.secondaryColor};
+    border-color: var(--secondary-color);
   }
 `
 
@@ -241,24 +265,24 @@ const RadioGroup = styled.div`
   }
   input[type="radio"] {
     margin-right: 5px;
-    accent-color: ${colors.primaryColor};
+    accent-color: var(--primary-color);
   }
 `
 
 const Button = styled.button`
   padding: 10px 20px;
-  background-color: ${colors.primaryColor};
+  background-color: var(--primary-color);
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   &:hover {
-    background-color: ${colors.secondaryColor};
+    background-color: var(--secondary-color);
   }
 `
 
 const FormTitle = styled.h2`
-  color: ${colors.primaryColor};
+  color: var(--primary-color);
   text-align: center;
   margin-bottom: 20px;
 `

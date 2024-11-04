@@ -3,11 +3,11 @@ import { loadStripe } from "@stripe/stripe-js"
 import { useDispatch, useSelector } from "react-redux"
 import { FaRegTrashAlt } from "react-icons/fa"
 import { useState } from "react"
-import CircularProgress from "@mui/material/CircularProgress"
 
 import { removeAllFromCart } from "../../features/cartSlice"
 import { formatCurrency } from "../../utils/formatCurrency"
 import { checkout } from "../../services/checkout"
+import PaymentForm from "../PaymentForm/PaymentForm"
 
 const stripePromise = loadStripe(
   "pk_test_51Q7T5KHxv792P1FeVX2530832RhslIDMtKZbqcDFOmoCrK76ZUeoJgDvyVgPZaxlzLi1xLKQcH0hMIjkuN6Jqx2D00FleKVO8J"
@@ -16,18 +16,19 @@ const stripePromise = loadStripe(
 function CartFooter() {
   const cart = useSelector((state) => state.cart)
   const dispatch = useDispatch()
-  const [checkoutLoading, setCheckoutLoading] = useState(false)
+  const [checkoutFormOpen, setCheckoutFormOpen] = useState(false)
 
-  //Handle checkout
+  // //Handle checkout
   const handleCheckout = async () => {
-    try {
-      setCheckoutLoading(true)
-      const response = await checkout({ items: cart.items })
-      const stripe = await stripePromise
-      stripe.redirectToCheckout({ sessionId: response })
-    } catch (error) {
-      console.error(error)
-    }
+    //   try {
+    //     setCheckoutLoading(true)
+    //     const response = await checkout({ items: cart.items })
+    //     const stripe = await stripePromise
+    //     stripe.redirectToCheckout({ sessionId: response })
+    //   } catch (error) {
+    //     console.error(error)
+    //   }
+    setCheckoutFormOpen(true)
   }
 
   return (
@@ -46,21 +47,18 @@ function CartFooter() {
         <p>{formatCurrency(cart.totalPrice)}</p>
       </SubTotal>
       <Checkout>
-        <button
-          onClick={() => {
-            handleCheckout()
-          }}
-        >
-          {checkoutLoading ? <CircularProgress color="white" /> : "Checkout"}
-        </button>
+        <button onClick={handleCheckout}>Checkout</button>
       </Checkout>
+      {<PaymentForm isOpen={checkoutFormOpen} onClose={setCheckoutFormOpen} />}
     </Footer>
   )
 }
 
 export default CartFooter
 
-const Footer = styled.div``
+const Footer = styled.div`
+  position: relative;
+`
 
 const CartInfo = styled.div`
   display: flex;

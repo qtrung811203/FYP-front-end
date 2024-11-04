@@ -1,7 +1,9 @@
+import styled from "styled-components"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 
 import { getCheckoutSession } from "../services/checkout"
+import successIcon from "../assets/success.svg"
 import NotFoundPage from "./NotFoundPage"
 
 function CheckoutSuccessPage() {
@@ -15,6 +17,7 @@ function CheckoutSuccessPage() {
       if (session) {
         setSession(session)
         // Clear the cart
+        //logic
       }
     }
 
@@ -22,12 +25,27 @@ function CheckoutSuccessPage() {
   }, [sessionId])
 
   return session ? (
-    <div>
-      <h1>Thank you for your order!</h1>
-    </div>
+    <CheckoutSuccessContainer>
+      <SuccessIcon src={successIcon} alt="success" />
+      <p>Thank you for your order!</p>
+    </CheckoutSuccessContainer>
   ) : (
     <NotFoundPage />
   )
 }
 
 export default CheckoutSuccessPage
+
+const CheckoutSuccessContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 100px;
+  font-size: 24px;
+  font-weight: 600;
+`
+const SuccessIcon = styled.img`
+  width: 100px;
+  height: 100px;
+`

@@ -1,5 +1,6 @@
 import axiosInstance from "../config/axiosConfig"
 
+//Checkout Function
 export async function checkout({ items }) {
   try {
     const response = await axiosInstance.post("/checkout/create-checkout-session", { items })

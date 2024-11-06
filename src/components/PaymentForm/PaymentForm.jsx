@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import styled from "styled-components"
 import { loadStripe } from "@stripe/stripe-js"
 import { useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
 import CircularProgress from "@mui/material/CircularProgress"
 
 import DropList from "./DropList"
@@ -11,7 +12,8 @@ import {
   getDistrictsByProvinceId,
   getWardsByDistrictId,
 } from "../../services/apiLocation"
-import { checkout } from "../../services/apiCheckout"
+import { checkout, checkoutCod } from "../../services/apiCheckout"
+import emailValidation from "../../utils/emailValidation"
 
 const stripePromise = loadStripe(
   "pk_test_51Q7T5KHxv792P1FeVX2530832RhslIDMtKZbqcDFOmoCrK76ZUeoJgDvyVgPZaxlzLi1xLKQcH0hMIjkuN6Jqx2D00FleKVO8J"
@@ -21,9 +23,12 @@ export default function PaymentForm({ isOpen, onClose }) {
   const [provinces, setProvinces] = useState([])
   const [districts, setDistricts] = useState([])
   const [wards, setWards] = useState([])
+
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
 
   const cart = useSelector((state) => state.cart)
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
     email: "",
@@ -53,6 +58,15 @@ export default function PaymentForm({ isOpen, onClose }) {
       ...prevState,
       [name]: value,
     }))
+
+    // Validate email
+    if (name === "email") {
+      if (!emailValidation(value)) {
+        setError("Invalid email")
+      } else {
+        setError(null)
+      }
+    }
   }
 
   // Handle select change
@@ -79,6 +93,8 @@ export default function PaymentForm({ isOpen, onClose }) {
   // Handle close modal
   const handleCloseModal = (e) => {
     if (e.target === e.currentTarget) {
+      setError(null)
+      document.body.style.overflow = "auto"
       onClose()
     }
   }
@@ -86,20 +102,36 @@ export default function PaymentForm({ isOpen, onClose }) {
   // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (formData.paymentMethod === "cod") {
-      console.log("Cash on delivery")
-      // Handle cash on delivery
-      onClose()
-    } else {
-      try {
-        setLoading(true)
-        const response = await checkout({ user: formData, items: cart.items })
-        const stripe = await stripePromise
-        stripe.redirectToCheckout({ sessionId: response })
-      } catch (error) {
-        console.error(error)
-      } finally {
-        setLoading(false)
+    if (!emailValidation(formData.email)) {
+      alert("Please enter valid email")
+      return
+    }
+    {
+      if (formData.paymentMethod === "cod") {
+        console.log("Cash on delivery")
+        const codResponse = await checkoutCod({ user: formData, items: cart.items })
+        if (!codResponse) {
+          alert("Checkout failed, please try again")
+          return
+        }
+        console.log(codResponse)
+        navigate("/checkout/cod-success", { state: { orderId: codResponse.data.order._id } })
+        onClose()
+      } else {
+        try {
+          setLoading(true)
+          const stripe = await stripePromise
+          const response = await checkout({ user: formData, items: cart.items })
+          if (!response) {
+            alert("Checkout failed, please try again")
+            return
+          }
+          stripe.redirectToCheckout({ sessionId: response })
+        } catch (error) {
+          console.error(error)
+        } finally {
+          setLoading(false)
+        }
       }
     }
   }
@@ -111,6 +143,7 @@ export default function PaymentForm({ isOpen, onClose }) {
       <ModalContent>
         <FormTitle>Payment Information</FormTitle>
         <Form onSubmit={handleSubmit}>
+          {error && <ErrorMessage>{error}</ErrorMessage>}
           <Input
             type="email"
             name="email"
@@ -285,4 +318,11 @@ const FormTitle = styled.h2`
   color: var(--primary-color);
   text-align: center;
   margin-bottom: 20px;
+`
+
+const ErrorMessage = styled.p`
+  color: red;
+  font-size: var(--font-size-sm);
+  margin-top: -18px;
+  margin-bottom: -15px;
 `

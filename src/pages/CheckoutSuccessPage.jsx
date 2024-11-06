@@ -1,19 +1,21 @@
 import styled from "styled-components"
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useSearchParams } from "react-router-dom"
 
-import { getCheckoutSession } from "../services/apiCheckout"
+import { checkoutSuccess } from "../services/apiCheckout"
 import successIcon from "../assets/success.svg"
 import NotFoundPage from "./NotFoundPage"
 
 function CheckoutSuccessPage() {
-  const { sessionId } = useParams()
+  const [searchParams] = useSearchParams()
+  const sessionId = searchParams.get("sessionId")
+
   const [session, setSession] = useState(null)
 
   // Fetch the checkout session
   useEffect(() => {
     const fetchCheckoutSession = async () => {
-      const session = await getCheckoutSession(sessionId)
+      const session = await checkoutSuccess(sessionId)
       if (session) {
         setSession(session)
         // Clear the cart
@@ -22,7 +24,7 @@ function CheckoutSuccessPage() {
     }
 
     fetchCheckoutSession()
-  }, [sessionId])
+  }, [])
 
   return session ? (
     <CheckoutSuccessContainer>

@@ -46,8 +46,9 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/cart" element={<CartPage />} />
               <Route path="/signup" element={<SignupPage />} />
-              <Route path="/checkout/success/:sessionId" element={<CheckoutSuccessPage />} />
-              <Route path="/checkout/cancel/:sessionId" element={<CheckoutCancelPage />} />
+              <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
+              <Route path="/checkout/cod-success" element={<CheckoutSuccessPage />} />
+              <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
               {/*Handle Not Found Path*/}
               <Route path="*" element={<PageNotFound />} />
             </Route>

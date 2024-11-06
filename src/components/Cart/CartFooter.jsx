@@ -12,6 +12,11 @@ function CartFooter() {
   const dispatch = useDispatch()
   const [checkoutFormOpen, setCheckoutFormOpen] = useState(false)
 
+  const handleOpenCheckoutForm = () => {
+    setCheckoutFormOpen(true)
+    document.body.style.overflow = "hidden"
+  }
+
   return (
     <Footer>
       <CartInfo>
@@ -28,7 +33,7 @@ function CartFooter() {
         <p>{formatCurrency(cart.totalPrice)}</p>
       </SubTotal>
       <Checkout>
-        <button onClick={() => setCheckoutFormOpen(true)}>Checkout</button>
+        <button onClick={handleOpenCheckoutForm}>Checkout</button>
       </Checkout>
       {<PaymentForm isOpen={checkoutFormOpen} onClose={setCheckoutFormOpen} />}
     </Footer>

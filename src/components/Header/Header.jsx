@@ -1,13 +1,18 @@
 import styled from "styled-components"
 
+import { useAuth } from "../../hooks/useAuth"
+
 import Logo from "./Logo"
 import NavMenu from "./NavMenu"
 import SearchBar from "./SearchBar"
 import CartIcon from "./CartIcon"
 import LoginButton from "./LoginButton"
 import MobileMenu from "./MobileMenu"
+import MyPage from "./MyPage"
 
 function Header() {
+  const { user } = useAuth()
+
   return (
     <StyledHeader>
       <Logo />
@@ -15,7 +20,7 @@ function Header() {
       <PcStyled>
         <SearchBar />
         <CartIcon />
-        <LoginButton />
+        {user ? <MyPage /> : <LoginButton />}
       </PcStyled>
       <MobileMenu />
     </StyledHeader>

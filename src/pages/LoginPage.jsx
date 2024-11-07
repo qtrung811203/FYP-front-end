@@ -1,21 +1,42 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import styled from "styled-components"
+import { useNavigate } from "react-router-dom"
+
+import { login } from "../services/apiAuth"
+import { useAuth } from "../hooks/useAuth"
 
 export default function LoginPage() {
+  const { user, setUser } = useAuth()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
-  const handleSubmit = (e) => {
+  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
+
+  const navigate = useNavigate()
+  if (user) navigate("/home")
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // Here you would typically handle the login logic
-    console.log("Login attempt with:", { email, password })
+    setLoading(true)
+    setError(null)
+    try {
+      const newUser = await login({ email, password })
+      setUser(newUser)
+      if (newUser) navigate("/home", { replace: true })
+    } catch (error) {
+      setError(error.message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
     <PageContainer>
       <LoginCard>
         <Title>Log In</Title>
+        {error && <div style={{ color: "red" }}>{error}</div>}
         <Form onSubmit={handleSubmit}>
           <div>
             <Label htmlFor="email">Email</Label>
@@ -40,7 +61,9 @@ export default function LoginPage() {
             />
           </div>
           <ForgotPassword href="/forgot-password">Forgot password?</ForgotPassword>
-          <Button type="submit">Log In</Button>
+          <Button type="submit" disabled={loading}>
+            Log In
+          </Button>
         </Form>
         <SignUpPrompt>
           Don&apos;t have an account? <SignUpLink to="/signup">Sign up</SignUpLink>

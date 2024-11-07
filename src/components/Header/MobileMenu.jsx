@@ -15,7 +15,7 @@ function MobileMenu() {
 
 export default MobileMenu
 
-//CSS
+//Styled Components
 const StyledMobileMenu = styled.div`
   display: none;
   @media (max-width: 768px) {

@@ -14,6 +14,7 @@ function CartList() {
 
 export default CartList
 
+//Styled Components
 const CartListContainer = styled.table`
   width: 100%;
   margin-top: 3rem;

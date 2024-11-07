@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
+import styled, { keyframes } from "styled-components"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Thumbs } from "swiper/modules"
 import "swiper/css"
 import "swiper/css/thumbs"
-import styled, { keyframes } from "styled-components"
 
 //data
 import data from "../../../data/data2"
@@ -45,7 +45,7 @@ function SwiperSub({ setSwiper }) {
 
 export default SwiperSub
 
-//styles
+//Styled Components
 const anime = keyframes`
   0% {
     transform: rotate(0);

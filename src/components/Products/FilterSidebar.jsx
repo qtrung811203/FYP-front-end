@@ -6,6 +6,7 @@ function FilterSidebar() {
 
 export default FilterSidebar
 
+//Styled Components
 const SidebarContainer = styled.div`
   background-color: var(--secondary-color);
   height: 100vh;

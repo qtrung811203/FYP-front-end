@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom"
 import styled from "styled-components"
+import { Link } from "react-router-dom"
 import { FaRegArrowAltCircleRight } from "react-icons/fa"
 
 function Heading() {
@@ -21,6 +21,7 @@ function Heading() {
 
 export default Heading
 
+//Styled Components
 const HeadingStyled = styled.div`
   display: flex;
   margin: 0 10rem;

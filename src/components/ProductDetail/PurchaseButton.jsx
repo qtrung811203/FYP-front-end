@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom"
 import styled from "styled-components"
-
 import { FaShoppingCart } from "react-icons/fa"
 
 function PurchaseButton() {
@@ -16,6 +15,7 @@ function PurchaseButton() {
 
 export default PurchaseButton
 
+//Styled Component
 const PurchaseButtonStyled = styled.div`
   margin-top: 28px;
   text-align: center;

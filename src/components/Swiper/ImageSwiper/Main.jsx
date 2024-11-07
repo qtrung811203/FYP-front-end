@@ -26,6 +26,7 @@ function Main({ thumbsSwiper, data }) {
 
 export default Main
 
+//Styled Components
 const SwiperStyled = styled(Swiper)`
   padding-bottom: 150px;
 

@@ -10,6 +10,7 @@ function CartItem() {
   const cart = useSelector((state) => state.cart)
   const dispatch = useDispatch()
 
+  // If cart is empty
   if (cart.items.length === 0) {
     return (
       <tr>
@@ -46,6 +47,7 @@ function CartItem() {
 
 export default CartItem
 
+//Styled Components
 const Item = styled.tr`
   display: flex;
   padding: 20px;

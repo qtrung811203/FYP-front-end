@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 import styled from "styled-components"
+import { useEffect, useState } from "react"
 
 import CategoryList from "./CategoryList"
 import CategoryItems from "./CategoryItems"
-import { useEffect, useState } from "react"
 
 function CategoryContainer({ items }) {
   const [category, setCategory] = useState(items[0].category)
@@ -26,6 +26,7 @@ function CategoryContainer({ items }) {
 
 export default CategoryContainer
 
+//Styled Components
 const CategoryBoxStyled = styled.div`
   background: #f7f7f7;
   padding: 0 15px 15px;

@@ -1,9 +1,9 @@
-import { Link } from "react-router-dom"
 import styled from "styled-components"
-import { Badge } from "@mui/material"
-
-import { FaShoppingCart } from "react-icons/fa"
+import { Link } from "react-router-dom"
 import { useSelector } from "react-redux"
+
+import { Badge } from "@mui/material"
+import { FaShoppingCart } from "react-icons/fa"
 
 function HeaderCart() {
   const cart = useSelector((state) => state.cart)
@@ -21,6 +21,7 @@ function HeaderCart() {
 
 export default HeaderCart
 
+//Styled Components
 const LinkStyled = styled(Link)`
   text-decoration: none;
   height: 100%;

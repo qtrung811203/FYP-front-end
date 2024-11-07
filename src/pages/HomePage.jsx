@@ -1,11 +1,9 @@
-//ui
+import { BsBoxFill } from "react-icons/bs"
+import { useHomeProducts } from "../hooks/useHomeProducts"
+
 import TopSwiper from "../components/Swiper/TopSwiper/TopSwiper"
 import FeatureSwiper from "../components/Swiper/FeatureSwiper/FeatureSwiper"
 import EndSwiper from "../components/Swiper/EndSwiper/EndSwiper"
-
-//icon
-import { BsBoxFill } from "react-icons/bs"
-import { useHomeProducts } from "../hooks/useHomeProducts"
 
 function HomePage() {
   const { newMerch } = useHomeProducts()

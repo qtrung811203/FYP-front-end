@@ -5,14 +5,12 @@ import styled from "styled-components"
 import Main from "./Main"
 import Sub from "./Sub"
 
-//Import Data
-// import product from "../../../data/productDetail"
-// import data from "../../../data/data"
-
+//ImageSwiper in ProductDetail
 function ImageSwiper({ images: data }) {
   const [thumbsSwiper, setThumbsSwiper] = useState(null)
   return (
     <SwiperContainer>
+      {/* MainSwiper */}
       <Main thumbsSwiper={thumbsSwiper} data={data} />
       {/* SubSwiper */}
       <Sub setThumbsSwiper={setThumbsSwiper} data={data} />
@@ -22,6 +20,7 @@ function ImageSwiper({ images: data }) {
 
 export default ImageSwiper
 
+//Styled Components
 const SwiperContainer = styled.div`
   max-width: 560px;
 `

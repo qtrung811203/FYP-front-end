@@ -1,7 +1,7 @@
+import styled from "styled-components"
 import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 
-import styled from "styled-components"
 import ImageSwiper from "../components/Swiper/ImageSwiper/ImageSwiper"
 import ProductDetail from "../components/ProductDetail/ProductDetail"
 // import FeatureSwiper from "../components/Swiper/FeatureSwiper/FeatureSwiper"
@@ -40,7 +40,7 @@ function Product() {
 
 export default Product
 
-//CSS
+//Styled Components
 const ProductContainer = styled.div`
   margin-top: 5rem;
 `

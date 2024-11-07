@@ -1,9 +1,8 @@
 import styled from "styled-components"
+import { Link } from "react-router-dom"
 
 import CustomSlider from "../Swiper/CustomSlider"
-
 import data from "../../data/data"
-import { Link } from "react-router-dom"
 
 function ProductsList() {
   return (
@@ -19,6 +18,7 @@ function ProductsList() {
 
 export default ProductsList
 
+//Styled Components
 const ProductsContainer = styled.div`
   height: 100%;
   display: grid;

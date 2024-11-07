@@ -1,9 +1,8 @@
 /* eslint-disable react/prop-types */
+import styled from "styled-components"
 import { Link } from "react-router-dom"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Thumbs, Navigation } from "swiper/modules"
-import styled from "styled-components"
-
 import "swiper/css"
 import "swiper/css/thumbs"
 import "swiper/css/navigation"
@@ -49,7 +48,7 @@ function SwiperMain({ thumbRef }) {
 
 export default SwiperMain
 
-//styles
+//Styled Components
 const LinkStyled = styled(Link)`
   text-decoration: none;
   width: 100%;

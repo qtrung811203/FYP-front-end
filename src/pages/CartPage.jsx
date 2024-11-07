@@ -1,5 +1,4 @@
 import styled from "styled-components"
-
 import { FaShoppingCart } from "react-icons/fa"
 
 import CartList from "../components/Cart/CartList"
@@ -26,6 +25,7 @@ function CartPage() {
 
 export default CartPage
 
+//Styled Component
 const CartContainer = styled.div`
   display: flex;
   flex-direction: column;

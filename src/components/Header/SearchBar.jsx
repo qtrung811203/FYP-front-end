@@ -1,5 +1,5 @@
-import { FaSearch } from "react-icons/fa"
 import styled from "styled-components"
+import { FaSearch } from "react-icons/fa"
 
 function Search() {
   return (
@@ -14,6 +14,7 @@ function Search() {
 
 export default Search
 
+//Styled Components
 const SearchStyled = styled.div`
   position: relative;
   display: flex;

@@ -2,6 +2,7 @@
 import styled from "styled-components"
 
 function CategoryList({ items, category, setCategory }) {
+  //Handle click to change category
   const handleClick = (category) => {
     setCategory(category)
   }
@@ -27,6 +28,7 @@ function CategoryList({ items, category, setCategory }) {
 
 export default CategoryList
 
+//Styled Components
 const CategoryListStyled = styled.div`
   padding: 15px 0 10px;
 `

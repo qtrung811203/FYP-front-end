@@ -1,13 +1,21 @@
 import styled from "styled-components"
 import { useDispatch, useSelector } from "react-redux"
 import { FaRegTrashAlt } from "react-icons/fa"
+import { useState } from "react"
 
 import { removeAllFromCart } from "../../features/cartSlice"
 import { formatCurrency } from "../../utils/formatCurrency"
+import PaymentForm from "../PaymentForm/PaymentForm"
 
 function CartFooter() {
   const cart = useSelector((state) => state.cart)
   const dispatch = useDispatch()
+  const [checkoutFormOpen, setCheckoutFormOpen] = useState(false)
+
+  const handleOpenCheckoutForm = () => {
+    setCheckoutFormOpen(true)
+    document.body.style.overflow = "hidden"
+  }
 
   return (
     <Footer>
@@ -25,15 +33,19 @@ function CartFooter() {
         <p>{formatCurrency(cart.totalPrice)}</p>
       </SubTotal>
       <Checkout>
-        <button>Checkout</button>
+        <button onClick={handleOpenCheckoutForm}>Checkout</button>
       </Checkout>
+      {<PaymentForm isOpen={checkoutFormOpen} onClose={setCheckoutFormOpen} />}
     </Footer>
   )
 }
 
 export default CartFooter
 
-const Footer = styled.div``
+// Styled Components
+const Footer = styled.div`
+  position: relative;
+`
 
 const CartInfo = styled.div`
   display: flex;

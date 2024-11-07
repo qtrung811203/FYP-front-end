@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom"
 import styled from "styled-components"
+import { Link } from "react-router-dom"
 
 function Logo() {
   return (
@@ -13,6 +13,7 @@ function Logo() {
 
 export default Logo
 
+//Styled Components
 const StyledDiv = styled.div`
   width: 22rem;
   height: 100%;

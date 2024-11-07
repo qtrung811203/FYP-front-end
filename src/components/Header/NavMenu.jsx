@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom"
 import styled from "styled-components"
+import { Link } from "react-router-dom"
 
 function NavMenu() {
   return (
@@ -16,6 +16,7 @@ function NavMenu() {
 
 export default NavMenu
 
+//Styled Components
 const NavListStyle = styled.ul`
   display: flex;
   position: relative;

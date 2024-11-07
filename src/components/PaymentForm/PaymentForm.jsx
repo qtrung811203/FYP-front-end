@@ -108,14 +108,13 @@ export default function PaymentForm({ isOpen, onClose }) {
     }
     {
       if (formData.paymentMethod === "cod") {
-        console.log("Cash on delivery")
+        setLoading(true)
         const codResponse = await checkoutCod({ user: formData, items: cart.items })
         if (!codResponse) {
           alert("Checkout failed, please try again")
           return
         }
-        console.log(codResponse)
-        navigate("/checkout/cod-success", { state: { orderId: codResponse.data.order._id } })
+        navigate("/checkout/cod-success", { state: { order: codResponse.data.order } })
         onClose()
       } else {
         try {
@@ -225,7 +224,7 @@ export default function PaymentForm({ isOpen, onClose }) {
               Cash on deliverys
             </label>
           </RadioGroup>
-          <Button type="submit">
+          <Button type="submit" disabled={loading}>
             {loading ? <CircularProgress color="white" size={20} /> : "Checkout"}
           </Button>
         </Form>
@@ -311,6 +310,10 @@ const Button = styled.button`
   cursor: pointer;
   &:hover {
     background-color: var(--secondary-color);
+  }
+  &:disabled {
+    background-color: var(--third-color);
+    cursor: not-allowed;
   }
 `
 

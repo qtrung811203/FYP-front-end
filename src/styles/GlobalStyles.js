@@ -81,6 +81,9 @@ const GlobalStyles = createGlobalStyle`
   --font-size-sm: 1.2rem;
   --font-size-md: 1.4rem;
   --font-size-lg: 1.6rem;
+  --font-size-xl: 1.8rem;
+  --font-size-xxl: 2rem;
+  --font-size-xxxl: 2.2rem;
 
   /* color danger and success */
   --color-danger: #d60000;
@@ -169,6 +172,9 @@ h6 {
   --font-size-sm: 0.5rem;
   --font-size-md: 0.8rem;
   --font-size-lg: 1rem;
+  --font-size-xl: 1.2rem;
+  --font-size-xxl: 1.4rem;
+  --font-size-xxxl: 1.6rem;
   }
 }
 
@@ -178,6 +184,9 @@ h6 {
   --font-size-sm: 0.8rem;
   --font-size-md: 1rem;
   --font-size-lg: 1.2rem;
+  --font-size-xl: 1.4rem;
+  --font-size-xxl: 1.6rem;
+  --font-size-xxxl: 1.8rem;
   }
 }
 
@@ -187,6 +196,9 @@ h6 {
   --font-size-sm: 1rem;
   --font-size-md: 1.2rem;
   --font-size-lg: 1.4rem;
+  --font-size-xl: 1.6rem;
+  --font-size-xxl: 1.8rem;
+  --font-size-xxxl: 2rem;
   }
 }
 
@@ -196,6 +208,9 @@ h6 {
   --font-size-sm: 1.2rem;
   --font-size-md: 1.4rem;
   --font-size-lg: 1.6rem;
+  --font-size-xl: 1.8rem;
+  --font-size-xxl: 2rem;
+  --font-size-xxxl: 2.2rem;
   }
 }
 `

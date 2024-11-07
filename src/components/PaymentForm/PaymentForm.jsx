@@ -122,7 +122,7 @@ export default function PaymentForm({ isOpen, onClose }) {
           const stripe = await stripePromise
           const response = await checkout({ user: formData, items: cart.items })
           if (!response) {
-            alert("Checkout failed, please try again")
+            alert(`Checkout failed, please try again + ${response}`)
             return
           }
           stripe.redirectToCheckout({ sessionId: response })

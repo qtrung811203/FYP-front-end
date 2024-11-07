@@ -15,6 +15,7 @@ import PageNotFound from "./pages/NotFoundPage"
 import CheckoutSuccessPage from "./pages/CheckoutSuccessPage"
 import CheckoutCancelPage from "./pages/CheckoutCancelPage"
 import CodSuccessPage from "./pages/CodSuccessPage"
+import ProfilePage from "./pages/ProfilePage"
 
 import ScrollToTop from "./utils/scrollToTop"
 
@@ -52,6 +53,7 @@ function App() {
                 <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
                 <Route path="/checkout/cod-success" element={<CodSuccessPage />} />
                 <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
+                <Route path="/account" element={<ProfilePage />} />
                 {/*Handle Not Found Path*/}
                 <Route path="*" element={<PageNotFound />} />
               </Route>

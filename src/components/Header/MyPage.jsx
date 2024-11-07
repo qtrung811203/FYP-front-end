@@ -5,7 +5,7 @@ import { FaUser } from "react-icons/fa"
 function MyPage() {
   return (
     <LoginStyled>
-      <LoginLinkStyled to="/">
+      <LoginLinkStyled to="/account">
         <FaUser size={32} />
       </LoginLinkStyled>
     </LoginStyled>

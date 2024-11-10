@@ -32,3 +32,18 @@ export async function logout() {
   })
   return response.data
 }
+
+export async function updatePassword({ passwordCurrent, password, passwordConfirm }) {
+  const response = await axiosInstance.patch(
+    "/users/updateMyPassword",
+    {
+      passwordCurrent,
+      password,
+      passwordConfirm,
+    },
+    {
+      withCredentials: true,
+    }
+  )
+  return response.data
+}

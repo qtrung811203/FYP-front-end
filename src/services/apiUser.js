@@ -4,6 +4,7 @@ export async function getUser() {
   const response = await axiosInstance.get("/users/me", {
     withCredentials: true,
   })
+  console.log(response.data)
   return response.data
 }
 

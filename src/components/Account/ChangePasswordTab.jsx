@@ -3,37 +3,45 @@ import styled from "styled-components"
 import { FaEye as Eye } from "react-icons/fa"
 import { FaEyeSlash as EyeOff } from "react-icons/fa"
 
+import { updatePassword } from "../../services/apiAuth"
+import SuccessModal from "../Alert/SuccessModal"
+import FailureModal from "../Alert/FailureModal"
+
 export default function ChangePasswordTab() {
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false)
+  const [isFailureModalOpen, setIsFailureModalOpen] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
+
   const [formData, setFormData] = useState({
-    oldPassword: "",
-    newPassword: "",
-    confirmPassword: "",
+    passwordCurrent: "",
+    password: "",
+    passwordConfirm: "",
   })
 
   const [errors, setErrors] = useState({})
   const [showPasswords, setShowPasswords] = useState({
-    oldPassword: false,
-    newPassword: false,
-    confirmPassword: false,
+    passwordCurrent: false,
+    password: false,
+    passwordConfirm: false,
   })
 
   const validateForm = () => {
     const newErrors = {}
 
-    if (!formData.oldPassword) {
-      newErrors.oldPassword = "Don't leave this field empty"
+    if (!formData.passwordCurrent) {
+      newErrors.passwordCurrent = "Don't leave this field empty"
     }
 
-    if (!formData.newPassword) {
-      newErrors.newPassword = "Don't leave this field empty"
-    } else if (formData.newPassword.length < 8) {
-      newErrors.newPassword = "Password must be at least 8 characters long"
+    if (!formData.password) {
+      newErrors.password = "Don't leave this field empty"
+    } else if (formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters long"
     }
 
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = "Don't leave this field empty"
-    } else if (formData.confirmPassword !== formData.newPassword) {
-      newErrors.confirmPassword = "Passwords do not match"
+    if (!formData.passwordConfirm) {
+      newErrors.passwordConfirm = "Don't leave this field empty"
+    } else if (formData.passwordConfirm !== formData.password) {
+      newErrors.passwordConfirm = "Passwords do not match"
     }
 
     setErrors(newErrors)
@@ -62,88 +70,111 @@ export default function ChangePasswordTab() {
     }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     if (validateForm()) {
-      console.log("Form submitted:", formData)
-      // Handle password change logic here
+      try {
+        await updatePassword(formData)
+        setIsSuccessModalOpen(true)
+        setFormData({
+          passwordCurrent: "",
+          password: "",
+          passwordConfirm: "",
+        })
+      } catch (error) {
+        setErrorMessage(error.message)
+        setIsFailureModalOpen(true)
+      }
     }
   }
 
   return (
-    <FormContainer>
-      <FormTitle>CHANGE PASSWORD</FormTitle>
-      <FormDescription>
-        To ensure security please set a password with at least 8 characters
-      </FormDescription>
+    <>
+      <FormContainer>
+        <FormTitle>CHANGE PASSWORD</FormTitle>
+        <FormDescription>
+          To ensure security please set a password with at least 8 characters
+        </FormDescription>
 
-      <Form onSubmit={handleSubmit}>
-        <FormGroup>
-          <Label htmlFor="oldPassword">OLD PASSWORD</Label>
-          <InputWrapper>
-            <Input
-              type={showPasswords.oldPassword ? "text" : "password"}
-              id="oldPassword"
-              name="oldPassword"
-              value={formData.oldPassword}
-              onChange={handleChange}
-              $error={errors.oldPassword}
-            />
-            <TogglePasswordButton
-              type="button"
-              onClick={() => togglePasswordVisibility("oldPassword")}
-            >
-              {showPasswords.oldPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </TogglePasswordButton>
-          </InputWrapper>
-          {errors.oldPassword && <ErrorMessage>{errors.oldPassword}</ErrorMessage>}
-        </FormGroup>
+        <Form onSubmit={handleSubmit}>
+          <FormGroup>
+            <Label htmlFor="passwordCurrent">OLD PASSWORD</Label>
+            <InputWrapper>
+              <Input
+                type={showPasswords.passwordCurrent ? "text" : "password"}
+                id="passwordCurrent"
+                name="passwordCurrent"
+                value={formData.passwordCurrent}
+                onChange={handleChange}
+                $error={errors.passwordCurrent}
+              />
+              <TogglePasswordButton
+                type="button"
+                onClick={() => togglePasswordVisibility("passwordCurrent")}
+              >
+                {showPasswords.passwordCurrent ? <EyeOff size={20} /> : <Eye size={20} />}
+              </TogglePasswordButton>
+            </InputWrapper>
+            {errors.passwordCurrent && <ErrorMessage>{errors.passwordCurrent}</ErrorMessage>}
+          </FormGroup>
 
-        <FormGroup>
-          <Label htmlFor="newPassword">NEW PASSWORD</Label>
-          <InputWrapper>
-            <Input
-              type={showPasswords.newPassword ? "text" : "password"}
-              id="newPassword"
-              name="newPassword"
-              value={formData.newPassword}
-              onChange={handleChange}
-              $error={errors.newPassword}
-            />
-            <TogglePasswordButton
-              type="button"
-              onClick={() => togglePasswordVisibility("newPassword")}
-            >
-              {showPasswords.newPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </TogglePasswordButton>
-          </InputWrapper>
-          {errors.newPassword && <ErrorMessage>{errors.newPassword}</ErrorMessage>}
-        </FormGroup>
+          <FormGroup>
+            <Label htmlFor="password">NEW PASSWORD</Label>
+            <InputWrapper>
+              <Input
+                type={showPasswords.password ? "text" : "password"}
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                $error={errors.password}
+              />
+              <TogglePasswordButton
+                type="button"
+                onClick={() => togglePasswordVisibility("password")}
+              >
+                {showPasswords.password ? <EyeOff size={20} /> : <Eye size={20} />}
+              </TogglePasswordButton>
+            </InputWrapper>
+            {errors.password && <ErrorMessage>{errors.password}</ErrorMessage>}
+          </FormGroup>
 
-        <FormGroup>
-          <Label htmlFor="confirmPassword">CONFIRM PASSWORD </Label>
-          <InputWrapper>
-            <Input
-              type={showPasswords.confirmPassword ? "text" : "password"}
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              $error={errors.confirmPassword}
-            />
-            <TogglePasswordButton
-              type="button"
-              onClick={() => togglePasswordVisibility("confirmPassword")}
-            >
-              {showPasswords.confirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </TogglePasswordButton>
-          </InputWrapper>
-          {errors.confirmPassword && <ErrorMessage>{errors.confirmPassword}</ErrorMessage>}
-        </FormGroup>
+          <FormGroup>
+            <Label htmlFor="passwordConfirm">CONFIRM PASSWORD </Label>
+            <InputWrapper>
+              <Input
+                type={showPasswords.passwordConfirm ? "text" : "password"}
+                id="passwordConfirm"
+                name="passwordConfirm"
+                value={formData.passwordConfirm}
+                onChange={handleChange}
+                $error={errors.passwordConfirm}
+              />
+              <TogglePasswordButton
+                type="button"
+                onClick={() => togglePasswordVisibility("passwordConfirm")}
+              >
+                {showPasswords.passwordConfirm ? <EyeOff size={20} /> : <Eye size={20} />}
+              </TogglePasswordButton>
+            </InputWrapper>
+            {errors.passwordConfirm && <ErrorMessage>{errors.passwordConfirm}</ErrorMessage>}
+          </FormGroup>
 
-        <SubmitButton type="submit">Change Password</SubmitButton>
-      </Form>
-    </FormContainer>
+          <SubmitButton type="submit">Change Password</SubmitButton>
+        </Form>
+      </FormContainer>
+      <SuccessModal
+        isOpen={isSuccessModalOpen}
+        onClose={() => setIsSuccessModalOpen(false)}
+        title="Change password successfully"
+      />
+      <FailureModal
+        isOpen={isFailureModalOpen}
+        onClose={() => setIsFailureModalOpen(false)}
+        title="Change password failed"
+        message={errorMessage}
+      />
+    </>
   )
 }
 

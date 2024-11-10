@@ -8,16 +8,20 @@ import OrderDetailsModal from "./OrderDetailModal"
 import { getOrders } from "../../services/apiUser"
 import { formatDate } from "../../utils/formatDate"
 import { formatCurrency } from "../../utils/formatCurrency"
+import Loading from "../Loading/Loading"
 
 function OrdersTab() {
   const [orders, setOrders] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedOrder, setSelectedOrder] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     async function fetchOrders() {
+      setIsLoading(true)
       const response = await getOrders()
       setOrders(response.data.orders)
+      setIsLoading(false)
     }
 
     fetchOrders()
@@ -30,6 +34,10 @@ function OrdersTab() {
   const handleViewOrder = (order) => {
     setSelectedOrder(order)
     setIsModalOpen(true)
+  }
+
+  if (isLoading) {
+    return <Loading />
   }
 
   return (

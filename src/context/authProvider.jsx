@@ -14,7 +14,7 @@ export function AuthProvider({ children }) {
         const response = await getUser()
         setUser(response.data.user)
       } catch (error) {
-        console.error(error)
+        console.log(error)
         setUser(null)
       } finally {
         setUserLoading(false)

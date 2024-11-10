@@ -16,6 +16,7 @@ import CheckoutSuccessPage from "./pages/CheckoutSuccessPage"
 import CheckoutCancelPage from "./pages/CheckoutCancelPage"
 import CodSuccessPage from "./pages/CodSuccessPage"
 import ProfilePage from "./pages/ProfilePage"
+import ProtectedRoute from "./pages/ProtectedRoute"
 
 import ScrollToTop from "./utils/scrollToTop"
 
@@ -44,7 +45,6 @@ function App() {
             <Routes>
               <Route element={<AppLayout />}>
                 <Route index element={<Navigate replace to="home" />} />
-                <Route path="/home" element={<HomePage />} />
                 <Route path="/all" element={<ProductsPage />} />
                 <Route path="/product/:slug" element={<ProductDetailPage />} />
                 <Route path="/login" element={<LoginPage />} />
@@ -53,7 +53,15 @@ function App() {
                 <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
                 <Route path="/checkout/cod-success" element={<CodSuccessPage />} />
                 <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
-                <Route path="/account" element={<ProfilePage />} />
+                <Route path="/home" element={<HomePage />} />
+                <Route
+                  path="/account"
+                  element={
+                    <ProtectedRoute>
+                      <ProfilePage />
+                    </ProtectedRoute>
+                  }
+                />
                 {/*Handle Not Found Path*/}
                 <Route path="*" element={<PageNotFound />} />
               </Route>

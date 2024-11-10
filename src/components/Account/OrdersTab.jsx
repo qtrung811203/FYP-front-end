@@ -1,25 +1,36 @@
 import styled from "styled-components"
+import { useEffect, useState } from "react"
+
 import { FaEye as Eye } from "react-icons/fa"
 
+import OrderDetailsModal from "./OrderDetailModal"
+
+import { getOrders } from "../../services/apiUser"
+import { formatDate } from "../../utils/formatDate"
+import { formatCurrency } from "../../utils/formatCurrency"
+
 function OrdersTab() {
-  const orders = [
-    {
-      id: "ORD001",
-      date: "2023-05-15",
-      address: "123 Đường ABC, Quận 1, TP.HCM",
-      total: "1,500,000",
-      paymentMethod: "COD",
-      note: "Giao hàng ngoài giờ hành chính",
-    },
-    {
-      id: "ORD002",
-      date: "2023-05-20",
-      address: "456 Đường XYZ, Quận 2, TP.HCM",
-      total: "2,300,000",
-      paymentMethod: "Chuyển khoản",
-      note: "Không có",
-    },
-  ]
+  const [orders, setOrders] = useState([])
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedOrder, setSelectedOrder] = useState(null)
+
+  useEffect(() => {
+    async function fetchOrders() {
+      const response = await getOrders()
+      setOrders(response.data.orders)
+    }
+
+    fetchOrders()
+  }, [])
+
+  const formatAddress = (shippingInformation) => {
+    return `${shippingInformation.address}, ${shippingInformation.ward}, ${shippingInformation.district}, ${shippingInformation.province}`
+  }
+
+  const handleViewOrder = (order) => {
+    setSelectedOrder(order)
+    setIsModalOpen(true)
+  }
 
   return (
     <>
@@ -41,13 +52,13 @@ function OrdersTab() {
             {orders.map((order) => (
               <tr key={order.id}>
                 <Td>{order.id}</Td>
-                <Td>{order.date}</Td>
-                <Td>{order.address}</Td>
-                <Td>{order.total}</Td>
+                <Td>{formatDate(order.createdAt)}</Td>
+                <Td>{formatAddress(order.shippingInformation)}</Td>
+                <Td>{formatCurrency(order.totalPrice)}</Td>
                 <Td>{order.paymentMethod}</Td>
-                <Td>{order.note}</Td>
+                <Td>{order.shippingInformation.note}</Td>
                 <Td>
-                  <ViewButton>
+                  <ViewButton onClick={() => handleViewOrder(order)}>
                     <Eye size={16} />
                     View
                   </ViewButton>
@@ -57,6 +68,14 @@ function OrdersTab() {
           </tbody>
         </Table>
       </InfoSection>
+
+      {selectedOrder && (
+        <OrderDetailsModal
+          order={selectedOrder}
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </>
   )
 }

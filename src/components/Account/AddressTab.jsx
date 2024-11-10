@@ -1,30 +1,29 @@
 import styled from "styled-components"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import { MdModeEdit as Edit2 } from "react-icons/md"
 import { FaTrash as Trash2 } from "react-icons/fa"
 import { FaPlus as Plus } from "react-icons/fa"
 
-const AddressesComponent = () => {
-  const [addresses, setAddresses] = useState([
-    {
-      id: 1,
-      address: "123 Đường ABC",
-      province: "TP. Hồ Chí Minh",
-      district: "Quận 1",
-      ward: "Phường Bến Nghé",
-    },
-    {
-      id: 2,
-      address: "456 Đường XYZ",
-      province: "Hà Nội",
-      district: "Quận Ba Đình",
-      ward: "Phường Điện Biên",
-    },
-  ])
+import { useAuth } from "../../hooks/useAuth"
+import DropList from "../PaymentForm/DropList"
+import {
+  getProvinces,
+  getDistrictsByProvinceId,
+  getWardsByDistrictId,
+} from "../../services/apiLocation"
+import { updateUser } from "../../services/apiUser"
 
+const AddressesComponent = () => {
+  const { user, setUser } = useAuth()
+  const [address, setAddress] = useState(user?.address ?? undefined)
   const [showForm, setShowForm] = useState(false)
-  const [editingAddress, setEditingAddress] = useState(null)
+
+  // Location data
+  const [provinces, setProvinces] = useState([])
+  const [districts, setDistricts] = useState([])
+  const [wards, setWards] = useState([])
+
   const [newAddress, setNewAddress] = useState({
     address: "",
     province: "",
@@ -32,106 +31,177 @@ const AddressesComponent = () => {
     ward: "",
   })
 
-  const handleAddAddress = () => {
-    setShowForm(true)
-    setEditingAddress(null)
-    setNewAddress({ address: "", province: "", district: "", ward: "" })
-  }
-
-  const handleEditAddress = (address) => {
-    setShowForm(true)
-    setEditingAddress(address.id)
-    setNewAddress(address)
-  }
-
-  const handleDeleteAddress = (id) => {
-    setAddresses(addresses.filter((address) => address.id !== id))
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if (editingAddress) {
-      setAddresses(
-        addresses.map((address) =>
-          address.id === editingAddress ? { ...newAddress, id: editingAddress } : address
-        )
-      )
-    } else {
-      setAddresses([...addresses, { ...newAddress, id: Date.now() }])
+  // Fetch provinces data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getProvinces()
+        setProvinces(data)
+      } catch (error) {
+        console.error("Failed to fetch provinces:", error)
+      }
     }
-    setShowForm(false)
-    setEditingAddress(null)
-    setNewAddress({ address: "", province: "", district: "", ward: "" })
+    fetchData()
+  }, [])
+
+  // Fetch districts data
+  useEffect(() => {
+    const fetchDistricts = async () => {
+      if (newAddress.province) {
+        try {
+          const provinceId = provinces.find((p) => p.name === newAddress.province)?.id ?? null
+          if (!provinceId) return
+          const fetchedDistricts = await getDistrictsByProvinceId(provinceId)
+          setDistricts(fetchedDistricts || [])
+        } catch (error) {
+          console.error("Failed to fetch districts:", error)
+        }
+      }
+    }
+
+    fetchDistricts()
+  }, [newAddress.province, provinces])
+
+  // Fetch wards data
+  useEffect(() => {
+    const fetchWards = async () => {
+      if (newAddress.district) {
+        try {
+          const districtId = districts.find((d) => d.name === newAddress.district)?.id ?? null
+          if (!districtId) return
+          const fetchedWards = await getWardsByDistrictId(districtId)
+          setWards(fetchedWards || [])
+        } catch (error) {
+          console.error("Failed to fetch wards:", error)
+        }
+      }
+    }
+
+    fetchWards()
+  }, [newAddress.district, districts])
+
+  // Handle show form
+  const handleShowForm = () => {
+    setShowForm(true)
   }
 
+  // Handle form input change
   const handleChange = (e) => {
     const { name, value } = e.target
-    setNewAddress((prev) => ({ ...prev, [name]: value }))
+    setNewAddress((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
+
+  // Handle select change
+  const handleSelectChange = async (name, id, value) => {
+    setNewAddress((prev) => ({
+      ...prev,
+      [name]: value,
+      ...(name === "province" && { district: "", ward: "" }),
+      ...(name === "district" && { ward: "" }),
+    }))
+  }
+
+  // Handle edit address
+  const handleEditAddress = async (address) => {
+    setNewAddress(address)
+    setShowForm((prev) => !prev)
+  }
+
+  const handleDeleteAddress = async () => {
+    // Delete
+    const updatedUser = await updateUser({ address: null })
+    setUser(updatedUser.data.user)
+    setAddress(null)
+    setNewAddress({
+      address: "",
+      province: "",
+      district: "",
+      ward: "",
+    })
+    setShowForm(false)
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    const updatedUser = await updateUser({ address: newAddress })
+    setUser(updatedUser.data.user)
+    setAddress(updatedUser.data.user.address)
+    setShowForm(false)
   }
 
   return (
     <>
-      <ContentHeader>ĐỊA CHỈ CỦA BẠN</ContentHeader>
-      {addresses.map((address) => (
-        <AddressCard key={address.id}>
-          <AddressActions>
-            <ActionButton onClick={() => handleEditAddress(address)}>
-              <Edit2 size={18} />
-            </ActionButton>
-            <ActionButton onClick={() => handleDeleteAddress(address.id)}>
-              <Trash2 size={18} />
-            </ActionButton>
-          </AddressActions>
-          <p>
-            <strong>Địa chỉ:</strong> {address.address}
-          </p>
-          <p>
-            <strong>Tỉnh/Thành phố:</strong> {address.province}
-          </p>
-          <p>
-            <strong>Quận/Huyện:</strong> {address.district}
-          </p>
-          <p>
-            <strong>Phường/Xã:</strong> {address.ward}
-          </p>
-        </AddressCard>
-      ))}
-      {!showForm && (
-        <AddAddressButton onClick={handleAddAddress}>
+      {address ? (
+        <>
+          <ContentHeader>YOUR ADDRESS</ContentHeader>
+          <AddressCard>
+            <AddressActions>
+              <ActionButton onClick={() => handleEditAddress(address)}>
+                <Edit2 size={18} />
+              </ActionButton>
+              <ActionButton onClick={() => handleDeleteAddress(address.id)}>
+                <Trash2 size={18} />
+              </ActionButton>
+            </AddressActions>
+            <p>
+              <strong>Address:</strong> {address.address}
+            </p>
+            <p>
+              <strong>Province:</strong> {address.province}
+            </p>
+            <p>
+              <strong>District:</strong> {address.district}
+            </p>
+            <p>
+              <strong>Ward:</strong> {address.ward}
+            </p>
+          </AddressCard>
+        </>
+      ) : (
+        <p>Don&apos;t have address</p>
+      )}
+
+      {!address && (
+        <AddAddressButton onClick={handleShowForm}>
           <Plus size={20} />
-          Thêm địa chỉ mới
+          Add address
         </AddAddressButton>
       )}
+
       {showForm && (
         <AddressForm onSubmit={handleSubmit}>
           <Input
             name="address"
             value={newAddress.address}
             onChange={handleChange}
-            placeholder="Địa chỉ"
+            placeholder="Address"
             required
           />
-          <Select name="province" value={newAddress.province} onChange={handleChange} required>
-            <option value="">Chọn Tỉnh/Thành phố</option>
-            <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
-            <option value="Hà Nội">Hà Nội</option>
-            {/* Add more options as needed */}
-          </Select>
-          <Select name="district" value={newAddress.district} onChange={handleChange} required>
-            <option value="">Chọn Quận/Huyện</option>
-            <option value="Quận 1">Quận 1</option>
-            <option value="Quận Ba Đình">Quận Ba Đình</option>
-            {/* Add more options as needed */}
-          </Select>
-          <Select name="ward" value={newAddress.ward} onChange={handleChange} required>
-            <option value="">Chọn Phường/Xã</option>
-            <option value="Phường Bến Nghé">Phường Bến Nghé</option>
-            <option value="Phường Điện Biên">Phường Điện Biên</option>
-            {/* Add more options as needed */}
-          </Select>
-          <SubmitButton type="submit">
-            {editingAddress ? "Cập nhật địa chỉ" : "Thêm địa chỉ"}
-          </SubmitButton>
+          <DropList
+            options={provinces}
+            placeholder="Province"
+            value={newAddress.province}
+            onChange={(id, value) => handleSelectChange("province", id, value)}
+            disabled={false}
+          />
+          <DropList
+            options={districts}
+            placeholder="District"
+            value={newAddress.district}
+            onChange={(id, value) => handleSelectChange("district", id, value)}
+            disabled={!newAddress.province}
+          />
+          <DropList
+            options={wards}
+            placeholder="Ward"
+            value={newAddress.ward}
+            onChange={(id, value) => handleSelectChange("ward", id, value)}
+            disabled={!newAddress.district}
+          />
+          <SubmitButton type="submit">Save</SubmitButton>
         </AddressForm>
       )}
     </>
@@ -216,20 +286,6 @@ const Input = styled.input`
   border: 1px solid ${colors.thirdColor};
   border-radius: 4px;
   font-size: 14px;
-
-  &:focus {
-    outline: none;
-    border-color: ${colors.secondaryColor};
-  }
-`
-
-const Select = styled.select`
-  width: 100%;
-  padding: 10px;
-  border: 1px solid ${colors.thirdColor};
-  border-radius: 4px;
-  font-size: 14px;
-  background-color: white;
 
   &:focus {
     outline: none;

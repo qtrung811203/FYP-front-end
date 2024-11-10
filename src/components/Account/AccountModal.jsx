@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import styled from "styled-components"
 
 import { IoMdClose as X } from "react-icons/io"
@@ -7,9 +7,14 @@ import { IoMdClose as X } from "react-icons/io"
 const AccountModal = ({ isOpen, onClose, fieldToEdit, currentValue, onSave }) => {
   const [value, setValue] = useState(currentValue)
 
+  useEffect(() => {
+    if (isOpen) setValue(currentValue)
+  }, [isOpen, currentValue])
+
+  //Save the new value and close the modal
   const handleSubmit = (e) => {
     e.preventDefault()
-    onSave(value)
+    onSave({ [fieldToEdit]: value })
     onClose()
   }
 
@@ -17,12 +22,10 @@ const AccountModal = ({ isOpen, onClose, fieldToEdit, currentValue, onSave }) =>
 
   const getFieldLabel = () => {
     switch (fieldToEdit) {
-      case "fullName":
-        return "Họ tên"
-      case "email":
-        return "Email"
+      case "name":
+        return "Full Name"
       case "phoneNumber":
-        return "Số điện thoại"
+        return "Phone Number"
       default:
         return ""
     }
@@ -32,7 +35,7 @@ const AccountModal = ({ isOpen, onClose, fieldToEdit, currentValue, onSave }) =>
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <ModalHeader>
-          <ModalTitle>Chỉnh sửa {getFieldLabel()}</ModalTitle>
+          <ModalTitle>Edit {getFieldLabel()}</ModalTitle>
           <CloseButton onClick={onClose}>
             <X size={24} />
           </CloseButton>
@@ -48,7 +51,7 @@ const AccountModal = ({ isOpen, onClose, fieldToEdit, currentValue, onSave }) =>
               required
             />
           </FormGroup>
-          <SaveButton type="submit">Lưu thay đổi</SaveButton>
+          <SaveButton type="submit">Save</SaveButton>
         </Form>
       </ModalContent>
     </ModalOverlay>

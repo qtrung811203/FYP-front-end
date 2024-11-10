@@ -20,7 +20,7 @@ axiosInstance.interceptors.response.use(
       } else if (error.response.status === 404) {
         errorMessage = "Resource not found"
       } else if (error.response.status === 500) {
-        errorMessage = "Internal server error"
+        errorMessage = error.response.data.message || "Internal server error"
       } else {
         errorMessage = error.response.data.message || "Something went wrong"
       }

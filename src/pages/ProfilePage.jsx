@@ -1,5 +1,6 @@
 import { useState } from "react"
 import styled from "styled-components"
+import { useNavigate } from "react-router-dom"
 
 import { FaUser as User } from "react-icons/fa"
 import { GoPackage as Package } from "react-icons/go"
@@ -12,18 +13,23 @@ import OrdersTab from "../components/Account/OrdersTab"
 import ChangePasswordTab from "../components/Account/ChangePasswordTab"
 import AddressTab from "../components/Account/AddressTab"
 
+import { useAuth } from "../hooks/useAuth"
+import { logout } from "../services/apiAuth"
+
 export default function ProfilePage() {
+  const { user, setUser, userLoading } = useAuth()
   const [activeSection, setActiveSection] = useState("account")
-  const [userData, setUserData] = useState({
-    fullName: "Quoc Trung",
-    email: "qtrung811203@gmail.com",
-    phone: "0123456789",
-  })
+
+  const navigate = useNavigate()
+
+  if (userLoading) {
+    return <p>Loading...</p>
+  }
 
   const renderContent = () => {
     switch (activeSection) {
       case "account":
-        return <AccountTab userData={userData} setUserData={setUserData} />
+        return <AccountTab userData={user} setUserData={setUser} />
       case "orders":
         return <OrdersTab />
       case "password":
@@ -35,8 +41,10 @@ export default function ProfilePage() {
     }
   }
 
-  const handleLogout = () => {
-    // Clear user data
+  const handleLogout = async () => {
+    await logout()
+    setUser(null)
+    navigate("/login", { replace: true })
   }
 
   return (
@@ -45,7 +53,7 @@ export default function ProfilePage() {
         <Sidebar>
           <WelcomeText>
             <h2>ACCOUNT PAGE</h2>
-            <p>Hello, {userData.fullName}!</p>
+            <p>Hello, {user?.name}!</p>
           </WelcomeText>
           <NavMenu>
             <NavItem

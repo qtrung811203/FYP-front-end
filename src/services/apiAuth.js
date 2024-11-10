@@ -26,8 +26,8 @@ export async function register({ email, password, passwordConfirm }) {
   return response.data
 }
 
-export async function getUser() {
-  const response = await axiosInstance.get("/users/me", {
+export async function logout() {
+  const response = await axiosInstance.get("/users/logout", {
     withCredentials: true,
   })
   return response.data

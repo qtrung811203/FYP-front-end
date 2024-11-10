@@ -1,13 +1,13 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import styled from "styled-components"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 
 import { login } from "../services/apiAuth"
 import { useAuth } from "../hooks/useAuth"
 
 export default function LoginPage() {
-  const { user, setUser } = useAuth()
+  const { user, setUser, userLoading } = useAuth()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
@@ -15,16 +15,25 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
 
   const navigate = useNavigate()
-  if (user) navigate("/home")
+  const location = useLocation()
+
+  useEffect(() => {
+    if (user && !userLoading) {
+      navigate("/home", { replace: true })
+    }
+  }, [user, navigate, userLoading])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
     setError(null)
     try {
-      const newUser = await login({ email, password })
-      setUser(newUser)
-      if (newUser) navigate("/home", { replace: true })
+      const currentUser = await login({ email, password })
+      if (currentUser) {
+        setUser(currentUser.data.user)
+        const { from } = location.state || { from: { pathname: "/home" } }
+        navigate(from, { replace: true })
+      }
     } catch (error) {
       setError(error.message)
     } finally {

@@ -11,20 +11,35 @@ function CheckoutSuccessPage() {
   const sessionId = searchParams.get("sessionId")
 
   const [session, setSession] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isProcessed, setIsProcessed] = useState(false)
 
   // Fetch the checkout session
   useEffect(() => {
+    if (!sessionId || isProcessed) return
     const fetchCheckoutSession = async () => {
-      const session = await checkoutSuccess(sessionId)
-      if (session) {
-        setSession(session)
-        // Clear the cart
-        //logic
+      setIsLoading(true)
+      try {
+        const session = await checkoutSuccess(sessionId)
+        if (session) {
+          setSession(session)
+          setIsProcessed(true)
+          // Clear the cart
+          //logic
+        }
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setIsLoading(false)
       }
     }
 
     fetchCheckoutSession()
-  }, [])
+  }, [sessionId, isProcessed])
+
+  if (isLoading) {
+    return <p>Loading...</p>
+  }
 
   return session ? (
     <CheckoutSuccessContainer>

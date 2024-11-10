@@ -4,7 +4,6 @@ import axiosInstance from "../config/axiosConfig"
 export async function checkout({ user, items }) {
   try {
     const response = await axiosInstance.post("/checkout/create-checkout-session", { user, items })
-    console.log(response.data)
     return response.data.sessionId
   } catch (error) {
     console.error(error)
@@ -21,12 +20,8 @@ export async function getCheckoutSession(sessionId) {
 }
 
 export async function checkoutSuccess(sessionId) {
-  try {
-    const response = await axiosInstance.get(`/checkout/success?sessionId=${sessionId}`)
-    return response.data
-  } catch (error) {
-    console.error(error)
-  }
+  const response = await axiosInstance.get(`/checkout/success?sessionId=${sessionId}`)
+  return response.data
 }
 
 export async function checkoutCod({ user, items }) {

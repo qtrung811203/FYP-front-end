@@ -1,17 +1,55 @@
 import { useState } from "react"
 import styled from "styled-components"
 import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
+
+import { useAuth } from "../hooks/useAuth"
+import { register } from "../services/apiAuth"
+import emailValidation from "../utils/emailValidation"
 
 export default function SignUpPage() {
-  const [name, setName] = useState("")
+  const { user, setUser } = useAuth()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
+  const [passwordConfirm, setpasswordConfirm] = useState("")
+  const [error, setError] = useState(null)
+  const [passwordError, setPasswordError] = useState(null)
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate()
+  if (user) navigate("/home")
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // Here you would typically handle the sign-up logic
-    console.log("Sign-up attempt with:", { name, email, password, confirmPassword })
+    setError(null)
+    setPasswordError(null)
+
+    if (!emailValidation(email)) {
+      setError("Invalid email")
+      return
+    }
+    if (password !== passwordConfirm) {
+      setPasswordError("Passwords do not match")
+      return
+    }
+
+    if (password.length < 8) {
+      setPasswordError("Password must be at least 8 characters")
+      return
+    }
+
+    if (email && password && passwordConfirm) {
+      try {
+        setLoading(true)
+        const newUser = await register({ email, password, passwordConfirm })
+        setUser(newUser)
+        if (newUser) navigate("/home", { replace: true })
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setLoading(false)
+      }
+    }
   }
 
   return (
@@ -19,17 +57,7 @@ export default function SignUpPage() {
       <SignUpCard>
         <Title>Sign Up</Title>
         <Form onSubmit={handleSubmit}>
-          <div>
-            <Label htmlFor="name">Name</Label>
-            <Input
-              id="name"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              placeholder="Enter your name"
-            />
-          </div>
+          {error && <ErrorMessage>{error}</ErrorMessage>}
           <div>
             <Label htmlFor="email">Email</Label>
             <Input
@@ -53,17 +81,21 @@ export default function SignUpPage() {
             />
           </div>
           <div>
-            <Label htmlFor="confirmPassword">Confirm Password</Label>
+            <Label htmlFor="passwordConfirm">Confirm Password</Label>
             <Input
-              id="confirmPassword"
+              id="passwordConfirm"
               type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              value={passwordConfirm}
+              onChange={(e) => setpasswordConfirm(e.target.value)}
               required
               placeholder="Confirm your password"
             />
           </div>
-          <Button type="submit">Sign Up</Button>
+          {passwordError && <ErrorMessage>{passwordError}</ErrorMessage>}
+
+          <Button type="submit" disabled={loading}>
+            Sign Up
+          </Button>
         </Form>
         <LoginPrompt>
           Already have an account? <LoginLink to="/login">Log in</LoginLink>
@@ -148,6 +180,11 @@ const Button = styled.button`
     outline: none;
     box-shadow: 0 0 0 3px var(--light-mint);
   }
+
+  &:disabled {
+    background-color: var(--light-gray);
+    cursor: not-allowed;
+  }
 `
 
 const LoginPrompt = styled.p`
@@ -165,4 +202,8 @@ const LoginLink = styled(Link)`
   &:hover {
     text-decoration: underline;
   }
+`
+const ErrorMessage = styled.p`
+  color: red;
+  font-size: var(--font-size-sm);
 `

@@ -15,11 +15,14 @@ import {
 import { checkout, checkoutCod } from "../../services/apiCheckout"
 import emailValidation from "../../utils/emailValidation"
 
+import { useAuth } from "../../hooks/useAuth"
+
 const stripePromise = loadStripe(
   "pk_test_51Q7T5KHxv792P1FeVX2530832RhslIDMtKZbqcDFOmoCrK76ZUeoJgDvyVgPZaxlzLi1xLKQcH0hMIjkuN6Jqx2D00FleKVO8J"
 )
 
 export default function PaymentForm({ isOpen, onClose }) {
+  const { user } = useAuth()
   const [provinces, setProvinces] = useState([])
   const [districts, setDistricts] = useState([])
   const [wards, setWards] = useState([])
@@ -31,9 +34,9 @@ export default function PaymentForm({ isOpen, onClose }) {
   const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
-    email: "",
-    fullName: "",
-    phoneNumber: "",
+    email: user ? user.email : "",
+    fullName: user ? user.name : "",
+    phoneNumber: user ? user.phoneNumber : "",
     address: "",
     province: "",
     district: "",
@@ -122,7 +125,7 @@ export default function PaymentForm({ isOpen, onClose }) {
           const stripe = await stripePromise
           const response = await checkout({ user: formData, items: cart.items })
           if (!response) {
-            alert("Checkout failed, please try again")
+            alert(`Checkout failed, please try again + ${response}`)
             return
           }
           stripe.redirectToCheckout({ sessionId: response })
@@ -147,8 +150,9 @@ export default function PaymentForm({ isOpen, onClose }) {
             type="email"
             name="email"
             placeholder="Email"
-            value={formData.email}
+            value={user ? user.email : formData.email}
             onChange={handleChange}
+            disabled={user}
             required
           />
           <Input

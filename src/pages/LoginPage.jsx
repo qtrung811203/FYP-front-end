@@ -1,21 +1,51 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import styled from "styled-components"
+import { useNavigate, useLocation } from "react-router-dom"
+
+import { login } from "../services/apiAuth"
+import { useAuth } from "../hooks/useAuth"
 
 export default function LoginPage() {
+  const { user, setUser, userLoading } = useAuth()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
-  const handleSubmit = (e) => {
+  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
+
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  useEffect(() => {
+    if (user && !userLoading) {
+      navigate("/home", { replace: true })
+    }
+  }, [user, navigate, userLoading])
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // Here you would typically handle the login logic
-    console.log("Login attempt with:", { email, password })
+    setLoading(true)
+    setError(null)
+    try {
+      const currentUser = await login({ email, password })
+      if (currentUser) {
+        setUser(currentUser.data.user)
+        const { from } = location.state || { from: { pathname: "/home" } }
+        navigate(from, { replace: true })
+      }
+    } catch (error) {
+      setError(error.message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
     <PageContainer>
       <LoginCard>
         <Title>Log In</Title>
+        {error && <div style={{ color: "red" }}>{error}</div>}
         <Form onSubmit={handleSubmit}>
           <div>
             <Label htmlFor="email">Email</Label>
@@ -40,7 +70,9 @@ export default function LoginPage() {
             />
           </div>
           <ForgotPassword href="/forgot-password">Forgot password?</ForgotPassword>
-          <Button type="submit">Log In</Button>
+          <Button type="submit" disabled={loading}>
+            Log In
+          </Button>
         </Form>
         <SignUpPrompt>
           Don&apos;t have an account? <SignUpLink to="/signup">Sign up</SignUpLink>

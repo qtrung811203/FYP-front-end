@@ -37,7 +37,7 @@ const DropList = ({ options, placeholder, value, onChange, disabled }) => {
         <DropdownList>
           <SearchInput
             type="text"
-            placeholder="Tìm kiếm..."
+            placeholder="Search..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />

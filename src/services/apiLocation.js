@@ -11,7 +11,9 @@ export async function getProvinces() {
 
 export async function getDistrictsByProvinceId(provinceId) {
   try {
-    const response = await axios.get(`https://open.oapi.vn/location/districts/${provinceId}`)
+    const response = await axios.get(
+      `https://open.oapi.vn/location/districts/${provinceId}?size=50`
+    )
     return response.data.data
   } catch (error) {
     console.error(error)
@@ -20,7 +22,7 @@ export async function getDistrictsByProvinceId(provinceId) {
 
 export async function getWardsByDistrictId(districtId) {
   try {
-    const response = await axios.get(`https://open.oapi.vn/location/wards/${districtId}`)
+    const response = await axios.get(`https://open.oapi.vn/location/wards/${districtId}?size=50`)
     return response.data.data
   } catch (error) {
     console.error(error)

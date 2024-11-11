@@ -3,6 +3,8 @@ import styled from "styled-components"
 
 import CategoryContainer from "./CategoryContainer"
 import PurchaseButton from "./PurchaseButton"
+import ProductDetailDescription from "./ProductDetailDescription"
+import BackButtonToDetail from "./BackButtonToDetail"
 
 function ProductDetail({ product }) {
   //If there is no product return null => maybe change to loading spinner
@@ -17,6 +19,8 @@ function ProductDetail({ product }) {
       </Title>
       <CategoryContainer items={product.items} />
       <PurchaseButton />
+      <ProductDetailDescription product={product} />
+      <BackButtonToDetail />
     </ProductDetailContainer>
   )
 }

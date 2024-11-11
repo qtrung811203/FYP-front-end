@@ -2,10 +2,21 @@ import styled from "styled-components"
 import { useLocation, Navigate, useNavigate } from "react-router-dom"
 import { FaCircleCheck as CheckCircle } from "react-icons/fa6"
 import { IoHome as Home } from "react-icons/io5"
+import { useDispatch } from "react-redux"
+
+import { removeAllFromCart } from "../features/cartSlice"
+import { useEffect } from "react"
 
 function CodSuccessPage() {
   const location = useLocation()
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (location.state && location.state.order._id) {
+      dispatch(removeAllFromCart())
+    }
+  }, [dispatch, location.state])
 
   if (!location.state || !location.state.order._id) {
     return <Navigate to="/home" />

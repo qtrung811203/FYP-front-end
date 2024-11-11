@@ -1,14 +1,19 @@
 import styled from "styled-components"
 import { useEffect, useState } from "react"
 import { useSearchParams } from "react-router-dom"
+import { useDispatch } from "react-redux"
 
 import { checkoutSuccess } from "../services/apiCheckout"
+import { removeAllFromCart } from "../features/cartSlice"
 import successIcon from "../assets/success.svg"
 import NotFoundPage from "./NotFoundPage"
 
 function CheckoutSuccessPage() {
   const [searchParams] = useSearchParams()
   const sessionId = searchParams.get("sessionId")
+
+  //Get the cart from the store
+  const dispatch = useDispatch()
 
   const [session, setSession] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -24,8 +29,7 @@ function CheckoutSuccessPage() {
         if (session) {
           setSession(session)
           setIsProcessed(true)
-          // Clear the cart
-          //logic
+          dispatch(removeAllFromCart())
         }
       } catch (error) {
         console.error(error)
@@ -35,7 +39,7 @@ function CheckoutSuccessPage() {
     }
 
     fetchCheckoutSession()
-  }, [sessionId, isProcessed])
+  }, [sessionId, isProcessed, dispatch])
 
   if (isLoading) {
     return <p>Loading...</p>

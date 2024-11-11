@@ -37,7 +37,7 @@ const LoadingSpinner = styled.div`
   animation: ${spinAnimation} 1s linear infinite;
 `
 
-export default function LoadingPage() {
+export default function Loading() {
   return (
     <Container>
       <LoadingText>Loading...</LoadingText>

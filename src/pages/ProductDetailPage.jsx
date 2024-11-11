@@ -64,6 +64,6 @@ const MainContainer = styled.div`
   gap: 5rem;
 `
 
-const SmallHeader = styled.h3`
-  font-size: 3rem;
+const SmallHeader = styled.p`
+  font-size: 2.5rem;
 `

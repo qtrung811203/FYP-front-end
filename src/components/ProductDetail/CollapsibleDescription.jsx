@@ -17,8 +17,8 @@ const CollapsibleDescription = ({ items }) => {
       {items.map((item, index) => (
         <CollapsibleItem key={index}>
           <CollapsibleTrigger onClick={() => toggleItem(index)}>
-            <CollapsibleTitle>{item.category}</CollapsibleTitle>
-            <CollapsibleIcon isOpen={openItems[index]} />
+            <CollapsibleTitle>{item.category} Detail</CollapsibleTitle>
+            <CollapsibleIcon $isOpen={openItems[index]} />
           </CollapsibleTrigger>
           {openItems[index] && (
             <CollapsibleContent>
@@ -92,7 +92,7 @@ const CollapsibleTitle = styled.span`
 const CollapsibleIcon = styled(FaChevronDown)`
   color: ${colors.primary};
   transition: transform 0.3s ease;
-  ${(props) => props.isOpen && "transform: rotate(180deg);"}
+  ${(props) => props.$isOpen && "transform: rotate(180deg);"}
 `
 
 const CollapsibleContent = styled.div`

@@ -22,7 +22,7 @@ function CartPage() {
         <CartFooter />
       </BodyWidth>
       <FeatureSwiper data={recentItems}>
-        <FaClockRotateLeft />
+        <FaClockRotateLeft size={32} />
         <SmallHeader>recently viewed</SmallHeader>
       </FeatureSwiper>
     </CartContainer>

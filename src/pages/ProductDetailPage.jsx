@@ -30,7 +30,7 @@ function Product() {
       setImages(combinedImages)
 
       // Add to recent items list
-      dispatch(addRecentItem(productData.productInfo))
+      dispatch(addRecentItem({ ...productData.productInfo, items: productData.items }))
     }
     fetchProduct()
   }, [slug, dispatch])
@@ -42,7 +42,7 @@ function Product() {
         <ProductDetail product={product} />
       </MainContainer>
       <FeatureSwiper data={recentItems}>
-        <FaClockRotateLeft />
+        <FaClockRotateLeft size={32} />
         <SmallHeader>recently viewed</SmallHeader>
       </FeatureSwiper>
     </ProductContainer>

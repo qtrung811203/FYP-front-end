@@ -35,6 +35,7 @@ const BackButton = styled.button`
   gap: 8px;
   padding: 8px 16px;
   margin-top: 2rem;
+  margin-bottom: 2rem;
   background: transparent;
   border: none;
   color: ${colors.primary};

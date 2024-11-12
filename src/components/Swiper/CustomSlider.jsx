@@ -1,7 +1,9 @@
 import styled from "styled-components"
+import { formatCurrency } from "../../utils/formatCurrency"
 
 /* eslint-disable react/prop-types */
 function CustomSlider({ data, isNew, border, small }) {
+  console.log(data)
   return (
     <CustomCard $border={border} className={small ? "small" : undefined}>
       <ImgCard>
@@ -12,7 +14,10 @@ function CustomSlider({ data, isNew, border, small }) {
         <h3>
           <p>{data.name || "Hololivex9090 COLLAB MERCH hololivex9090"}</p>
         </h3>
-        <Price>{"~ 500.000 VND"}</Price>
+        <Price>
+          {data?.items?.length > 1 ? " ~ " : ""}{" "}
+          {data?.minPrice ? formatCurrency(data.minPrice) : "0"}
+        </Price>
       </Content>
       {isNew && <NewStyled>new</NewStyled>}
     </CustomCard>

@@ -3,7 +3,6 @@ import { formatCurrency } from "../../utils/formatCurrency"
 
 /* eslint-disable react/prop-types */
 function CustomSlider({ data, isNew, border, small }) {
-  console.log(data)
   return (
     <CustomCard $border={border} className={small ? "small" : undefined}>
       <ImgCard>

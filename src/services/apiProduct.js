@@ -9,6 +9,15 @@ export async function getHomeProducts() {
   }
 }
 
+export async function getProducts(page) {
+  try {
+    const response = await axiosInstance.get(`/products?page=${page}&limit=2`)
+    return response.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 export async function getProductBySlug(slug) {
   try {
     const response = await axiosInstance.get(`/products/${slug}`)

@@ -1,17 +1,18 @@
-import styled from "styled-components"
+import styled from "styled-components";
 
-import { useAuth } from "../../hooks/useAuth"
+import { useAuth } from "../../hooks/useAuth";
 
-import Logo from "./Logo"
-import NavMenu from "./NavMenu"
-import SearchBar from "./SearchBar"
-import CartIcon from "./CartIcon"
-import LoginButton from "./LoginButton"
-import MobileMenu from "./MobileMenu"
-import MyPage from "./MyPage"
+import Logo from "./Logo";
+import NavMenu from "./NavMenu";
+import SearchBar from "./SearchBar";
+import CartIcon from "./CartIcon";
+import LoginButton from "./LoginButton";
+import MobileMenu from "./MobileMenu";
+import MyPage from "./MyPage";
+import Admin from "./Admin";
 
 function Header() {
-  const { user } = useAuth()
+  const { user } = useAuth();
 
   return (
     <StyledHeader>
@@ -20,14 +21,15 @@ function Header() {
       <PcStyled>
         <SearchBar />
         <CartIcon />
+        <Admin />
         {user ? <MyPage /> : <LoginButton />}
       </PcStyled>
       <MobileMenu />
     </StyledHeader>
-  )
+  );
 }
 
-export default Header
+export default Header;
 
 //Styled Components
 const StyledHeader = styled.header`
@@ -48,7 +50,7 @@ const StyledHeader = styled.header`
     justify-content: space-between;
     padding: 0 1.5rem;
   }
-`
+`;
 
 const PcStyled = styled.div`
   display: flex;
@@ -58,4 +60,4 @@ const PcStyled = styled.div`
   @media (max-width: 768px) {
     display: none;
   }
-`
+`;

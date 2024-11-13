@@ -35,7 +35,7 @@ const OrderDetailsModal = ({ order, isOpen, onClose }) => {
           </InfoItem>
           <InfoItem>
             <MdEmail />
-            <span>Phone Number: {order.email}</span>
+            <span>Email: {order.email}</span>
           </InfoItem>
           <InfoItem>
             <FaCalendarAlt />

@@ -1,11 +1,14 @@
 import styled from "styled-components"
 import { FaShoppingCart } from "react-icons/fa"
+import { FaClockRotateLeft } from "react-icons/fa6"
+import { useSelector } from "react-redux"
 
 import CartList from "../components/Cart/CartList"
 import CartFooter from "../components/Cart/CartFooter"
 import FeatureSwiper from "../components/Swiper/FeatureSwiper/FeatureSwiper"
 
 function CartPage() {
+  const recentItems = useSelector((state) => state.recentItems.items)
   return (
     <CartContainer>
       <BodyWidth>
@@ -18,7 +21,10 @@ function CartPage() {
         <CartList />
         <CartFooter />
       </BodyWidth>
-      <FeatureSwiper />
+      <FeatureSwiper data={recentItems}>
+        <FaClockRotateLeft size={32} />
+        <SmallHeader>recently viewed</SmallHeader>
+      </FeatureSwiper>
     </CartContainer>
   )
 }
@@ -46,4 +52,8 @@ const BodyWidth = styled.div`
   width: 100%;
   max-width: 124rem;
   margin: 0 auto;
+`
+
+const SmallHeader = styled.p`
+  font-size: 2.5rem;
 `

@@ -1,26 +1,26 @@
-import styled from "styled-components"
-import { Link } from "react-router-dom"
+/* eslint-disable react/prop-types */
+import styled from "styled-components";
+import { Link } from "react-router-dom";
 
-import CustomSlider from "../Swiper/CustomSlider"
-import data from "../../data/data"
+import CustomSlider from "../Swiper/CustomSlider";
+// import data from "../../data/data"
 
-function ProductsList() {
+function ProductsList({ data }) {
   return (
     <ProductsContainer>
       {data.map((item) => (
-        <Link to={`/product/hehe`} key={item.id}>
+        <Link to={`/product/${item.slug}`} key={item.id}>
           <CustomSlider small={true} data={item} />
         </Link>
       ))}
     </ProductsContainer>
-  )
+  );
 }
 
-export default ProductsList
+export default ProductsList;
 
 //Styled Components
 const ProductsContainer = styled.div`
-  height: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 20px;
@@ -32,4 +32,4 @@ const ProductsContainer = styled.div`
   @media screen and (max-width: 768px) {
     grid-template-columns: 1fr 1fr;
   }
-`
+`;

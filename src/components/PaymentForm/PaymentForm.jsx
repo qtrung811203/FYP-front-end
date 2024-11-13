@@ -6,6 +6,8 @@ import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import CircularProgress from "@mui/material/CircularProgress"
 
+import Loading from "../Loading/Loading"
+
 import DropList from "./DropList"
 import {
   getProvinces,
@@ -22,7 +24,7 @@ const stripePromise = loadStripe(
 )
 
 export default function PaymentForm({ isOpen, onClose }) {
-  const { user } = useAuth()
+  const { user, userLoading } = useAuth()
   const [provinces, setProvinces] = useState([])
   const [districts, setDistricts] = useState([])
   const [wards, setWards] = useState([])
@@ -34,9 +36,9 @@ export default function PaymentForm({ isOpen, onClose }) {
   const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
-    email: user ? user.email : "",
-    fullName: user ? user.name : "",
-    phoneNumber: user ? user.phoneNumber : "",
+    email: "",
+    fullName: "",
+    phoneNumber: "",
     address: "",
     province: "",
     district: "",
@@ -45,14 +47,71 @@ export default function PaymentForm({ isOpen, onClose }) {
     paymentMethod: "stripe",
   })
 
+  //Fill Data to form
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        email: user.email,
+        fullName: user.name,
+        phoneNumber: user.phoneNumber,
+        address: user?.address?.address || "",
+        province: user?.address?.province || "",
+        district: user?.address?.district || "",
+        ward: user?.address?.ward || "",
+        note: "",
+        paymentMethod: "stripe",
+      })
+    }
+  }, [user])
+
   // Fetch provinces data
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getProvinces()
-      setProvinces(data)
+      try {
+        const data = await getProvinces()
+        setProvinces(data)
+      } catch (error) {
+        console.error("Failed to fetch provinces:", error)
+      }
     }
     fetchData()
   }, [])
+
+  // Fetch districts data
+  useEffect(() => {
+    const fetchDistricts = async () => {
+      if (formData.province) {
+        try {
+          const provinceId = provinces.find((p) => p.name === formData.province)?.id ?? null
+          if (!provinceId) return
+          const fetchedDistricts = await getDistrictsByProvinceId(provinceId)
+          setDistricts(fetchedDistricts || [])
+        } catch (error) {
+          console.error("Failed to fetch districts:", error)
+        }
+      }
+    }
+
+    fetchDistricts()
+  }, [formData.province, provinces])
+
+  // Fetch wards data
+  useEffect(() => {
+    const fetchWards = async () => {
+      if (formData.district) {
+        try {
+          const districtId = districts.find((d) => d.name === formData.district)?.id ?? null
+          if (!districtId) return
+          const fetchedWards = await getWardsByDistrictId(districtId)
+          setWards(fetchedWards || [])
+        } catch (error) {
+          console.error("Failed to fetch wards:", error)
+        }
+      }
+    }
+
+    fetchWards()
+  }, [formData.district, districts])
 
   // Handle form input change
   const handleChange = (e) => {
@@ -80,17 +139,6 @@ export default function PaymentForm({ isOpen, onClose }) {
       ...(name === "province" && { district: "", ward: "" }),
       ...(name === "district" && { ward: "" }),
     }))
-
-    // Fetch districts or wards data
-    if (name === "province") {
-      const fetchedDistricts = await getDistrictsByProvinceId(id)
-      setDistricts(fetchedDistricts || [])
-    }
-
-    if (name === "district") {
-      const fetchedWards = await getWardsByDistrictId(id)
-      setWards(fetchedWards || [])
-    }
   }
 
   // Handle close modal
@@ -137,6 +185,8 @@ export default function PaymentForm({ isOpen, onClose }) {
       }
     }
   }
+
+  if (userLoading) return <Loading />
 
   if (!isOpen) return null
 

@@ -9,9 +9,12 @@ export async function getHomeProducts() {
   }
 }
 
-export async function getProducts(page) {
+export async function getProducts(page, brands) {
+  const brandQuery = brands ? `&brands=${brands}` : "";
   try {
-    const response = await axiosInstance.get(`/products?page=${page}&limit=12`);
+    const response = await axiosInstance.get(
+      `/products?page=${page}&limit=12${brandQuery}`
+    );
     return response.data;
   } catch (error) {
     console.error(error);

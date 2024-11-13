@@ -1,30 +1,32 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react"
-import styled from "styled-components"
-import { FaChevronDown } from "react-icons/fa"
+import { useState } from "react";
+import styled from "styled-components";
+import { FaChevronDown } from "react-icons/fa";
 
-export default function FilterDropList({ onSearch }) {
-  const [selectedSort, setSelectedSort] = useState("default")
-  const [isOpen, setIsOpen] = useState(false)
+export default function FilterDropList({ onChange }) {
+  const [selectedSort, setSelectedSort] = useState("default");
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleSort = (option) => {
-    setSelectedSort(option)
-    setIsOpen(false)
-    onSearch(option)
-  }
+    setSelectedSort(option);
+    setIsOpen(false);
+    onChange(option);
+  };
 
-  const toggleDropdown = () => setIsOpen(!isOpen)
+  const toggleDropdown = () => setIsOpen(!isOpen);
 
   const getSortLabel = (option) => {
     switch (option) {
       case "lowToHigh":
-        return "Price: Low to High"
+        return "Price: Low to High";
       case "highToLow":
-        return "Price: High to Low"
+        return "Price: High to Low";
       case "default":
-        return "Default"
+        return "Default";
+      default:
+        return "Default";
     }
-  }
+  };
 
   return (
     <DropdownContainer>
@@ -33,18 +35,24 @@ export default function FilterDropList({ onSearch }) {
         <FaChevronDown />
       </DropdownButton>
       <DropdownContent $isOpen={isOpen}>
-        <DropdownItem onClick={() => handleSort("default")}>Default</DropdownItem>
-        <DropdownItem onClick={() => handleSort("lowToHigh")}>Price: Low to High</DropdownItem>
-        <DropdownItem onClick={() => handleSort("highToLow")}>Price: High to Low</DropdownItem>
+        <DropdownItem onClick={() => handleSort("default")}>
+          Default
+        </DropdownItem>
+        <DropdownItem onClick={() => handleSort("lowToHigh")}>
+          Price: Low to High
+        </DropdownItem>
+        <DropdownItem onClick={() => handleSort("highToLow")}>
+          Price: High to Low
+        </DropdownItem>
       </DropdownContent>
     </DropdownContainer>
-  )
+  );
 }
 
 const DropdownContainer = styled.div`
   position: relative;
   width: 200px;
-`
+`;
 
 const DropdownButton = styled.button`
   width: 100%;
@@ -56,7 +64,7 @@ const DropdownButton = styled.button`
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-`
+`;
 
 const DropdownContent = styled.div`
   display: ${(props) => (props.$isOpen ? "block" : "none")};
@@ -65,7 +73,7 @@ const DropdownContent = styled.div`
   min-width: 200px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
-`
+`;
 
 const DropdownItem = styled.a`
   color: black;
@@ -77,4 +85,4 @@ const DropdownItem = styled.a`
   &:hover {
     background-color: #f1f1f1;
   }
-`
+`;

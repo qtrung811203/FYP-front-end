@@ -8,11 +8,13 @@ import FilterDropList from "../components/Products/FilterDropList";
 import Pagination from "../components/Products/Pagination";
 import Loading from "../components/Loading/Loading";
 
-import { getProducts, getProductsByBrand } from "../services/apiProduct";
+import { getProducts } from "../services/apiProduct";
 
 function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [sortedProducts, setSortedProducts] = useState([]);
+
+  const [brands, setBrands] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [sortOption, setSortOption] = useState("default");
@@ -22,13 +24,13 @@ function ProductsPage() {
   useEffect(() => {
     async function fetchProducts() {
       setLoading(true);
-      const response = await getProducts(page);
+      const response = await getProducts(page, brands);
       setProducts(response.data);
       setTotalPages(response.totalPages);
       setLoading(false);
     }
     fetchProducts();
-  }, [page]);
+  }, [page, brands]);
 
   useEffect(() => {
     let sortedProducts = [...products];
@@ -55,35 +57,15 @@ function ProductsPage() {
     setSortOption(option);
   }
 
-  async function handleBrandChange(brand) {
-    setLoading(true);
-    if (brand.isEmpty) {
-      try {
-        const response = await getProducts(page);
-        setProducts(response.data);
-        setTotalPages(response.totalPages);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    } else {
-      try {
-        const response = await getProductsByBrand(page, brand);
-        setProducts(response.data);
-        setTotalPages(response.totalPages);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    }
+  async function handleBrandsChange(brands) {
+    const brandsString = brands.join(",");
+    setBrands(brandsString);
   }
 
   return (
     <PageContainer>
       {/* Filter SideBar */}
-      <FilterSidebar onChange={handleBrandChange} />
+      <FilterSidebar onChange={handleBrandsChange} />
 
       {/* Products */}
       <ProductsContainer>

@@ -12,18 +12,160 @@ import {
   Modal,
   Box,
   Typography,
-  //   TextField,
   Select,
   MenuItem,
   FormControl,
   InputLabel,
 } from "@mui/material";
 
+import { MdEdit as EditIcon } from "react-icons/md";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  MdAdd as AddIcon,
-  MdEdit as EditIcon,
-  MdDelete as DeleteIcon,
-} from "react-icons/md";
+  getUsers,
+  updateUserRole,
+} from "../../../services/admin/apiAdminUsers";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+
+const roles = ["admin", "user"];
+
+export default function UsersManagement() {
+  const querryClient = useQueryClient();
+  const { register, handleSubmit, reset } = useForm({});
+
+  const [openModal, setOpenModal] = useState(false);
+
+  const { isLoading, data: users } = useQuery({
+    queryKey: ["users"],
+    queryFn: getUsers,
+  });
+
+  const { mutate: updateUserRoleMutation } = useMutation({
+    mutationFn: ({ _id, data }) => updateUserRole(_id, data),
+    onSuccess: () => {
+      toast.success("User role updated successfully");
+      querryClient.invalidateQueries("users");
+    },
+    onError: () => {
+      toast.error("Something went wrong");
+    },
+  });
+
+  const handleOpenModal = (mode, id) => {
+    reset({ _id: id });
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  // Submit form data
+  const onSubmit = (data) => {
+    if (data.role === "") {
+      toast.error("Please Choose Role");
+    } else {
+      const { _id, role } = data;
+      updateUserRoleMutation({ _id, data: { role } });
+      handleCloseModal();
+    }
+  };
+
+  // Format address for data from API
+  const formatAddress = (address) => {
+    return `${address?.address}, ${address?.province}, ${address?.district}, ${address?.ward}`;
+  };
+
+  if (isLoading) return <p>Loading...</p>;
+
+  return (
+    <PageContainer>
+      <Typography variant="h4" gutterBottom>
+        User Management
+      </Typography>
+      <TableWrapper component={Paper}>
+        <Table aria-label="user management table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell>Email</StyledTableCell>
+              <StyledTableCell>Name</StyledTableCell>
+              <StyledTableCell>Role</StyledTableCell>
+              <StyledTableCell>Phone Number</StyledTableCell>
+              <StyledTableCell>Address</StyledTableCell>
+              <StyledTableCell align="right">Actions</StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {users.data.users.map((user) => (
+              <TableRow key={user._id}>
+                <StyledTableCell>{user.email}</StyledTableCell>
+                <StyledTableCell>{user.name}</StyledTableCell>
+                <StyledTableCell>{user.role}</StyledTableCell>
+                <StyledTableCell>{user.phoneNumber}</StyledTableCell>
+                <StyledTableCell>
+                  {user?.address ? `${formatAddress(user?.address)}` : ""}
+                </StyledTableCell>
+                <StyledTableCell align="right">
+                  <ActionButton
+                    startIcon={<EditIcon />}
+                    onClick={() => handleOpenModal("edit", user._id)}
+                    aria-label={`Edit ${user.name}`}
+                    style={{ color: "var(--warm-accent)" }}
+                  >
+                    Edit
+                  </ActionButton>
+                </StyledTableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableWrapper>
+
+      {/* Model for edit */}
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        aria-labelledby="user-modal-title"
+      >
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <ModalContent>
+            <Typography id="user-modal-title" variant="h6" component="h2">
+              Edit User
+            </Typography>
+            <FormSelect
+              fullWidth
+              style={{ marginBottom: "20px", marginTop: "20px" }}
+            >
+              <InputLabel id="role-label">Role</InputLabel>
+              <Select
+                labelId="role-label"
+                id="role"
+                {...register("role")}
+                defaultValue={""}
+              >
+                {roles.map((role) => (
+                  <MenuItem key={role} value={role}>
+                    {role}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormSelect>
+            <Button
+              variant="contained"
+              type="submit"
+              style={{ backgroundColor: "var(--primary-color)" }}
+            >
+              Update
+            </Button>
+            <Button onClick={handleCloseModal} color="inherit">
+              Cancel
+            </Button>
+          </ModalContent>
+        </form>
+      </Modal>
+    </PageContainer>
+  );
+}
 
 const PageContainer = styled.div`
   padding: 20px;
@@ -66,192 +208,3 @@ const FormSelect = styled(FormControl)`
 const StyledTableCell = styled(TableCell)`
   font-size: var(--font-size-md);
 `;
-
-// Dummy data for users
-const initialUsers = [
-  {
-    id: 1,
-    email: "user1@example.com",
-    name: "User One",
-    role: "Admin",
-    phoneNumber: "123-456-7890",
-    address: "123 Main St, City, Country",
-  },
-  {
-    id: 2,
-    email: "user2@example.com",
-    name: "User Two",
-    role: "Editor",
-    phoneNumber: "098-765-4321",
-    address: "456 Elm St, Town, Country",
-  },
-  {
-    id: 3,
-    email: "user3@example.com",
-    name: "User Three",
-    role: "Viewer",
-    phoneNumber: "111-222-3333",
-    address: "789 Oak St, Village, Country",
-  },
-];
-
-const roles = ["Admin", "Editor", "Viewer"];
-
-export default function UsersManagement() {
-  const [users, setUsers] = useState(initialUsers);
-  const [openModal, setOpenModal] = useState(false);
-  const [currentUser, setCurrentUser] = useState({
-    id: null,
-    email: "",
-    name: "",
-    role: "",
-    phoneNumber: "",
-    address: "",
-  });
-  const [modalMode, setModalMode] = useState("create");
-
-  const handleOpenModal = (
-    mode,
-    user = {
-      id: null,
-      email: "",
-      name: "",
-      role: "",
-      phoneNumber: "",
-      address: "",
-    }
-  ) => {
-    setModalMode(mode);
-    setCurrentUser(user);
-    setOpenModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setOpenModal(false);
-    setCurrentUser({
-      id: null,
-      email: "",
-      name: "",
-      role: "",
-      phoneNumber: "",
-      address: "",
-    });
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setCurrentUser((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = () => {
-    if (modalMode === "create") {
-      setUsers((prev) => [...prev, { ...currentUser, id: Date.now() }]);
-    } else {
-      setUsers((prev) =>
-        prev.map((user) => (user.id === currentUser.id ? currentUser : user))
-      );
-    }
-    handleCloseModal();
-  };
-
-  const handleDelete = (id) => {
-    setUsers((prev) => prev.filter((user) => user.id !== id));
-  };
-
-  return (
-    <PageContainer>
-      <Typography variant="h4" gutterBottom>
-        User Management
-      </Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        startIcon={<AddIcon />}
-        onClick={() => handleOpenModal("create")}
-        style={{ backgroundColor: "var(--primary-color)" }}
-      >
-        Add New User
-      </Button>
-      <TableWrapper component={Paper}>
-        <Table aria-label="user management table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>Email</StyledTableCell>
-              <StyledTableCell>Name</StyledTableCell>
-              <StyledTableCell>Role</StyledTableCell>
-              <StyledTableCell>Phone Number</StyledTableCell>
-              <StyledTableCell>Address</StyledTableCell>
-              <StyledTableCell align="right">Actions</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {users.map((user) => (
-              <TableRow key={user.id}>
-                <StyledTableCell>{user.email}</StyledTableCell>
-                <StyledTableCell>{user.name}</StyledTableCell>
-                <StyledTableCell>{user.role}</StyledTableCell>
-                <StyledTableCell>{user.phoneNumber}</StyledTableCell>
-                <StyledTableCell>{user.address}</StyledTableCell>
-                <StyledTableCell align="right">
-                  <ActionButton
-                    startIcon={<EditIcon />}
-                    onClick={() => handleOpenModal("edit", user)}
-                    aria-label={`Edit ${user.name}`}
-                  >
-                    Edit
-                  </ActionButton>
-                  <ActionButton
-                    startIcon={<DeleteIcon />}
-                    onClick={() => handleDelete(user.id)}
-                    aria-label={`Delete ${user.name}`}
-                  >
-                    Delete
-                  </ActionButton>
-                </StyledTableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableWrapper>
-
-      {/* Model for edit */}
-      <Modal
-        open={openModal}
-        onClose={handleCloseModal}
-        aria-labelledby="user-modal-title"
-      >
-        <ModalContent>
-          <Typography id="user-modal-title" variant="h6" component="h2">
-            {modalMode === "create" ? "Create New User" : "Edit User"}
-          </Typography>
-          <FormSelect>
-            <InputLabel id="role-label">Role</InputLabel>
-            <Select
-              labelId="role-label"
-              name="role"
-              value={currentUser.role}
-              onChange={handleInputChange}
-              required
-            >
-              {roles.map((role) => (
-                <MenuItem key={role} value={role}>
-                  {role}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormSelect>
-          <Button
-            variant="contained"
-            onClick={handleSubmit}
-            style={{ backgroundColor: "var(--primary-color)" }}
-          >
-            {modalMode === "create" ? "Create" : "Update"}
-          </Button>
-          <Button onClick={handleCloseModal} color="inherit">
-            Cancel
-          </Button>
-        </ModalContent>
-      </Modal>
-    </PageContainer>
-  );
-}

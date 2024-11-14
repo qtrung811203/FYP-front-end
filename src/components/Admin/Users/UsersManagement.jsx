@@ -31,9 +31,8 @@ const roles = ["admin", "user"];
 
 export default function UsersManagement() {
   const querryClient = useQueryClient();
-  const { register, handleSubmit, reset } = useForm({});
-
   const [openModal, setOpenModal] = useState(false);
+  const { register, handleSubmit, reset } = useForm({});
 
   const { isLoading, data: users } = useQuery({
     queryKey: ["users"],

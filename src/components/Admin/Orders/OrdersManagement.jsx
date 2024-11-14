@@ -19,6 +19,185 @@ import {
 } from "@mui/material";
 
 import { MdVisibility as VisibilityIcon } from "react-icons/md";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getOrders } from "../../../services/admin/apiAdminOrders";
+import { formatCurrency } from "../../../utils/formatCurrency";
+
+export default function OrdersManagement() {
+  const querryClient = useQueryClient();
+  // const [orders, setOrders] = useState(initialOrders);
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+
+  const { isLoading, data: orders } = useQuery({
+    queryKey: ["orders"],
+    queryFn: getOrders,
+  });
+
+  const handleOpenModal = (order) => {
+    console.log(order);
+    setSelectedOrder(order);
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setSelectedOrder(null);
+  };
+
+  // Format address for data from API
+  const formatAddress = (address) => {
+    return `${address?.address}, ${address?.province}, ${address?.district}, ${address?.ward}`;
+  };
+
+  if (isLoading) return <p>Loading...</p>;
+
+  return (
+    <PageContainer>
+      <Typography variant="h4" gutterBottom>
+        Order Management
+      </Typography>
+      <TableWrapper component={Paper}>
+        <Table aria-label="order management table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Order ID</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Payment Method</TableCell>
+              <TableCell>Total Price</TableCell>
+              <TableCell>Order Date</TableCell>
+              <TableCell align="right">Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {orders.data.orders.map((order) => (
+              <TableRow key={order._id}>
+                <TableCell>{order._id}</TableCell>
+                <TableCell>{order.email}</TableCell>
+                <TableCell>{order.paymentMethod}</TableCell>
+                <TableCell>{formatCurrency(order.totalPrice)}</TableCell>
+                <TableCell>{order.orderDate}</TableCell>
+                <TableCell align="right">
+                  <Button
+                    startIcon={<VisibilityIcon />}
+                    onClick={() => handleOpenModal(order)}
+                    aria-label={`View details of order ${order._id}`}
+                  >
+                    View
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableWrapper>
+
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        aria-labelledby="order-modal-title"
+      >
+        <ModalContent>
+          {selectedOrder && (
+            <>
+              <Typography
+                id="order-modal-title"
+                variant="h6"
+                component="h2"
+                gutterBottom
+              >
+                Order Details - {selectedOrder._id}
+              </Typography>
+              <List>
+                <ListItem>
+                  <ListItemText
+                    primary="Email"
+                    secondary={selectedOrder.email}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Shipping Information"
+                    secondary={formatAddress(selectedOrder.shippingInformation)}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Note"
+                    secondary={selectedOrder.note || "N/A"}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Status"
+                    secondary={selectedOrder.status}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Payment Method"
+                    secondary={selectedOrder.paymentMethod}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Total Price"
+                    secondary={formatCurrency(selectedOrder.totalPrice)}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Order Date"
+                    secondary={selectedOrder.createdAt}
+                  />
+                </ListItem>
+              </List>
+              <Divider />
+              <Typography
+                variant="h6"
+                gutterBottom
+                style={{ marginTop: "20px" }}
+              >
+                Ordered Products
+              </Typography>
+              <TableContainer component={Paper}>
+                <Table aria-label="ordered products table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Image</TableCell>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Category</TableCell>
+                      <TableCell>Price</TableCell>
+                      <TableCell>Quantity</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {selectedOrder.items.map((product, index) => (
+                      <TableRow key={index}>
+                        <TableCell>
+                          <ProductImage
+                            src={product.itemId.imageItem}
+                            alt={product.itemId.name}
+                          />
+                        </TableCell>
+                        <TableCell>{product.itemId.name}</TableCell>
+                        <TableCell>{product.itemId.category}</TableCell>
+                        <TableCell>
+                          {formatCurrency(product.itemId.price)}
+                        </TableCell>
+                        <TableCell>{product.itemId.quantity}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+    </PageContainer>
+  );
+}
 
 const PageContainer = styled.div`
   padding: 20px;
@@ -117,163 +296,3 @@ const initialOrders = [
     ],
   },
 ];
-
-export default function OrdersManagement() {
-  const [orders, setOrders] = useState(initialOrders);
-  const [openModal, setOpenModal] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState(null);
-
-  const handleOpenModal = (order) => {
-    setSelectedOrder(order);
-    setOpenModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setOpenModal(false);
-    setSelectedOrder(null);
-  };
-
-  return (
-    <PageContainer>
-      <Typography variant="h4" gutterBottom>
-        Order Management
-      </Typography>
-      <TableWrapper component={Paper}>
-        <Table aria-label="order management table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Order ID</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Payment Method</TableCell>
-              <TableCell>Total Price</TableCell>
-              <TableCell>Order Date</TableCell>
-              <TableCell align="right">Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {orders.map((order) => (
-              <TableRow key={order.id}>
-                <TableCell>{order.id}</TableCell>
-                <TableCell>{order.email}</TableCell>
-                <TableCell>{order.paymentMethod}</TableCell>
-                <TableCell>${order.totalPrice.toFixed(2)}</TableCell>
-                <TableCell>{order.orderDate}</TableCell>
-                <TableCell align="right">
-                  <Button
-                    startIcon={<VisibilityIcon />}
-                    onClick={() => handleOpenModal(order)}
-                    aria-label={`View details of order ${order.id}`}
-                  >
-                    View
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableWrapper>
-
-      <Modal
-        open={openModal}
-        onClose={handleCloseModal}
-        aria-labelledby="order-modal-title"
-      >
-        <ModalContent>
-          {selectedOrder && (
-            <>
-              <Typography
-                id="order-modal-title"
-                variant="h6"
-                component="h2"
-                gutterBottom
-              >
-                Order Details - {selectedOrder.id}
-              </Typography>
-              <List>
-                <ListItem>
-                  <ListItemText
-                    primary="Email"
-                    secondary={selectedOrder.email}
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary="Shipping Information"
-                    secondary={selectedOrder.shippingInformation}
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary="Note"
-                    secondary={selectedOrder.note || "N/A"}
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary="Status"
-                    secondary={selectedOrder.status}
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary="Payment Method"
-                    secondary={selectedOrder.paymentMethod}
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary="Total Price"
-                    secondary={`$${selectedOrder.totalPrice.toFixed(2)}`}
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary="Order Date"
-                    secondary={selectedOrder.orderDate}
-                  />
-                </ListItem>
-              </List>
-              <Divider />
-              <Typography
-                variant="h6"
-                gutterBottom
-                style={{ marginTop: "20px" }}
-              >
-                Ordered Products
-              </Typography>
-              <TableContainer component={Paper}>
-                <Table aria-label="ordered products table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Image</TableCell>
-                      <TableCell>Name</TableCell>
-                      <TableCell>Category</TableCell>
-                      <TableCell>Price</TableCell>
-                      <TableCell>Quantity</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {selectedOrder.products.map((product, index) => (
-                      <TableRow key={index}>
-                        <TableCell>
-                          <ProductImage
-                            src={product.image}
-                            alt={product.name}
-                          />
-                        </TableCell>
-                        <TableCell>{product.name}</TableCell>
-                        <TableCell>{product.category}</TableCell>
-                        <TableCell>${product.price.toFixed(2)}</TableCell>
-                        <TableCell>{product.quantity}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-    </PageContainer>
-  );
-}

@@ -24,11 +24,12 @@ import ScrollToTop from "./utils/scrollToTop";
 //Redux Store
 import store from "./store";
 import { AuthProvider } from "./context/authProvider";
+import { Toaster } from "react-hot-toast";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 5,
+      staleTime: 1000 * 60,
       refetchOnWindowFocus: false,
     },
   },
@@ -78,6 +79,27 @@ function App() {
               </Route>
             </Routes>
           </BrowserRouter>
+
+          {/* Toast Custom */}
+          <Toaster
+            position="top-center"
+            reverseOrder={false}
+            gutter={12}
+            containerStyle={{ margin: "8px" }}
+            toastOptions={{
+              success: {
+                duration: 3000,
+              },
+              error: {
+                duration: 5000,
+              },
+              style: {
+                fontSize: "14px",
+                maxWidth: "500px",
+                padding: "16px 24px",
+              },
+            }}
+          />
         </QueryClientProvider>
       </Provider>
     </AuthProvider>

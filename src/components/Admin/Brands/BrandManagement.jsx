@@ -19,58 +19,75 @@ import {
   MdEdit as EditIcon,
   MdDelete as DeleteIcon,
 } from "react-icons/md";
+import { useQuery } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
 
-const initialBrands = [
-  { id: 1, name: "Brand A", description: "Description for Brand A" },
-  { id: 2, name: "Brand B", description: "Description for Brand B" },
-  { id: 3, name: "Brand C", description: "Description for Brand C" },
-];
+import {
+  getBrands,
+  deleteBrand,
+  createBrand,
+  updateBrand,
+} from "../../../services/admin/apiAdminBrands";
+import useBrandMutation from "../../../hooks/admin/useBrandMutation";
 
-export default function BrandManagement() {
-  const [brands, setBrands] = useState(initialBrands);
+export default function BrandsManagement() {
   const [openModal, setOpenModal] = useState(false);
-  const [currentBrand, setCurrentBrand] = useState({
-    id: null,
-    name: "",
-  });
   const [modalMode, setModalMode] = useState("create");
 
-  const handleOpenModal = (
-    mode,
-    brand = { id: null, name: "", description: "" }
-  ) => {
+  const { register, handleSubmit, formState, reset } = useForm({});
+  const { errors } = formState;
+
+  // get all brands
+  const { isLoading, data: brands } = useQuery({
+    queryKey: ["brands"],
+    queryFn: getBrands,
+  });
+
+  const { mutate: createBrandMutation } = useBrandMutation(
+    createBrand,
+    "Brand created successfully"
+  );
+
+  const { mutate: deleteBrandMutation } = useBrandMutation(
+    deleteBrand,
+    "Brand deleted successfully"
+  );
+
+  const { mutate: updateBrandMutation } = useBrandMutation(({ _id, data }) => {
+    updateBrand(_id, data);
+  }, "Brand updated successfully");
+
+  if (isLoading) return <p>Loading...</p>;
+
+  const handleOpenModal = (mode, brand) => {
     setModalMode(mode);
-    setCurrentBrand(brand);
+    if (mode === "create") {
+      reset();
+    } else {
+      reset(brand);
+    }
     setOpenModal(true);
   };
 
   const handleCloseModal = () => {
     setOpenModal(false);
-    setCurrentBrand({ id: null, name: "", description: "" });
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setCurrentBrand((prev) => ({ ...prev, [name]: value }));
+    reset();
   };
 
   // Create or update brand
-  const handleSubmit = () => {
+  const onSubmit = (data) => {
     if (modalMode === "create") {
-      setBrands((prev) => [...prev, { ...currentBrand, id: Date.now() }]);
+      createBrandMutation(data);
     } else {
-      setBrands((prev) =>
-        prev.map((brand) =>
-          brand.id === currentBrand.id ? currentBrand : brand
-        )
-      );
+      const { _id, name } = data;
+      updateBrandMutation({ _id, data: { name } });
     }
     handleCloseModal();
   };
 
   // Delete brand
   const handleDelete = (id) => {
-    setBrands((prev) => prev.filter((brand) => brand.id !== id));
+    deleteBrandMutation(id);
   };
 
   return (
@@ -80,9 +97,9 @@ export default function BrandManagement() {
       </Typography>
       <Button
         variant="contained"
-        color="primary"
         startIcon={<AddIcon />}
         onClick={() => handleOpenModal("create")}
+        size="large"
         style={{ backgroundColor: "var(--primary-color)" }}
       >
         Add New Brand
@@ -96,8 +113,8 @@ export default function BrandManagement() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {brands.map((brand) => (
-              <TableRow key={brand.id}>
+            {brands.data.brands.map((brand) => (
+              <TableRow key={brand._id}>
                 <StyledTableCell component="th" scope="row">
                   {brand.name}
                 </StyledTableCell>
@@ -112,7 +129,7 @@ export default function BrandManagement() {
                   </ActionButton>
                   <ActionButton
                     startIcon={<DeleteIcon />}
-                    onClick={() => handleDelete(brand.id)}
+                    onClick={() => handleDelete(brand._id)}
                     aria-label={`Delete ${brand.name}`}
                     style={{ color: "red" }}
                   >
@@ -125,33 +142,37 @@ export default function BrandManagement() {
         </Table>
       </TableWrapper>
 
+      {/* Modal */}
       <Modal
         open={openModal}
         onClose={handleCloseModal}
         aria-labelledby="brand-modal-title"
       >
-        <ModalContent>
-          <Typography id="brand-modal-title" variant="h5" component="h2">
-            {modalMode === "create" ? "Create New Brand" : "Edit Brand"}
-          </Typography>
-          <FormField
-            name="name"
-            label="Brand Name"
-            value={currentBrand.name}
-            onChange={handleInputChange}
-            required
-          />
-          <Button
-            variant="contained"
-            onClick={handleSubmit}
-            style={{ backgroundColor: "var(--primary-color)" }}
-          >
-            {modalMode === "create" ? "Create" : "Update"}
-          </Button>
-          <Button onClick={handleCloseModal} color="inherit">
-            Cancel
-          </Button>
-        </ModalContent>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <ModalContent>
+            <Typography id="brand-modal-title" variant="h5" component="h2">
+              {modalMode === "create" ? "Create New Brand" : "Edit Brand"}
+            </Typography>
+            <FormField
+              {...register("name", {
+                required: "Name is required",
+              })}
+              label="Name"
+              name="name"
+            />
+            {errors?.name && <ErrorSpan>{errors.name.message}</ErrorSpan>}
+            <Button
+              variant="contained"
+              style={{ backgroundColor: "var(--primary-color)" }}
+              type="submit"
+            >
+              {modalMode === "create" ? "Create" : "Update"}
+            </Button>
+            <Button color="inherit" onClick={handleCloseModal}>
+              Cancel
+            </Button>
+          </ModalContent>
+        </form>
       </Modal>
     </PageContainer>
   );
@@ -198,4 +219,10 @@ const FormField = styled(TextField)`
 
 const StyledTableCell = styled(TableCell)`
   font-size: var(--font-size-md);
+`;
+
+const ErrorSpan = styled.div`
+  color: red;
+  font-size: var(--font-size-sm);
+  margin-bottom: 10px;
 `;

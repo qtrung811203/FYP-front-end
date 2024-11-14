@@ -9,10 +9,7 @@ import {
   TableRow,
   Paper,
   Button,
-  Modal,
-  Box,
   Typography,
-  TextField,
 } from "@mui/material";
 import {
   MdAdd as AddIcon,
@@ -29,12 +26,14 @@ import {
   updateBrand,
 } from "../../../services/admin/apiAdminBrands";
 import useBrandMutation from "../../../hooks/admin/useBrandMutation";
+import BrandCreateUpdateModal from "./BrandCreateUpdateModal";
 
 export default function BrandsManagement() {
   const [openModal, setOpenModal] = useState(false);
   const [modalMode, setModalMode] = useState("create");
-
-  const { register, handleSubmit, formState, reset } = useForm({});
+  const { register, handleSubmit, formState, reset } = useForm({
+    defaultValues: { name: "" },
+  });
   const { errors } = formState;
 
   // get all brands
@@ -43,6 +42,7 @@ export default function BrandsManagement() {
     queryFn: getBrands,
   });
 
+  // Create, update and delete brand
   const { mutate: createBrandMutation } = useBrandMutation(
     createBrand,
     "Brand created successfully"
@@ -57,8 +57,7 @@ export default function BrandsManagement() {
     updateBrand(_id, data);
   }, "Brand updated successfully");
 
-  if (isLoading) return <p>Loading...</p>;
-
+  // Open modal
   const handleOpenModal = (mode, brand) => {
     setModalMode(mode);
     if (mode === "create") {
@@ -69,12 +68,13 @@ export default function BrandsManagement() {
     setOpenModal(true);
   };
 
+  // Close modal
   const handleCloseModal = () => {
+    reset({});
     setOpenModal(false);
-    reset();
   };
 
-  // Create or update brand
+  // Handle form submit
   const onSubmit = (data) => {
     if (modalMode === "create") {
       createBrandMutation(data);
@@ -89,6 +89,8 @@ export default function BrandsManagement() {
   const handleDelete = (id) => {
     deleteBrandMutation(id);
   };
+
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <PageContainer>
@@ -143,37 +145,15 @@ export default function BrandsManagement() {
       </TableWrapper>
 
       {/* Modal */}
-      <Modal
-        open={openModal}
-        onClose={handleCloseModal}
-        aria-labelledby="brand-modal-title"
-      >
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <ModalContent>
-            <Typography id="brand-modal-title" variant="h5" component="h2">
-              {modalMode === "create" ? "Create New Brand" : "Edit Brand"}
-            </Typography>
-            <FormField
-              {...register("name", {
-                required: "Name is required",
-              })}
-              label="Name"
-              name="name"
-            />
-            {errors?.name && <ErrorSpan>{errors.name.message}</ErrorSpan>}
-            <Button
-              variant="contained"
-              style={{ backgroundColor: "var(--primary-color)" }}
-              type="submit"
-            >
-              {modalMode === "create" ? "Create" : "Update"}
-            </Button>
-            <Button color="inherit" onClick={handleCloseModal}>
-              Cancel
-            </Button>
-          </ModalContent>
-        </form>
-      </Modal>
+      <BrandCreateUpdateModal
+        openModal={openModal}
+        handleCloseModal={handleCloseModal}
+        modalMode={modalMode}
+        onSubmit={onSubmit}
+        register={register}
+        handleSubmit={handleSubmit}
+        errors={errors}
+      />
     </PageContainer>
   );
 }
@@ -192,37 +172,6 @@ const ActionButton = styled(Button)`
   margin: 0 5px;
 `;
 
-const ModalContent = styled(Box)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 400px;
-  background-color: white;
-  box-shadow: 24px;
-  padding: 20px;
-  border-radius: 8px;
-`;
-
-const FormField = styled(TextField)`
-  margin: 10px 0;
-  width: 100%;
-
-  & .MuiInputBase-input {
-    font-size: var(--font-size-md);
-  }
-
-  & .MuiFormLabel-root {
-    font-size: var(--font-size-sm);
-  }
-`;
-
 const StyledTableCell = styled(TableCell)`
   font-size: var(--font-size-md);
-`;
-
-const ErrorSpan = styled.div`
-  color: red;
-  font-size: var(--font-size-sm);
-  margin-bottom: 10px;
 `;

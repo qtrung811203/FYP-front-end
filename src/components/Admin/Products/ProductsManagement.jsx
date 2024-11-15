@@ -25,17 +25,21 @@ import {
 } from "@mui/material";
 import { FaPlus, FaEdit, FaTrash, FaEye } from "react-icons/fa";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, set } from "react-hook-form";
 import toast from "react-hot-toast";
 
 import {
   getProducts,
   createProduct,
+  updateProduct,
   deleteProduct,
 } from "../../../services/admin/apiAdminProducts";
 import { getBrands } from "../../../services/admin/apiAdminBrands";
-import { formatDate } from "../../../utils/formatDate";
+import { formatDateSelection } from "../../../utils/formatDate";
 import LoadingModal from "../../Loading/LoadingModal";
+
+//Component
+import CreateEditProductModal from "./CreateEditProductModal";
 
 export default function ProductManagement() {
   const querryClient = useQueryClient();
@@ -43,6 +47,7 @@ export default function ProductManagement() {
   const [modalMode, setModalMode] = useState("create");
   const [coverImage, setCoverImage] = useState(null);
   const [productImages, setProductImages] = useState([]);
+  const [choosenProduct, setChoosenProduct] = useState(null);
 
   const [openItemModal, setOpenItemModal] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
@@ -62,6 +67,7 @@ export default function ProductManagement() {
     queryFn: getBrands,
   });
 
+  // Create Product Mutation
   const { mutate: createProductMutation, isPending: isCreating } = useMutation({
     mutationFn: createProduct,
     onSuccess: () => {
@@ -73,6 +79,7 @@ export default function ProductManagement() {
     },
   });
 
+  // Delete Product Mutation
   const { mutate: deleteProductMutation, isPending: isDeleting } = useMutation({
     mutationFn: deleteProduct,
     onSuccess: () => {
@@ -84,19 +91,52 @@ export default function ProductManagement() {
     },
   });
 
+  // Update Product Mutation
+  const { mutate: updateProductMutation, isPending: isUpdating } = useMutation({
+    mutationFn: ({ slug, formData }) => updateProduct(slug, formData),
+    onSuccess: () => {
+      toast.success("Product updated successfully");
+      querryClient.invalidateQueries("products");
+    },
+    onError: () => {
+      toast.error("Something went wrong");
+    },
+  });
+
   // Submit form data
   const onSubmit = (data) => {
     const formData = new FormData();
-    for (const key in data) {
-      if (key === "images") {
-        data[key].forEach((image) => {
-          formData.append("images", image);
+    // Filter fields to create or update
+    const filterData = {
+      name: data.name,
+      brand: data.brand?._id ? data.brand._id : data.brand,
+      description: data.description,
+      openTime: data.openTime,
+      closeTime: data.closeTime,
+      imageCover: data.imageCover,
+      images: data.images,
+    };
+
+    for (const key in filterData) {
+      if (key === "imageCover") {
+        filterData[key] instanceof Blob &&
+          formData.append("imageCover", filterData[key]);
+      } else if (key === "images") {
+        filterData[key].forEach((image) => {
+          if (image instanceof Blob) {
+            formData.append("images", image);
+          }
         });
       } else {
-        formData.append(key, data[key]);
+        formData.append(key, filterData[key]);
       }
     }
-    createProductMutation(formData);
+
+    if (modalMode === "create") {
+      createProductMutation(formData);
+    } else {
+      updateProductMutation({ slug: choosenProduct.slug, formData });
+    }
     handleCloseProductModal();
   };
 
@@ -105,10 +145,18 @@ export default function ProductManagement() {
     //Change Status
     setModalMode(mode);
     setOpenProductModal(true);
-    // if (mode === "edit") {
-    //   setCoverImage(product.imageCover);
-    //   setProductImages(product.images);
-    // }
+    if (mode === "edit") {
+      setCoverImage(product.imageCover);
+      setProductImages(product.images);
+      setChoosenProduct(product);
+      reset({
+        ...product,
+        openTime: formatDateSelection(product.openTime),
+        closeTime: formatDateSelection(product.closeTime),
+      });
+    } else {
+      setChoosenProduct(null);
+    }
   };
 
   // Handle Modal Close
@@ -116,6 +164,15 @@ export default function ProductManagement() {
     setOpenProductModal(false);
     setCoverImage(null);
     setProductImages([]);
+    reset({
+      name: "",
+      brand: "",
+      description: "",
+      openTime: "",
+      closeTime: "",
+      imageCover: null,
+      images: [],
+    });
   };
 
   // NOT IMPLEMENTED YET
@@ -222,8 +279,8 @@ export default function ProductManagement() {
                 <TableCell>{product.description}</TableCell>
                 <TableCell>{product.status}</TableCell>
                 <TableCell>{product?.brand?.name}</TableCell>
-                <TableCell>{product?.openTime}</TableCell>
-                <TableCell>{product?.closeTime}</TableCell>
+                <TableCell>{formatDateSelection(product?.openTime)}</TableCell>
+                <TableCell>{formatDateSelection(product?.closeTime)}</TableCell>
                 <TableCell align="right">
                   <IconButton
                     onClick={() => handleOpenProductModal("edit", product)}
@@ -251,162 +308,24 @@ export default function ProductManagement() {
       </TableWrapper>
 
       {/* Product Modal */}
-      <Modal
+      <CreateEditProductModal
         open={openProductModal}
-        onClose={handleCloseProductModal}
-        aria-labelledby="product-modal-title"
-      >
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <ModalContent>
-            {/* Header */}
-            <Typography
-              id="product-modal-title"
-              variant="h6"
-              component="h2"
-              gutterBottom
-            >
-              {modalMode === "create" ? "Create New Product" : "Edit Product"}
-            </Typography>
-            {/* Form Fields */}
-            <FormField
-              {...register("name", { required: true })}
-              label="Name"
-              required
-            />
-
-            {/* BRAND SELECT */}
-            <StyledSelect {...register("brand", { required: true })}>
-              {brands.data.brands.map((brand) => (
-                <option key={brand._id} value={brand._id}>
-                  {brand.name}
-                </option>
-              ))}
-            </StyledSelect>
-
-            {/* DESCRIPTION */}
-            <FormField
-              {...register("description", { required: true })}
-              label="Description"
-              multiline
-              rows={4}
-            />
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <FormField
-                  {...register("openTime")}
-                  name="openTime"
-                  type="date"
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <FormField
-                  {...register("closeTime")}
-                  name="closeTime"
-                  type="date"
-                />
-              </Grid>
-            </Grid>
-
-            {/* Cover Image */}
-            <Typography variant="subtitle1">Cover Image:</Typography>
-            <Controller
-              name="imageCover"
-              control={control}
-              rules={{ required: true }}
-              render={() => (
-                <>
-                  <input
-                    accept="image/*"
-                    id="cover-image-upload"
-                    type="file"
-                    onChange={handleCoverImageUpload}
-                    style={{ display: "none" }}
-                  />
-                  <ImageBoxPreShow>
-                    {coverImage && (
-                      <ImagePreview src={coverImage} alt="Cover" />
-                    )}
-                    <div>
-                      <label htmlFor="cover-image-upload">
-                        <Button variant="contained" component="span">
-                          Upload Cover Image
-                        </Button>
-                      </label>
-                      <Button
-                        component="span"
-                        color="error"
-                        onClick={removeImageCover}
-                      >
-                        Remove image
-                      </Button>
-                    </div>
-                  </ImageBoxPreShow>
-                </>
-              )}
-            />
-
-            {/* Product Images */}
-            <Typography variant="subtitle1">Product Images:</Typography>
-            <Controller
-              name="images"
-              control={control}
-              rules={{ required: true }}
-              render={() => (
-                <>
-                  <input
-                    accept="image/*"
-                    id="images-upload"
-                    type="file"
-                    multiple
-                    onChange={handleImagesUpload}
-                    style={{ display: "none" }}
-                  />
-                  <ImageBoxPreShow>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexWrap: "wrap",
-                        marginTop: "10px",
-                      }}
-                    >
-                      {productImages.map((image, index) => (
-                        <ImagePreview
-                          key={index}
-                          src={image}
-                          alt={`Product ${index + 1}`}
-                        />
-                      ))}
-                    </div>
-                    <div>
-                      <label htmlFor="images-upload">
-                        <Button variant="contained" component="span">
-                          Upload Product Images
-                        </Button>
-                      </label>
-                      <Button
-                        component="span"
-                        color="error"
-                        onClick={removeAllProductImages}
-                      >
-                        Remove all images
-                      </Button>
-                    </div>
-                  </ImageBoxPreShow>
-                </>
-              )}
-            />
-
-            <Button
-              variant="contained"
-              color="primary"
-              type="submit"
-              style={{ float: "right" }}
-            >
-              {modalMode === "create" ? "Create" : "Update"}
-            </Button>
-          </ModalContent>
-        </form>
-      </Modal>
+        handleClose={handleCloseProductModal}
+        modalMode={modalMode}
+        handleSubmit={handleSubmit}
+        onSubmit={onSubmit}
+        register={register}
+        control={control}
+        setValue={setValue}
+        coverImage={coverImage}
+        productImages={productImages}
+        handleCoverImageUpload={handleCoverImageUpload}
+        removeImageCover={removeImageCover}
+        handleImagesUpload={handleImagesUpload}
+        removeAllProductImages={removeAllProductImages}
+        brands={brands.data.brands}
+        choosenProduct={choosenProduct}
+      />
 
       {/* Item Modal */}
       {/* <Modal
@@ -547,6 +466,7 @@ export default function ProductManagement() {
       </Modal> */}
       <LoadingModal isOpen={isCreating} message="Creating product..." />
       <LoadingModal isOpen={isDeleting} message="Deleting product..." />
+      <LoadingModal isOpen={isUpdating} message="Updating product..." />
     </PageContainer>
   );
 }

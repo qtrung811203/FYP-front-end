@@ -15,6 +15,15 @@ export const createProduct = async (formData) => {
   return response.data;
 };
 
+export const updateProduct = async (slug, formData) => {
+  const response = await axiosInstance.patch(`/products/${slug}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data;
+};
+
 export const deleteProduct = async (slug) => {
   const response = await axiosInstance.delete(`/products/${slug}`);
   return response.data;

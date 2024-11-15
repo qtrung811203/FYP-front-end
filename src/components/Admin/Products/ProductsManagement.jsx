@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import {
   Table,
@@ -24,121 +24,101 @@ import {
   IconButton,
 } from "@mui/material";
 import { FaPlus, FaEdit, FaTrash, FaEye } from "react-icons/fa";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useForm, Controller } from "react-hook-form";
+import toast from "react-hot-toast";
 
-const PageContainer = styled.div`
-  padding: 20px;
-`;
-
-const TableWrapper = styled(TableContainer)`
-  margin-top: 20px;
-`;
-
-const ModalContent = styled(Box)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 80%;
-  max-width: 800px;
-  max-height: 80vh;
-  overflow-y: auto;
-  background-color: white;
-  box-shadow: 24px;
-  padding: 20px;
-  border-radius: 8px;
-`;
-
-const FormField = styled(TextField)`
-  margin: 10px 0;
-  width: 100%;
-`;
-
-const ImagePreview = styled.img`
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  margin: 5px;
-`;
-
-// Dummy data for products
-const initialProducts = [
-  {
-    id: "1",
-    name: "Product A",
-    description: "Description for Product A",
-    imageCover: "/placeholder.svg",
-    status: "Active",
-    brand: "Brand X",
-    openTime: "09:00",
-    closeTime: "18:00",
-    images: ["/placeholder.svg", "/placeholder.svg"],
-    items: [
-      {
-        name: "Item 1",
-        category: "Category 1",
-        description: "Description for Item 1",
-        imageItem: "/placeholder.svg",
-        price: 10,
-        stock: 100,
-      },
-      {
-        name: "Item 2",
-        category: "Category 2",
-        description: "Description for Item 2",
-        imageItem: "/placeholder.svg",
-        price: 20,
-        stock: 50,
-      },
-    ],
-  },
-  {
-    id: "2",
-    name: "Product B",
-    description: "Description for Product B",
-    imageCover: "/placeholder.svg",
-    status: "Inactive",
-    brand: "Brand Y",
-    openTime: "10:00",
-    closeTime: "20:00",
-    images: ["/placeholder.svg"],
-    items: [],
-  },
-];
-
-const brands = ["Brand X", "Brand Y", "Brand Z"];
-const categories = ["Category 1", "Category 2", "Category 3"];
+import {
+  getProducts,
+  createProduct,
+  deleteProduct,
+} from "../../../services/admin/apiAdminProducts";
+import { getBrands } from "../../../services/admin/apiAdminBrands";
+import { formatDate } from "../../../utils/formatDate";
+import LoadingModal from "../../Loading/LoadingModal";
 
 export default function ProductManagement() {
-  const [products, setProducts] = useState(initialProducts);
+  const querryClient = useQueryClient();
   const [openProductModal, setOpenProductModal] = useState(false);
+  const [modalMode, setModalMode] = useState("create");
+  const [coverImage, setCoverImage] = useState(null);
+  const [productImages, setProductImages] = useState([]);
+
   const [openItemModal, setOpenItemModal] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
   const [currentItem, setCurrentItem] = useState(null);
-  const [modalMode, setModalMode] = useState("create");
 
-  const handleOpenProductModal = (mode, product = null) => {
-    setModalMode(mode);
-    setCurrentProduct(
-      product || {
-        name: "",
-        description: "",
-        imageCover: "",
-        status: "Active",
-        brand: "",
-        openTime: "09:00",
-        closeTime: "18:00",
-        images: [],
-        items: [],
+  const { register, handleSubmit, reset, setValue, control } = useForm({
+    defaultValues: {},
+  });
+
+  const { isLoading, data: products } = useQuery({
+    queryKey: ["products"],
+    queryFn: getProducts,
+  });
+
+  const { isLoading: isBrandLoading, data: brands } = useQuery({
+    queryKey: ["brands"],
+    queryFn: getBrands,
+  });
+
+  const { mutate: createProductMutation, isPending: isCreating } = useMutation({
+    mutationFn: createProduct,
+    onSuccess: () => {
+      toast.success("Product created successfully");
+      querryClient.invalidateQueries("products");
+    },
+    onError: () => {
+      toast.error("Something went wrong");
+    },
+  });
+
+  const { mutate: deleteProductMutation, isPending: isDeleting } = useMutation({
+    mutationFn: deleteProduct,
+    onSuccess: () => {
+      toast.success("Product deleted successfully");
+      querryClient.invalidateQueries("products");
+    },
+    onError: () => {
+      toast.error("Something went wrong");
+    },
+  });
+
+  // Submit form data
+  const onSubmit = (data) => {
+    const formData = new FormData();
+    for (const key in data) {
+      if (key === "images") {
+        data[key].forEach((image) => {
+          formData.append("images", image);
+        });
+      } else {
+        formData.append(key, data[key]);
       }
-    );
-    setOpenProductModal(true);
+    }
+    createProductMutation(formData);
+    handleCloseProductModal();
   };
 
+  // Handle Modal Open
+  const handleOpenProductModal = (mode, product = null) => {
+    //Change Status
+    setModalMode(mode);
+    setOpenProductModal(true);
+    // if (mode === "edit") {
+    //   setCoverImage(product.imageCover);
+    //   setProductImages(product.images);
+    // }
+  };
+
+  // Handle Modal Close
   const handleCloseProductModal = () => {
     setOpenProductModal(false);
-    setCurrentProduct(null);
+    setCoverImage(null);
+    setProductImages([]);
   };
 
+  // NOT IMPLEMENTED YET
   const handleOpenItemModal = (product, item = null) => {
     setCurrentProduct(product);
     setCurrentItem(
@@ -168,75 +148,42 @@ export default function ProductManagement() {
     }
   };
 
+  // IMAGE UPLOAD HANDLER
   const handleCoverImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
-      setCurrentProduct((prev) => ({ ...prev, imageCover: imageUrl }));
+      setCoverImage(imageUrl);
+      setValue("imageCover", file);
     }
+  };
+
+  const removeImageCover = () => {
+    setCoverImage(null);
+    setValue("imageCover", null);
   };
 
   const handleImagesUpload = (e) => {
     const files = Array.from(e.target.files);
     const imageUrls = files.map((file) => URL.createObjectURL(file));
-    setCurrentProduct((prev) => ({
-      ...prev,
-      images: [...prev.images, ...imageUrls],
-    }));
+    setProductImages(imageUrls);
+    setValue("images", files);
   };
 
-  const handleSubmitProduct = () => {
-    if (modalMode === "create") {
-      setProducts((prev) => [
-        ...prev,
-        { ...currentProduct, id: Date.now().toString() },
-      ]);
-    } else {
-      setProducts((prev) =>
-        prev.map((product) =>
-          product.id === currentProduct.id ? currentProduct : product
-        )
-      );
-    }
-    handleCloseProductModal();
+  const removeAllProductImages = () => {
+    setProductImages([]);
+    setValue("images", []);
   };
 
-  const handleSubmitItem = () => {
-    const updatedProduct = {
-      ...currentProduct,
-      items: currentItem.id
-        ? currentProduct.items.map((item) =>
-            item.id === currentItem.id ? currentItem : item
-          )
-        : [
-            ...currentProduct.items,
-            { ...currentItem, id: Date.now().toString() },
-          ],
-    };
-    setProducts((prev) =>
-      prev.map((product) =>
-        product.id === updatedProduct.id ? updatedProduct : product
-      )
-    );
-    handleCloseItemModal();
+  // DELETE PRODUCT
+  const handleDeleteProduct = (slug) => {
+    console.log(slug);
+    deleteProductMutation(slug);
   };
 
-  const handleDeleteProduct = (id) => {
-    setProducts((prev) => prev.filter((product) => product.id !== id));
-  };
+  const handleDeleteItem = (productId, itemId) => {};
 
-  const handleDeleteItem = (productId, itemId) => {
-    setProducts((prev) =>
-      prev.map((product) =>
-        product.id === productId
-          ? {
-              ...product,
-              items: product.items.filter((item) => item.id !== itemId),
-            }
-          : product
-      )
-    );
-  };
+  if (isLoading || isBrandLoading) return <p>Loading...</p>;
 
   return (
     <PageContainer>
@@ -266,17 +213,17 @@ export default function ProductManagement() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {products.map((product) => (
-              <TableRow key={product.id}>
+            {products.data.map((product) => (
+              <TableRow key={product._id}>
                 <TableCell>
                   <ImagePreview src={product.imageCover} alt={product.name} />
                 </TableCell>
                 <TableCell>{product.name}</TableCell>
                 <TableCell>{product.description}</TableCell>
                 <TableCell>{product.status}</TableCell>
-                <TableCell>{product.brand}</TableCell>
-                <TableCell>{product.openTime}</TableCell>
-                <TableCell>{product.closeTime}</TableCell>
+                <TableCell>{product?.brand?.name}</TableCell>
+                <TableCell>{product?.openTime}</TableCell>
+                <TableCell>{product?.closeTime}</TableCell>
                 <TableCell align="right">
                   <IconButton
                     onClick={() => handleOpenProductModal("edit", product)}
@@ -291,8 +238,8 @@ export default function ProductManagement() {
                     <FaEye />
                   </IconButton>
                   <IconButton
-                    onClick={() => handleDeleteProduct(product.id)}
-                    aria-label={`Delete ${product.name}`}
+                    onClick={() => handleDeleteProduct(product.slug)}
+                    aria-label={`Delete ${product.slug}`}
                   >
                     <FaTrash />
                   </IconButton>
@@ -309,142 +256,160 @@ export default function ProductManagement() {
         onClose={handleCloseProductModal}
         aria-labelledby="product-modal-title"
       >
-        <ModalContent>
-          <Typography
-            id="product-modal-title"
-            variant="h6"
-            component="h2"
-            gutterBottom
-          >
-            {modalMode === "create" ? "Create New Product" : "Edit Product"}
-          </Typography>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <FormField
-                name="name"
-                label="Name"
-                value={currentProduct?.name || ""}
-                onChange={handleInputChange}
-                required
-              />
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <ModalContent>
+            {/* Header */}
+            <Typography
+              id="product-modal-title"
+              variant="h6"
+              component="h2"
+              gutterBottom
+            >
+              {modalMode === "create" ? "Create New Product" : "Edit Product"}
+            </Typography>
+            {/* Form Fields */}
+            <FormField
+              {...register("name", { required: true })}
+              label="Name"
+              required
+            />
+
+            {/* BRAND SELECT */}
+            <StyledSelect {...register("brand", { required: true })}>
+              {brands.data.brands.map((brand) => (
+                <option key={brand._id} value={brand._id}>
+                  {brand.name}
+                </option>
+              ))}
+            </StyledSelect>
+
+            {/* DESCRIPTION */}
+            <FormField
+              {...register("description", { required: true })}
+              label="Description"
+              multiline
+              rows={4}
+            />
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <FormField
+                  {...register("openTime")}
+                  name="openTime"
+                  type="date"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormField
+                  {...register("closeTime")}
+                  name="closeTime"
+                  type="date"
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel id="brand-label">Brand</InputLabel>
-                <Select
-                  labelId="brand-label"
-                  name="brand"
-                  value={currentProduct?.brand || ""}
-                  onChange={handleInputChange}
-                  required
-                >
-                  {brands.map((brand) => (
-                    <MenuItem key={brand} value={brand}>
-                      {brand}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12}>
-              <FormField
-                name="description"
-                label="Description"
-                value={currentProduct?.description || ""}
-                onChange={handleInputChange}
-                multiline
-                rows={4}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormField
-                name="openTime"
-                label="Open Time"
-                type="time"
-                value={currentProduct?.openTime || ""}
-                onChange={handleInputChange}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                inputProps={{
-                  step: 300, // 5 min
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormField
-                name="closeTime"
-                label="Close Time"
-                type="time"
-                value={currentProduct?.closeTime || ""}
-                onChange={handleInputChange}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                inputProps={{
-                  step: 300, // 5 min
-                }}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="subtitle1">Cover Image:</Typography>
-              <input
-                accept="image/*"
-                id="cover-image-upload"
-                type="file"
-                onChange={handleCoverImageUpload}
-                style={{ display: "none" }}
-              />
-              <label htmlFor="cover-image-upload">
-                <Button variant="contained" component="span">
-                  Upload Cover Image
-                </Button>
-              </label>
-              {currentProduct?.imageCover && (
-                <ImagePreview src={currentProduct.imageCover} alt="Cover" />
-              )}
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="subtitle1">Product Images:</Typography>
-              <input
-                accept="image/*"
-                id="images-upload"
-                type="file"
-                multiple
-                onChange={handleImagesUpload}
-                style={{ display: "none" }}
-              />
-              <label htmlFor="images-upload">
-                <Button variant="contained" component="span">
-                  Upload Product Images
-                </Button>
-              </label>
-              <div
-                style={{ display: "flex", flexWrap: "wrap", marginTop: "10px" }}
-              >
-                {currentProduct?.images.map((image, index) => (
-                  <ImagePreview
-                    key={index}
-                    src={image}
-                    alt={`Product ${index + 1}`}
+
+            {/* Cover Image */}
+            <Typography variant="subtitle1">Cover Image:</Typography>
+            <Controller
+              name="imageCover"
+              control={control}
+              rules={{ required: true }}
+              render={() => (
+                <>
+                  <input
+                    accept="image/*"
+                    id="cover-image-upload"
+                    type="file"
+                    onChange={handleCoverImageUpload}
+                    style={{ display: "none" }}
                   />
-                ))}
-              </div>
-            </Grid>
-          </Grid>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSubmitProduct}
-            style={{ marginTop: "20px" }}
-          >
-            {modalMode === "create" ? "Create" : "Update"}
-          </Button>
-        </ModalContent>
+                  <ImageBoxPreShow>
+                    {coverImage && (
+                      <ImagePreview src={coverImage} alt="Cover" />
+                    )}
+                    <div>
+                      <label htmlFor="cover-image-upload">
+                        <Button variant="contained" component="span">
+                          Upload Cover Image
+                        </Button>
+                      </label>
+                      <Button
+                        component="span"
+                        color="error"
+                        onClick={removeImageCover}
+                      >
+                        Remove image
+                      </Button>
+                    </div>
+                  </ImageBoxPreShow>
+                </>
+              )}
+            />
+
+            {/* Product Images */}
+            <Typography variant="subtitle1">Product Images:</Typography>
+            <Controller
+              name="images"
+              control={control}
+              rules={{ required: true }}
+              render={() => (
+                <>
+                  <input
+                    accept="image/*"
+                    id="images-upload"
+                    type="file"
+                    multiple
+                    onChange={handleImagesUpload}
+                    style={{ display: "none" }}
+                  />
+                  <ImageBoxPreShow>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexWrap: "wrap",
+                        marginTop: "10px",
+                      }}
+                    >
+                      {productImages.map((image, index) => (
+                        <ImagePreview
+                          key={index}
+                          src={image}
+                          alt={`Product ${index + 1}`}
+                        />
+                      ))}
+                    </div>
+                    <div>
+                      <label htmlFor="images-upload">
+                        <Button variant="contained" component="span">
+                          Upload Product Images
+                        </Button>
+                      </label>
+                      <Button
+                        component="span"
+                        color="error"
+                        onClick={removeAllProductImages}
+                      >
+                        Remove all images
+                      </Button>
+                    </div>
+                  </ImageBoxPreShow>
+                </>
+              )}
+            />
+
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              style={{ float: "right" }}
+            >
+              {modalMode === "create" ? "Create" : "Update"}
+            </Button>
+          </ModalContent>
+        </form>
       </Modal>
 
       {/* Item Modal */}
-      <Modal
+      {/* <Modal
         open={openItemModal}
         onClose={handleCloseItemModal}
         aria-labelledby="item-modal-title"
@@ -579,7 +544,66 @@ export default function ProductManagement() {
             {currentItem?.id ? "Update Item" : "Add Item"}
           </Button>
         </ModalContent>
-      </Modal>
+      </Modal> */}
+      <LoadingModal isOpen={isCreating} message="Creating product..." />
+      <LoadingModal isOpen={isDeleting} message="Deleting product..." />
     </PageContainer>
   );
 }
+
+const PageContainer = styled.div`
+  padding: 20px;
+`;
+
+const TableWrapper = styled(TableContainer)`
+  margin-top: 20px;
+`;
+
+const ModalContent = styled(Box)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 800px;
+  max-height: 80vh;
+  overflow-y: auto;
+  background-color: white;
+  box-shadow: 24px;
+  padding: 20px;
+  border-radius: 8px;
+`;
+
+const FormField = styled(TextField)`
+  margin: 10px 0;
+  width: 100%;
+`;
+
+const ImagePreview = styled.img`
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin: 5px;
+`;
+
+const ImageBoxPreShow = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 10px 0;
+`;
+
+const StyledSelect = styled.select`
+  font-size: var(--font-size-md);
+  padding: 10px;
+  width: 100%;
+  border: 1px solid #c4c4c4;
+  border-radius: 4px;
+  background-color: white;
+  color: var(--text-color);
+  font-family: inherit;
+  transition: border-color 0.2s;
+  &:focus {
+    outline: none;
+    border-color: var(--primary-color);
+  }
+`;

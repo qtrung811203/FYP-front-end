@@ -26,16 +26,12 @@ import {
 } from "@mui/material";
 import { FaPlus, FaEdit, FaTrash, FaEye } from "react-icons/fa";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 import {
   getProducts,
-  createProduct,
-  updateProduct,
   deleteProduct,
 } from "../../../services/admin/apiAdminProducts";
-import { getBrands } from "../../../services/admin/apiAdminBrands";
 import { formatDateSelection } from "../../../utils/formatDate";
 import LoadingModal from "../../Loading/LoadingModal";
 
@@ -45,39 +41,15 @@ import CreateEditProductModal from "./CreateEditProductModal";
 export default function ProductManagement() {
   const querryClient = useQueryClient();
   const [openProductModal, setOpenProductModal] = useState(false);
-  const [modalMode, setModalMode] = useState("create");
-  const [coverImage, setCoverImage] = useState(null);
-  const [productImages, setProductImages] = useState([]);
   const [choosenProduct, setChoosenProduct] = useState(null);
 
   const [openItemModal, setOpenItemModal] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
   const [currentItem, setCurrentItem] = useState(null);
 
-  const { register, handleSubmit, reset, setValue, control } = useForm({
-    defaultValues: {},
-  });
-
   const { isLoading, data: products } = useQuery({
     queryKey: ["products"],
     queryFn: getProducts,
-  });
-
-  const { isLoading: isBrandLoading, data: brands } = useQuery({
-    queryKey: ["brands"],
-    queryFn: getBrands,
-  });
-
-  // Create Product Mutation
-  const { mutate: createProductMutation, isPending: isCreating } = useMutation({
-    mutationFn: createProduct,
-    onSuccess: () => {
-      toast.success("Product created successfully");
-      querryClient.invalidateQueries("products");
-    },
-    onError: () => {
-      toast.error("Something went wrong");
-    },
   });
 
   // Delete Product Mutation
@@ -92,88 +64,16 @@ export default function ProductManagement() {
     },
   });
 
-  // Update Product Mutation
-  const { mutate: updateProductMutation, isPending: isUpdating } = useMutation({
-    mutationFn: ({ slug, formData }) => updateProduct(slug, formData),
-    onSuccess: () => {
-      toast.success("Product updated successfully");
-      querryClient.invalidateQueries("products");
-    },
-    onError: () => {
-      toast.error("Something went wrong");
-    },
-  });
-
-  // Submit form data
-  const onSubmit = (data) => {
-    const formData = new FormData();
-    // Filter fields to create or update
-    const filterData = {
-      name: data.name,
-      brand: data.brand?._id ? data.brand._id : data.brand,
-      description: data.description,
-      openTime: data.openTime,
-      closeTime: data.closeTime,
-      imageCover: data.imageCover,
-      images: data.images,
-    };
-
-    for (const key in filterData) {
-      if (key === "imageCover") {
-        filterData[key] instanceof Blob &&
-          formData.append("imageCover", filterData[key]);
-      } else if (key === "images") {
-        filterData[key].forEach((image) => {
-          if (image instanceof Blob) {
-            formData.append("images", image);
-          }
-        });
-      } else {
-        formData.append(key, filterData[key]);
-      }
-    }
-
-    if (modalMode === "create") {
-      createProductMutation(formData);
-    } else {
-      updateProductMutation({ slug: choosenProduct.slug, formData });
-    }
-    handleCloseProductModal();
-  };
-
   // Handle Modal Open
-  const handleOpenProductModal = (mode, product = null) => {
-    //Change Status
-    setModalMode(mode);
+  const handleOpenProductModal = (product = null) => {
     setOpenProductModal(true);
-    if (mode === "edit") {
-      setCoverImage(product.imageCover);
-      setProductImages(product.images);
-      setChoosenProduct(product);
-      reset({
-        ...product,
-        openTime: formatDateSelection(product.openTime),
-        closeTime: formatDateSelection(product.closeTime),
-      });
-    } else {
-      setChoosenProduct(null);
-    }
+    setChoosenProduct(product);
   };
 
-  // Handle Modal Close
-  const handleCloseProductModal = () => {
-    setOpenProductModal(false);
-    setCoverImage(null);
-    setProductImages([]);
-    reset({
-      name: "",
-      brand: "",
-      description: "",
-      openTime: "",
-      closeTime: "",
-      imageCover: null,
-      images: [],
-    });
+  // DELETE PRODUCT
+  const handleDeleteProduct = (slug) => {
+    console.log(slug);
+    deleteProductMutation(slug);
   };
 
   // NOT IMPLEMENTED YET
@@ -206,40 +106,7 @@ export default function ProductManagement() {
     }
   };
 
-  // IMAGE UPLOAD HANDLER
-  const handleCoverImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setCoverImage(imageUrl);
-      setValue("imageCover", file);
-    }
-  };
-
-  const removeImageCover = () => {
-    setCoverImage(null);
-    setValue("imageCover", null);
-  };
-
-  const handleImagesUpload = (e) => {
-    const files = Array.from(e.target.files);
-    const imageUrls = files.map((file) => URL.createObjectURL(file));
-    setProductImages(imageUrls);
-    setValue("images", files);
-  };
-
-  const removeAllProductImages = () => {
-    setProductImages([]);
-    setValue("images", []);
-  };
-
-  // DELETE PRODUCT
-  const handleDeleteProduct = (slug) => {
-    console.log(slug);
-    deleteProductMutation(slug);
-  };
-
-  if (isLoading || isBrandLoading) return <p>Loading...</p>;
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <PageContainer>
@@ -250,7 +117,7 @@ export default function ProductManagement() {
         variant="contained"
         color="primary"
         startIcon={<FaPlus />}
-        onClick={() => handleOpenProductModal("create")}
+        onClick={() => handleOpenProductModal()}
       >
         Add New Product
       </Button>
@@ -282,7 +149,7 @@ export default function ProductManagement() {
                 <TableCell>{formatDateSelection(product?.closeTime)}</TableCell>
                 <TableCell align="right">
                   <IconButton
-                    onClick={() => handleOpenProductModal("edit", product)}
+                    onClick={() => handleOpenProductModal(product)}
                     aria-label={`Edit ${product.name}`}
                   >
                     <FaEdit />
@@ -309,21 +176,9 @@ export default function ProductManagement() {
       {/* Product Modal */}
       <CreateEditProductModal
         open={openProductModal}
-        handleClose={handleCloseProductModal}
-        modalMode={modalMode}
-        handleSubmit={handleSubmit}
-        onSubmit={onSubmit}
-        register={register}
-        control={control}
-        setValue={setValue}
-        coverImage={coverImage}
-        productImages={productImages}
-        handleCoverImageUpload={handleCoverImageUpload}
-        removeImageCover={removeImageCover}
-        handleImagesUpload={handleImagesUpload}
-        removeAllProductImages={removeAllProductImages}
-        brands={brands.data.brands}
+        setOpen={setOpenProductModal}
         choosenProduct={choosenProduct}
+        setChoosenProduct={setChoosenProduct}
       />
 
       {/* Item Modal */}
@@ -460,9 +315,8 @@ export default function ProductManagement() {
           </Button>
         </ModalContent>
       </Modal>
-      <LoadingModal isOpen={isCreating} message="Creating product..." />
+
       <LoadingModal isOpen={isDeleting} message="Deleting product..." />
-      <LoadingModal isOpen={isUpdating} message="Updating product..." />
     </PageContainer>
   );
 }
@@ -500,28 +354,6 @@ const ImagePreview = styled.img`
   height: 100px;
   object-fit: cover;
   margin: 5px;
-`;
-
-const ImageBoxPreShow = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 10px 0;
-`;
-
-const StyledSelect = styled.select`
-  font-size: var(--font-size-md);
-  padding: 10px;
-  width: 100%;
-  border: 1px solid #c4c4c4;
-  border-radius: 4px;
-  background-color: white;
-  color: var(--text-color);
-  font-family: inherit;
-  transition: border-color 0.2s;
-  &:focus {
-    outline: none;
-    border-color: var(--primary-color);
-  }
 `;
 
 const ImageAvatar = styled.img`

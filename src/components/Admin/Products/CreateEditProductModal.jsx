@@ -35,6 +35,7 @@ export default function ProductModal({
 
   useEffect(() => {
     if (choosenProduct) {
+      console.log("FILL PRODUCT");
       setCoverImage(choosenProduct.imageCover);
       setProductImages(choosenProduct.images);
       reset({
@@ -46,7 +47,7 @@ export default function ProductModal({
     } else {
       setValue("brand", brands?.data.brands[0]._id);
     }
-  }, [choosenProduct, setValue, reset, brands]);
+  }, [choosenProduct, setValue, reset, brands, setChoosenProduct]);
 
   const { mutate: createProductMutation, isPending: isCreating } = useMutation({
     mutationFn: createProduct,
@@ -125,12 +126,17 @@ export default function ProductModal({
       }
     }
 
-    if (!choosenProduct) {
-      createProductMutation(formData);
-    } else {
-      updateProductMutation({ slug: choosenProduct.slug, formData });
-    }
-    handleCloseProductModal();
+    console.log(choosenProduct);
+    formData.forEach((value, key) => {
+      console.log(`${key}: ${value}`);
+    });
+
+    // if (!choosenProduct) {
+    //   createProductMutation(formData);
+    // } else {
+    //   updateProductMutation({ slug: choosenProduct.slug, formData });
+    // }
+    // handleCloseProductModal();
   };
 
   const handleCloseProductModal = () => {
@@ -138,6 +144,10 @@ export default function ProductModal({
     setCoverImage(null);
     setProductImages([]);
     setChoosenProduct(null);
+    resetForm();
+  };
+
+  const resetForm = () => {
     reset({
       name: "",
       brand: "",

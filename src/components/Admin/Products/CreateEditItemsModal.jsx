@@ -1,14 +1,7 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
   Button,
   Modal,
   Box,
@@ -16,7 +9,6 @@ import {
   TextField,
   Select,
   MenuItem,
-  FormControl,
   InputLabel,
   Grid,
   List,
@@ -25,9 +17,9 @@ import {
   IconButton,
   ListItemAvatar,
 } from "@mui/material";
-import { FaPlus, FaEdit, FaTrash, FaEye } from "react-icons/fa";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { set, useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 
 import {
   getItems,
@@ -45,9 +37,15 @@ const CreateEditItemsModal = ({
 }) => {
   const queryClient = useQueryClient();
   const [currentItem, setCurrentItem] = useState(null);
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset, control } = useForm();
 
-  console.log(currentItem);
+  useEffect(() => {
+    if (choosenProduct) {
+      reset({
+        imageItem: choosenProduct.images[0],
+      });
+    }
+  }, [choosenProduct, reset]);
 
   const { isLoading: isItemsLoading, data: items } = useQuery({
     queryKey: ["items", choosenProduct?.slug],
@@ -97,12 +95,22 @@ const CreateEditItemsModal = ({
 
   // Form submit
   const onSubmit = (data) => {
-    console.log(data);
-    console.log(currentItem);
-    // addItemMutation({ slug: choosenProduct.slug, newItem: filterItem });
-    // handleResetForm();
+    if (currentItem) {
+      updateItemMutation({
+        slug: choosenProduct.slug,
+        id: currentItem._id,
+        updatedItem: data,
+      });
+    } else {
+      addItemMutation({
+        slug: choosenProduct.slug,
+        newItem: filterItem(data),
+      });
+    }
+    handleResetForm();
   };
 
+  // Edit item
   const handleEditItem = (item) => {
     setCurrentItem(item);
     const filterField = filterItem(item);
@@ -112,26 +120,31 @@ const CreateEditItemsModal = ({
     });
   };
 
+  // Cancel edit
   const handleCancelEdit = () => {
     setCurrentItem(null);
     handleResetForm();
   };
 
+  // Delete item
   const handleDeleteItem = (slug, itemId) => {
+    setCurrentItem(null);
     deleteItemMutation({ slug, id: itemId });
   };
 
+  // Reset form
   const handleResetForm = () => {
     reset({
       name: "",
       category: "",
       description: "",
-      imageItem: "",
+      imageItem: choosenProduct?.images[0],
       price: "",
       stock: "",
     });
   };
 
+  // Filter item
   const filterItem = (data) => {
     const filterItem = {
       name: data.name,
@@ -231,21 +244,27 @@ const CreateEditItemsModal = ({
             {/* IMAGE FORM AND SHOW */}
             <Grid item xs={12} sm={2}>
               <InputLabel id="image-label">Image</InputLabel>
-              <Select
-                {...register("imageItem", { required: true })}
+              <Controller
+                name="imageItem"
+                control={control}
                 defaultValue={
                   currentItem
                     ? currentItem.imageItem
                     : choosenProduct?.images[0]
                 }
-                labelId="image-label"
-              >
-                {choosenProduct?.images.map((image, index) => (
-                  <MenuItem key={index} value={image}>
-                    <ImageAvatar src={image} alt={choosenProduct.name} />
-                  </MenuItem>
-                ))}
-              </Select>
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <>
+                    <Select {...field} labelId="image-label">
+                      {choosenProduct?.images.map((image, index) => (
+                        <MenuItem key={index} value={image}>
+                          <ImageAvatar src={image} alt={choosenProduct.name} />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </>
+                )}
+              />
             </Grid>
 
             {/* PRICE */}
@@ -266,25 +285,25 @@ const CreateEditItemsModal = ({
               />
             </Grid>
           </Grid>
-          <Button
-            variant="contained"
-            color="primary"
-            type="submit"
-            // onClick={}
-            style={{ marginTop: "20px" }}
-          >
-            {currentItem ? "Update Item" : "Add Item"}
-          </Button>
-          {currentItem && (
+          <div style={{ float: "right" }}>
             <Button
               variant="contained"
-              color="secondary"
-              onClick={handleCancelEdit}
-              style={{ marginTop: "20px", marginLeft: "10px" }}
+              type="submit"
+              style={{ marginTop: "20px", backgroundColor: "#16423C" }}
             >
-              Cancel
+              {currentItem ? "Update Item" : "Add Item"}
             </Button>
-          )}
+            {currentItem && (
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handleCancelEdit}
+                style={{ marginTop: "20px", marginLeft: "10px" }}
+              >
+                Cancel
+              </Button>
+            )}
+          </div>
         </form>
       </ModalContent>
     </Modal>

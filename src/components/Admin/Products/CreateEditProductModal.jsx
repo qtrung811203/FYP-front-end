@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Button, Modal, Typography, Grid, TextField, Box } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 import { Controller } from "react-hook-form";
 import styled from "styled-components";
@@ -23,6 +24,8 @@ export default function ProductModal({
   brands,
   choosenProduct = null,
 }) {
+  const querryClient = useQueryClient();
+
   useEffect(() => {
     if (choosenProduct) {
       setValue("brand", choosenProduct.brand._id);

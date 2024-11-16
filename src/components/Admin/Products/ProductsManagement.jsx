@@ -22,10 +22,11 @@ import {
   ListItem,
   ListItemText,
   IconButton,
+  ListItemAvatar,
 } from "@mui/material";
 import { FaPlus, FaEdit, FaTrash, FaEye } from "react-icons/fa";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useForm, Controller, set } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 import {
@@ -177,7 +178,7 @@ export default function ProductManagement() {
 
   // NOT IMPLEMENTED YET
   const handleOpenItemModal = (product, item = null) => {
-    setCurrentProduct(product);
+    setChoosenProduct(product);
     setCurrentItem(
       item || {
         name: "",
@@ -237,8 +238,6 @@ export default function ProductManagement() {
     console.log(slug);
     deleteProductMutation(slug);
   };
-
-  const handleDeleteItem = (productId, itemId) => {};
 
   if (isLoading || isBrandLoading) return <p>Loading...</p>;
 
@@ -328,7 +327,7 @@ export default function ProductManagement() {
       />
 
       {/* Item Modal */}
-      {/* <Modal
+      <Modal
         open={openItemModal}
         onClose={handleCloseItemModal}
         aria-labelledby="item-modal-title"
@@ -343,9 +342,9 @@ export default function ProductManagement() {
             Manage Items for {currentProduct?.name}
           </Typography>
           <List>
-            {currentProduct?.items.map((item) => (
+            {choosenProduct?.items.map((item) => (
               <ListItem
-                key={item.id}
+                key={item._id}
                 secondaryAction={
                   <>
                     <IconButton
@@ -355,18 +354,15 @@ export default function ProductManagement() {
                     >
                       <FaEdit />
                     </IconButton>
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() =>
-                        handleDeleteItem(currentProduct.id, item.id)
-                      }
-                    >
+                    <IconButton edge="end" aria-label="delete">
                       <FaTrash />
                     </IconButton>
                   </>
                 }
               >
+                <ListItemAvatar>
+                  <ImageAvatar src={item.imageItem} alt={item.name} />
+                </ListItemAvatar>
                 <ListItemText
                   primary={item.name}
                   secondary={`${item.category} - $${item.price} - Stock: ${item.stock}`}
@@ -397,11 +393,11 @@ export default function ProductManagement() {
                   onChange={(e) => handleInputChange(e, "item")}
                   required
                 >
-                  {categories.map((category) => (
+                  {/* {categories.map((category) => (
                     <MenuItem key={category} value={category}>
                       {category}
                     </MenuItem>
-                  ))}
+                  ))} */}
                 </Select>
               </FormControl>
             </Grid>
@@ -457,13 +453,13 @@ export default function ProductManagement() {
           <Button
             variant="contained"
             color="primary"
-            onClick={handleSubmitItem}
+            // onClick={}
             style={{ marginTop: "20px" }}
           >
             {currentItem?.id ? "Update Item" : "Add Item"}
           </Button>
         </ModalContent>
-      </Modal> */}
+      </Modal>
       <LoadingModal isOpen={isCreating} message="Creating product..." />
       <LoadingModal isOpen={isDeleting} message="Deleting product..." />
       <LoadingModal isOpen={isUpdating} message="Updating product..." />
@@ -526,4 +522,10 @@ const StyledSelect = styled.select`
     outline: none;
     border-color: var(--primary-color);
   }
+`;
+
+const ImageAvatar = styled.img`
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
 `;

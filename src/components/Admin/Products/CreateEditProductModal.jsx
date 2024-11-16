@@ -131,12 +131,12 @@ export default function ProductModal({
       console.log(`${key}: ${value}`);
     });
 
-    // if (!choosenProduct) {
-    //   createProductMutation(formData);
-    // } else {
-    //   updateProductMutation({ slug: choosenProduct.slug, formData });
-    // }
-    // handleCloseProductModal();
+    if (!choosenProduct) {
+      createProductMutation(formData);
+    } else {
+      updateProductMutation({ slug: choosenProduct.slug, formData });
+    }
+    handleCloseProductModal();
   };
 
   const handleCloseProductModal = () => {

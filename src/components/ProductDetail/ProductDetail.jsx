@@ -1,38 +1,48 @@
 /* eslint-disable react/prop-types */
-import styled from "styled-components"
+import styled from "styled-components";
 
-import CategoryContainer from "./CategoryContainer"
-import PurchaseButton from "./PurchaseButton"
-import ProductDetailDescription from "./ProductDetailDescription"
-import BackButtonToDetail from "./BackButtonToDetail"
+import CategoryContainer from "./CategoryContainer";
+import PurchaseButton from "./PurchaseButton";
+import ProductDetailDescription from "./ProductDetailDescription";
+import BackButtonToDetail from "./BackButtonToDetail";
+import { useEffect, useState } from "react";
+import groupCategoryItems from "../../utils/groupCategoryItems";
 
 function ProductDetail({ product }) {
   //If there is no product return null => maybe change to loading spinner
-  if (!product) return null
+  const [groupedData, setGroupedData] = useState();
+
+  useEffect(() => {
+    const grouped = groupCategoryItems(product.items);
+    setGroupedData(grouped);
+  }, [product]);
+
+  if (!product || !groupedData) return null;
+
   return (
     <ProductDetailContainer>
       <SalePreiod>
-        <p>{product.productInfo.openTime}</p>
+        <p>{product.openTime}</p>
       </SalePreiod>
       <Title>
-        <h1>{product.productInfo.name}</h1>
+        <h1>{product.name}</h1>
       </Title>
-      <CategoryContainer items={product.items} />
+      <CategoryContainer items={groupedData} />
       <PurchaseButton />
       <ProductDetailDescription product={product} />
       <BackButtonToDetail />
     </ProductDetailContainer>
-  )
+  );
 }
 
-export default ProductDetail
+export default ProductDetail;
 
 //Styled Components
 const ProductDetailContainer = styled.div`
   width: 100%;
   /* border: 1px solid #e2e2e2; */
   color: #516677;
-`
+`;
 const SalePreiod = styled.div`
   background-color: #fdf2f2;
   color: #d60000;
@@ -40,7 +50,7 @@ const SalePreiod = styled.div`
   font-size: 16px;
   line-height: 1.25;
   font-weight: 500;
-`
+`;
 const Title = styled.div`
   color: #516677;
 
@@ -51,4 +61,4 @@ const Title = styled.div`
     margin-top: 16px;
     padding-bottom: 30px;
   }
-`
+`;

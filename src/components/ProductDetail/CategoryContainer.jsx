@@ -1,30 +1,36 @@
 /* eslint-disable react/prop-types */
-import styled from "styled-components"
-import { useEffect, useState } from "react"
+import styled from "styled-components";
+import { useEffect, useState } from "react";
 
-import CategoryList from "./CategoryList"
-import CategoryItems from "./CategoryItems"
+import CategoryList from "./CategoryList";
+import CategoryItems from "./CategoryItems";
 
 function CategoryContainer({ items }) {
-  const [category, setCategory] = useState(items[0].category)
-  const [categoryItems, setCategoryItems] = useState()
+  //Set category state
+  const [category, setCategory] = useState(items[0].category);
+  const [categoryItems, setCategoryItems] = useState(items[0].items);
 
-  //Get items of one category
   useEffect(() => {
-    const itemsFiltered = items.filter((item) => item.category === category)
-    setCategoryItems(itemsFiltered[0])
-  }, [category, items])
+    const selectedCategory = items.find((item) => item.category === category);
+    if (selectedCategory) setCategoryItems(selectedCategory.items);
+  }, [category, items]);
+
+  if (!category || !categoryItems) return null;
 
   return (
     <CategoryBoxStyled>
       <h3>Category</h3>
-      <CategoryList items={items} category={category} setCategory={setCategory} />
+      <CategoryList
+        items={items}
+        category={category}
+        setCategory={setCategory}
+      />
       <CategoryItems categoryItems={categoryItems} />
     </CategoryBoxStyled>
-  )
+  );
 }
 
-export default CategoryContainer
+export default CategoryContainer;
 
 //Styled Components
 const CategoryBoxStyled = styled.div`
@@ -35,4 +41,4 @@ const CategoryBoxStyled = styled.div`
     font-weight: 700;
     padding-top: 22px;
   }
-`
+`;

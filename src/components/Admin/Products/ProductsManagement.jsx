@@ -37,6 +37,7 @@ import LoadingModal from "../../Loading/LoadingModal";
 
 //Component
 import CreateEditProductModal from "./CreateEditProductModal";
+import CreateEditItemsModal from "./CreateEditItemsModal";
 
 export default function ProductManagement() {
   const querryClient = useQueryClient();
@@ -77,18 +78,8 @@ export default function ProductManagement() {
   };
 
   // NOT IMPLEMENTED YET
-  const handleOpenItemModal = (product, item = null) => {
+  const handleOpenItemModal = (product) => {
     setChoosenProduct(product);
-    setCurrentItem(
-      item || {
-        name: "",
-        category: "",
-        description: "",
-        imageItem: "",
-        price: 0,
-        stock: 0,
-      }
-    );
     setOpenItemModal(true);
   };
 
@@ -182,7 +173,13 @@ export default function ProductManagement() {
       />
 
       {/* Item Modal */}
-      <Modal
+      <CreateEditItemsModal
+        open={openItemModal}
+        setOpen={setOpenItemModal}
+        choosenProduct={choosenProduct}
+        setChoosenProduct={setChoosenProduct}
+      />
+      {/* <Modal
         open={openItemModal}
         onClose={handleCloseItemModal}
         aria-labelledby="item-modal-title"
@@ -248,11 +245,11 @@ export default function ProductManagement() {
                   onChange={(e) => handleInputChange(e, "item")}
                   required
                 >
-                  {/* {categories.map((category) => (
+                  {categories.map((category) => (
                     <MenuItem key={category} value={category}>
                       {category}
                     </MenuItem>
-                  ))} */}
+                  ))}
                 </Select>
               </FormControl>
             </Grid>
@@ -314,7 +311,7 @@ export default function ProductManagement() {
             {currentItem?.id ? "Update Item" : "Add Item"}
           </Button>
         </ModalContent>
-      </Modal>
+      </Modal> */}
 
       <LoadingModal isOpen={isDeleting} message="Deleting product..." />
     </PageContainer>

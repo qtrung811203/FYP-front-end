@@ -181,7 +181,7 @@ export default function ProductModal({
             {/* BRAND SELECT */}
             <StyledSelect
               {...register("brand", { required: true })}
-              defaultValue={choosenProduct ? choosenProduct.brand._id : ""}
+              // defaultValue={choosenProduct ? choosenProduct.brand._id : ""}
             >
               {brands.data.brands.map((brand) => (
                 <option key={brand._id} value={brand._id}>

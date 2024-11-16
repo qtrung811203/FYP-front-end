@@ -27,7 +27,15 @@ import {
 } from "@mui/material";
 import { FaPlus, FaEdit, FaTrash, FaEye } from "react-icons/fa";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
+
+import {
+  getItems,
+  createItem,
+  updateItem,
+  deleteItem,
+} from "../../../services/admin/apiAdminItems";
+import toast from "react-hot-toast";
 
 const CreateEditItemsModal = ({
   open,
@@ -35,6 +43,109 @@ const CreateEditItemsModal = ({
   choosenProduct,
   setChoosenProduct,
 }) => {
+  const queryClient = useQueryClient();
+  const [currentItem, setCurrentItem] = useState(null);
+  const { register, handleSubmit, reset } = useForm();
+
+  console.log(currentItem);
+
+  const { isLoading: isItemsLoading, data: items } = useQuery({
+    queryKey: ["items", choosenProduct?.slug],
+    queryFn: () => getItems(choosenProduct.slug),
+  });
+
+  const { mutate: addItemMutation } = useMutation({
+    mutationFn: ({ slug, newItem }) => createItem(slug, newItem),
+    onSuccess: () => {
+      toast.success("Item added successfully");
+      queryClient.invalidateQueries(["items", choosenProduct?.slug]);
+    },
+    onError: () => {
+      toast.error("Error adding item");
+    },
+  });
+
+  const { mutate: updateItemMutation } = useMutation({
+    mutationFn: ({ slug, id, updatedItem }) =>
+      updateItem(slug, id, updatedItem),
+    onSuccess: () => {
+      toast.success("Item updated successfully");
+      queryClient.invalidateQueries(["items", choosenProduct?.slug]);
+    },
+    onError: () => {
+      toast.error("Error updating item");
+    },
+  });
+
+  const { mutate: deleteItemMutation } = useMutation({
+    mutationFn: ({ slug, id }) => deleteItem(slug, id),
+    onSuccess: () => {
+      toast.success("Item delete successfully");
+      queryClient.invalidateQueries(["items", choosenProduct?.slug]);
+    },
+    onError: () => {
+      toast.error("Error adding item");
+    },
+  });
+
+  const handleCloseItemModal = () => {
+    setOpen(false);
+    setChoosenProduct(null);
+    setCurrentItem(null);
+    handleResetForm();
+  };
+
+  // Form submit
+  const onSubmit = (data) => {
+    console.log(data);
+    console.log(currentItem);
+    // addItemMutation({ slug: choosenProduct.slug, newItem: filterItem });
+    // handleResetForm();
+  };
+
+  const handleEditItem = (item) => {
+    setCurrentItem(item);
+    const filterField = filterItem(item);
+    reset({
+      ...filterField,
+      imageItem: item.imageItem,
+    });
+  };
+
+  const handleCancelEdit = () => {
+    setCurrentItem(null);
+    handleResetForm();
+  };
+
+  const handleDeleteItem = (slug, itemId) => {
+    deleteItemMutation({ slug, id: itemId });
+  };
+
+  const handleResetForm = () => {
+    reset({
+      name: "",
+      category: "",
+      description: "",
+      imageItem: "",
+      price: "",
+      stock: "",
+    });
+  };
+
+  const filterItem = (data) => {
+    const filterItem = {
+      name: data.name,
+      category: data.category,
+      description: data.description,
+      imageItem: data.imageItem,
+      price: data.price,
+      stock: data.stock,
+    };
+    return filterItem;
+  };
+
+  if (!choosenProduct || isItemsLoading) return null;
+
   return (
     <Modal
       open={open}
@@ -50,137 +161,137 @@ const CreateEditItemsModal = ({
         >
           Manage Items for {choosenProduct.name}
         </Typography>
-        <List>
-          {choosenProduct?.items.map((item) => (
-            <ListItem
-              key={item._id}
-              secondaryAction={
-                <>
-                  <IconButton
-                    edge="end"
-                    aria-label="edit"
-                    onClick={() => handleOpenItemModal(currentProduct, item)}
-                  >
-                    <FaEdit />
-                  </IconButton>
-                  <IconButton edge="end" aria-label="delete">
-                    <FaTrash />
-                  </IconButton>
-                </>
-              }
-            >
-              <ListItemAvatar>
-                <ImageAvatar src={item.imageItem} alt={item.name} />
-              </ListItemAvatar>
-              <ListItemText
-                primary={item.name}
-                secondary={`${item.category} - $${item.price} - Stock: ${item.stock}`}
-              />
-            </ListItem>
-          ))}
-        </List>
-        <Typography variant="h6" gutterBottom style={{ marginTop: "20px" }}>
-          {currentItem?.id ? "Edit Item" : "Add New Item"}
-        </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <FormField
-              name="name"
-              label="Name"
-              value={currentItem?.name || ""}
-              onChange={(e) => handleInputChange(e, "item")}
-              required
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel id="category-label">Category</InputLabel>
-              <Select
-                labelId="category-label"
-                name="category"
-                value={currentItem?.category || ""}
-                onChange={(e) => handleInputChange(e, "item")}
-                required
+        {items.data.items.length === 0 ? null : (
+          <List>
+            {items.data.items.map((item) => (
+              <ListItem
+                key={item._id}
+                secondaryAction={
+                  <>
+                    <IconButton
+                      edge="end"
+                      aria-label="edit"
+                      onClick={() => handleEditItem(item)}
+                    >
+                      <FaEdit />
+                    </IconButton>
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={() =>
+                        handleDeleteItem(choosenProduct.slug, item._id)
+                      }
+                    >
+                      <FaTrash />
+                    </IconButton>
+                  </>
+                }
               >
-                {/* {categories.map((category) => (
-                    <MenuItem key={category} value={category}>
-                      {category}
-                    </MenuItem>
-                  ))} */}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12}>
-            <FormField
-              name="description"
-              label="Description"
-              value={currentItem?.description || ""}
-              onChange={(e) => handleInputChange(e, "item")}
-              multiline
-              rows={2}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
+                <ListItemAvatar>
+                  <ImageAvatar src={item.imageItem} alt={item.name} />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={item.name}
+                  secondary={`${item.category} - $${item.price} - Stock: ${item.stock}`}
+                />
+              </ListItem>
+            ))}
+          </List>
+        )}
+
+        {/* FORM BELOW */}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Typography variant="h6" gutterBottom style={{ marginTop: "20px" }}>
+            {choosenProduct?.items.length === 0 ? "Add New Item" : "Edit Item"}
+          </Typography>
+
+          {/* NAME */}
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <InputLabel>Name</InputLabel>
+              <FormField {...register("name", { required: true })} />
+            </Grid>
+
+            {/* CATEGORY */}
+            <Grid item xs={12} sm={6}>
+              <InputLabel>Category</InputLabel>
+              <FormField {...register("category", { required: true })} />
+            </Grid>
+
+            {/* DESCRIPTION */}
+            <Grid item xs={12}>
+              <InputLabel>Description</InputLabel>
+              <FormField
+                {...register("description", { required: true })}
+                multiline
+                rows={4}
+              />
+            </Grid>
+
+            {/* IMAGE FORM AND SHOW */}
+            <Grid item xs={12} sm={2}>
               <InputLabel id="image-label">Image</InputLabel>
               <Select
+                {...register("imageItem", { required: true })}
+                defaultValue={
+                  currentItem
+                    ? currentItem.imageItem
+                    : choosenProduct?.images[0]
+                }
                 labelId="image-label"
-                name="imageItem"
-                value={currentItem?.imageItem || ""}
-                onChange={(e) => handleInputChange(e, "item")}
-                required
               >
-                {currentProduct?.images.map((image, index) => (
+                {choosenProduct?.images.map((image, index) => (
                   <MenuItem key={index} value={image}>
-                    Image {index + 1}
+                    <ImageAvatar src={image} alt={choosenProduct.name} />
                   </MenuItem>
                 ))}
               </Select>
-            </FormControl>
+            </Grid>
+
+            {/* PRICE */}
+            <Grid item xs={12} sm={5}>
+              <InputLabel>Price (VND)</InputLabel>
+              <FormField
+                {...register("price", { required: true })}
+                type="number"
+              />
+            </Grid>
+
+            {/* STOCK */}
+            <Grid item xs={12} sm={5}>
+              <InputLabel>Stock</InputLabel>
+              <FormField
+                {...register("stock", { required: true })}
+                type="number"
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={3}>
-            <FormField
-              name="price"
-              label="Price"
-              type="number"
-              value={currentItem?.price || ""}
-              onChange={(e) => handleInputChange(e, "item")}
-              required
-            />
-          </Grid>
-          <Grid item xs={12} sm={3}>
-            <FormField
-              name="stock"
-              label="Stock"
-              type="number"
-              value={currentItem?.stock || ""}
-              onChange={(e) => handleInputChange(e, "item")}
-              required
-            />
-          </Grid>
-        </Grid>
-        <Button
-          variant="contained"
-          color="primary"
-          // onClick={}
-          style={{ marginTop: "20px" }}
-        >
-          {currentItem?.id ? "Update Item" : "Add Item"}
-        </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            // onClick={}
+            style={{ marginTop: "20px" }}
+          >
+            {currentItem ? "Update Item" : "Add Item"}
+          </Button>
+          {currentItem && (
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleCancelEdit}
+              style={{ marginTop: "20px", marginLeft: "10px" }}
+            >
+              Cancel
+            </Button>
+          )}
+        </form>
       </ModalContent>
     </Modal>
   );
 };
 
 export default CreateEditItemsModal;
-
-const PageContainer = styled.div`
-  padding: 20px;
-`;
-
-const TableWrapper = styled(TableContainer)`
-  margin-top: 20px;
-`;
 
 const ModalContent = styled(Box)`
   position: absolute;
@@ -200,35 +311,6 @@ const ModalContent = styled(Box)`
 const FormField = styled(TextField)`
   margin: 10px 0;
   width: 100%;
-`;
-
-const ImagePreview = styled.img`
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  margin: 5px;
-`;
-
-const ImageBoxPreShow = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 10px 0;
-`;
-
-const StyledSelect = styled.select`
-  font-size: var(--font-size-md);
-  padding: 10px;
-  width: 100%;
-  border: 1px solid #c4c4c4;
-  border-radius: 4px;
-  background-color: white;
-  color: var(--text-color);
-  font-family: inherit;
-  transition: border-color 0.2s;
-  &:focus {
-    outline: none;
-    border-color: var(--primary-color);
-  }
 `;
 
 const ImageAvatar = styled.img`

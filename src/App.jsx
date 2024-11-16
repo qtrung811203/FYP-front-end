@@ -73,7 +73,14 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
-                <Route path="/admin/*" element={<AdminLayout />} />
+                <Route
+                  path="/admin/*"
+                  element={
+                    <ProtectedRoute inRole={"admin"}>
+                      <AdminLayout />
+                    </ProtectedRoute>
+                  }
+                />
                 {/*Handle Not Found Path*/}
                 <Route path="*" element={<PageNotFound />} />
               </Route>

@@ -21,7 +21,7 @@ function Header() {
       <PcStyled>
         <SearchBar />
         <CartIcon />
-        <Admin />
+        {user && user.role === "admin" && <Admin />}
         {user ? <MyPage /> : <LoginButton />}
       </PcStyled>
       <MobileMenu />

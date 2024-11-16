@@ -1,29 +1,31 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect } from "react"
-import { getUser } from "../services/apiUser"
+import { useState, useEffect } from "react";
+import { getUser } from "../services/apiUser";
 
-import { AuthContext } from "./authContext"
+import { AuthContext } from "./authContext";
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null)
-  const [userLoading, setUserLoading] = useState(true)
+  const [user, setUser] = useState(null);
+  const [userLoading, setUserLoading] = useState(true);
 
   useEffect(() => {
     async function loadUser() {
       try {
-        const response = await getUser()
-        setUser(response.data.user)
+        const response = await getUser();
+        setUser(response.data.user);
       } catch (error) {
-        console.log(error)
-        setUser(null)
+        setUser(null);
+        console.log(error);
       } finally {
-        setUserLoading(false)
+        setUserLoading(false);
       }
     }
-    loadUser()
-  }, [])
+    loadUser();
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ user, setUser, userLoading }}>{children}</AuthContext.Provider>
-  )
+    <AuthContext.Provider value={{ user, setUser, userLoading }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }

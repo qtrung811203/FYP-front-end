@@ -26,7 +26,6 @@ function CategoryItems({ categoryItems }) {
   return (
     <CategoryItemsStyled>
       {categoryItems.map((item, index) => {
-        console.log(item);
         const cartItem = findItemInCart(item._id);
         return (
           <ItemStyled key={index}>

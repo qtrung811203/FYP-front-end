@@ -7,6 +7,7 @@ import ProductDetailDescription from "./ProductDetailDescription";
 import BackButtonToDetail from "./BackButtonToDetail";
 import { useEffect, useState } from "react";
 import groupCategoryItems from "../../utils/groupCategoryItems";
+import { formatDate } from "../../utils/formatDate";
 
 function ProductDetail({ product }) {
   //If there is no product return null => maybe change to loading spinner
@@ -19,11 +20,20 @@ function ProductDetail({ product }) {
 
   if (!product || !groupedData) return null;
 
+  const isCloseTime = (openTime, closeTime) => {
+    return closeTime && openTime ? true : false;
+  };
+
   return (
     <ProductDetailContainer>
-      <SalePreiod>
-        <p>{product.openTime}</p>
-      </SalePreiod>
+      {isCloseTime(product.openTime, product.closeTime) && (
+        <SalePreiod>
+          <p>
+            `${formatDate(product.openTime)} - ${formatDate(product.closeTime)}`
+          </p>
+        </SalePreiod>
+      )}
+
       <Title>
         <h1>{product.name}</h1>
       </Title>

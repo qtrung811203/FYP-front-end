@@ -1,39 +1,39 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect } from "react"
-import styled from "styled-components"
-import { loadStripe } from "@stripe/stripe-js"
-import { useSelector } from "react-redux"
-import { useNavigate } from "react-router-dom"
-import CircularProgress from "@mui/material/CircularProgress"
+import { useState, useEffect } from "react";
+import styled from "styled-components";
+import { loadStripe } from "@stripe/stripe-js";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import CircularProgress from "@mui/material/CircularProgress";
 
-import Loading from "../Loading/Loading"
-
-import DropList from "./DropList"
+import Loading from "../Loading/Loading";
+import LoadingModal from "../Loading/LoadingModal";
+import DropList from "./DropList";
 import {
   getProvinces,
   getDistrictsByProvinceId,
   getWardsByDistrictId,
-} from "../../services/apiLocation"
-import { checkout, checkoutCod } from "../../services/apiCheckout"
-import emailValidation from "../../utils/emailValidation"
+} from "../../services/apiLocation";
+import { checkout, checkoutCod } from "../../services/apiCheckout";
+import emailValidation from "../../utils/emailValidation";
 
-import { useAuth } from "../../hooks/useAuth"
+import { useAuth } from "../../hooks/useAuth";
 
 const stripePromise = loadStripe(
   "pk_test_51Q7T5KHxv792P1FeVX2530832RhslIDMtKZbqcDFOmoCrK76ZUeoJgDvyVgPZaxlzLi1xLKQcH0hMIjkuN6Jqx2D00FleKVO8J"
-)
+);
 
 export default function PaymentForm({ isOpen, onClose }) {
-  const { user, userLoading } = useAuth()
-  const [provinces, setProvinces] = useState([])
-  const [districts, setDistricts] = useState([])
-  const [wards, setWards] = useState([])
+  const { user, userLoading } = useAuth();
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
 
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const cart = useSelector((state) => state.cart)
-  const navigate = useNavigate()
+  const cart = useSelector((state) => state.cart);
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -45,7 +45,7 @@ export default function PaymentForm({ isOpen, onClose }) {
     ward: "",
     note: "",
     paymentMethod: "stripe",
-  })
+  });
 
   //Fill Data to form
   useEffect(() => {
@@ -60,76 +60,78 @@ export default function PaymentForm({ isOpen, onClose }) {
         ward: user?.address?.ward || "",
         note: "",
         paymentMethod: "stripe",
-      })
+      });
     }
-  }, [user])
+  }, [user]);
 
   // Fetch provinces data
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getProvinces()
-        setProvinces(data)
+        const data = await getProvinces();
+        setProvinces(data);
       } catch (error) {
-        console.error("Failed to fetch provinces:", error)
+        console.error("Failed to fetch provinces:", error);
       }
-    }
-    fetchData()
-  }, [])
+    };
+    fetchData();
+  }, []);
 
   // Fetch districts data
   useEffect(() => {
     const fetchDistricts = async () => {
       if (formData.province) {
         try {
-          const provinceId = provinces.find((p) => p.name === formData.province)?.id ?? null
-          if (!provinceId) return
-          const fetchedDistricts = await getDistrictsByProvinceId(provinceId)
-          setDistricts(fetchedDistricts || [])
+          const provinceId =
+            provinces.find((p) => p.name === formData.province)?.id ?? null;
+          if (!provinceId) return;
+          const fetchedDistricts = await getDistrictsByProvinceId(provinceId);
+          setDistricts(fetchedDistricts || []);
         } catch (error) {
-          console.error("Failed to fetch districts:", error)
+          console.error("Failed to fetch districts:", error);
         }
       }
-    }
+    };
 
-    fetchDistricts()
-  }, [formData.province, provinces])
+    fetchDistricts();
+  }, [formData.province, provinces]);
 
   // Fetch wards data
   useEffect(() => {
     const fetchWards = async () => {
       if (formData.district) {
         try {
-          const districtId = districts.find((d) => d.name === formData.district)?.id ?? null
-          if (!districtId) return
-          const fetchedWards = await getWardsByDistrictId(districtId)
-          setWards(fetchedWards || [])
+          const districtId =
+            districts.find((d) => d.name === formData.district)?.id ?? null;
+          if (!districtId) return;
+          const fetchedWards = await getWardsByDistrictId(districtId);
+          setWards(fetchedWards || []);
         } catch (error) {
-          console.error("Failed to fetch wards:", error)
+          console.error("Failed to fetch wards:", error);
         }
       }
-    }
+    };
 
-    fetchWards()
-  }, [formData.district, districts])
+    fetchWards();
+  }, [formData.district, districts]);
 
   // Handle form input change
   const handleChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
-    }))
+    }));
 
     // Validate email
     if (name === "email") {
       if (!emailValidation(value)) {
-        setError("Invalid email")
+        setError("Invalid email");
       } else {
-        setError(null)
+        setError(null);
       }
     }
-  }
+  };
 
   // Handle select change
   const handleSelectChange = async (name, id, value) => {
@@ -138,57 +140,63 @@ export default function PaymentForm({ isOpen, onClose }) {
       [name]: value,
       ...(name === "province" && { district: "", ward: "" }),
       ...(name === "district" && { ward: "" }),
-    }))
-  }
+    }));
+  };
 
   // Handle close modal
   const handleCloseModal = (e) => {
     if (e.target === e.currentTarget) {
-      setError(null)
-      document.body.style.overflow = "auto"
-      onClose()
+      setError(null);
+      document.body.style.overflow = "auto";
+      onClose();
     }
-  }
+  };
 
   // Handle form submit
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (!emailValidation(formData.email)) {
-      alert("Please enter valid email")
-      return
+      alert("Please enter valid email");
+      return;
     }
     {
       if (formData.paymentMethod === "cod") {
-        setLoading(true)
-        const codResponse = await checkoutCod({ user: formData, items: cart.items })
+        setLoading(true);
+        const codResponse = await checkoutCod({
+          user: formData,
+          items: cart.items,
+        });
         if (!codResponse) {
-          alert("Checkout failed, please try again")
-          return
+          alert("Checkout failed, please try again");
+          return;
         }
-        navigate("/checkout/cod-success", { state: { order: codResponse.data.order } })
-        onClose()
+        navigate("/checkout/cod-success", {
+          state: { order: codResponse.data.order },
+        });
+        onClose();
       } else {
         try {
-          setLoading(true)
-          const stripe = await stripePromise
-          const response = await checkout({ user: formData, items: cart.items })
-          if (!response) {
-            alert(`Checkout failed, please try again + ${response}`)
-            return
+          setLoading(true);
+          const stripe = await stripePromise;
+          const response = await checkout({
+            user: formData,
+            items: cart.items,
+          });
+          if (response) {
+            stripe.redirectToCheckout({ sessionId: response });
           }
-          stripe.redirectToCheckout({ sessionId: response })
         } catch (error) {
-          console.error(error)
+          console.error(error);
         } finally {
-          setLoading(false)
+          setLoading(false);
         }
       }
     }
-  }
+  };
 
-  if (userLoading) return <Loading />
+  if (userLoading) return <Loading />;
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <ModalOverlay onClick={(e) => handleCloseModal(e)}>
@@ -279,12 +287,17 @@ export default function PaymentForm({ isOpen, onClose }) {
             </label>
           </RadioGroup>
           <Button type="submit" disabled={loading}>
-            {loading ? <CircularProgress color="white" size={20} /> : "Checkout"}
+            {loading ? (
+              <CircularProgress color="white" size={20} />
+            ) : (
+              "Checkout"
+            )}
           </Button>
         </Form>
       </ModalContent>
+      <LoadingModal isOpen={loading} />
     </ModalOverlay>
-  )
+  );
 }
 
 // Styles Components
@@ -299,7 +312,7 @@ const ModalOverlay = styled.div`
   align-items: center;
   justify-content: center;
   z-index: 1000;
-`
+`;
 
 const ModalContent = styled.div`
   background-color: var(--fourth-color);
@@ -310,14 +323,14 @@ const ModalContent = styled.div`
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 0 10px rgba(22, 66, 60, 0.1);
-`
+`;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 15px;
   font-size: var(--font-size-lg);
-`
+`;
 
 const Input = styled.input`
   padding: 10px;
@@ -327,7 +340,7 @@ const Input = styled.input`
     outline: none;
     border-color: var(--secondary-color);
   }
-`
+`;
 
 const TextArea = styled.textarea`
   padding: 10px;
@@ -338,7 +351,7 @@ const TextArea = styled.textarea`
     outline: none;
     border-color: var(--secondary-color);
   }
-`
+`;
 
 const RadioGroup = styled.div`
   display: flex;
@@ -353,7 +366,7 @@ const RadioGroup = styled.div`
     margin-right: 5px;
     accent-color: var(--primary-color);
   }
-`
+`;
 
 const Button = styled.button`
   padding: 10px 20px;
@@ -369,17 +382,17 @@ const Button = styled.button`
     background-color: var(--third-color);
     cursor: not-allowed;
   }
-`
+`;
 
 const FormTitle = styled.h2`
   color: var(--primary-color);
   text-align: center;
   margin-bottom: 20px;
-`
+`;
 
 const ErrorMessage = styled.p`
   color: red;
   font-size: var(--font-size-sm);
   margin-top: -18px;
   margin-bottom: -15px;
-`
+`;

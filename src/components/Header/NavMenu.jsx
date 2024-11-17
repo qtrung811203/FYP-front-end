@@ -1,5 +1,5 @@
-import styled from "styled-components"
-import { Link } from "react-router-dom"
+import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 function NavMenu() {
   return (
@@ -7,14 +7,14 @@ function NavMenu() {
       <ListItemStyle>
         <Link to="/all">All Products</Link>
       </ListItemStyle>
-      <ListItemStyle>
+      {/* <ListItemStyle>
         <Link to="/notYet">Category</Link>
-      </ListItemStyle>
+      </ListItemStyle> */}
     </NavListStyle>
-  )
+  );
 }
 
-export default NavMenu
+export default NavMenu;
 
 //Styled Components
 const NavListStyle = styled.ul`
@@ -31,7 +31,7 @@ const NavListStyle = styled.ul`
   @media (max-width: 768px) {
     display: none;
   }
-`
+`;
 
 const ListItemStyle = styled.li`
   position: relative;
@@ -62,4 +62,4 @@ const ListItemStyle = styled.li`
   &:hover {
     opacity: 0.5;
   }
-`
+`;

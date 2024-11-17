@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query"
-import { getHomeProducts } from "../services/apiProduct"
+import { useQuery } from "@tanstack/react-query";
+import { getHomeProducts } from "../services/apiProduct";
 
 export function useHomeProducts() {
   const {
@@ -9,9 +9,9 @@ export function useHomeProducts() {
   } = useQuery({
     queryKey: ["homeProducts"],
     queryFn: getHomeProducts,
-  })
+  });
 
-  const { newMerch } = products?.data || {}
+  const { newMerch, newProducts, almostEnd } = products?.data || {};
 
-  return { newMerch }
+  return { newMerch, newProducts, almostEnd };
 }

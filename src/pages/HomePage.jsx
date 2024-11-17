@@ -1,19 +1,23 @@
-import { BsBoxFill } from "react-icons/bs"
-import { useHomeProducts } from "../hooks/useHomeProducts"
+import { BsBoxFill } from "react-icons/bs";
+import { useHomeProducts } from "../hooks/useHomeProducts";
 
-import TopSwiper from "../components/Swiper/TopSwiper/TopSwiper"
-import FeatureSwiper from "../components/Swiper/FeatureSwiper/FeatureSwiper"
-import EndSwiper from "../components/Swiper/EndSwiper/EndSwiper"
+import TopSwiper from "../components/Swiper/TopSwiper/TopSwiper";
+import FeatureSwiper from "../components/Swiper/FeatureSwiper/FeatureSwiper";
+import EndSwiper from "../components/Swiper/EndSwiper/EndSwiper";
 
 function HomePage() {
-  const { newMerch } = useHomeProducts()
+  const { newMerch } = useHomeProducts();
 
   return (
     <>
       {/* TOP SWIPER */}
       <TopSwiper />
       {/* NEW MERCH */}
-      <FeatureSwiper mainColor={"var(--primary-color)"} isNew={true} data={newMerch}>
+      <FeatureSwiper
+        mainColor={"var(--primary-color)"}
+        isNew={true}
+        data={newMerch}
+      >
         <BsBoxFill />
         <p>new merch</p>
       </FeatureSwiper>
@@ -25,6 +29,6 @@ function HomePage() {
       {/* END SWIPER */}
       <EndSwiper />
     </>
-  )
+  );
 }
-export default HomePage
+export default HomePage;

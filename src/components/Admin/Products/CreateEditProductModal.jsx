@@ -213,6 +213,7 @@ export default function ProductModal({
                   {...register("openTime")}
                   name="openTime"
                   type="date"
+                  defaultValue={formatDateSelection(new Date())}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>

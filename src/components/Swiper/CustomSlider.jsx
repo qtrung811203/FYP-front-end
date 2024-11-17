@@ -1,29 +1,63 @@
-import styled from "styled-components"
-import { formatCurrency } from "../../utils/formatCurrency"
+import styled from "styled-components";
+import { formatCurrency } from "../../utils/formatCurrency";
+import { useEffect, useState } from "react";
 
 /* eslint-disable react/prop-types */
 function CustomSlider({ data, isNew, border, small }) {
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(0);
+
+  //Calculate min and max price
+  useEffect(() => {
+    if (data.items) {
+      const { min, max } = data.items.reduce(
+        (acc, item) => {
+          if (item.price < acc.min) {
+            acc.min = item.price;
+          }
+          if (item.price > acc.max) {
+            acc.max = item.price;
+          }
+          return acc;
+        },
+        { min: Infinity, max: 0 }
+      );
+      setMinPrice(Math.min(min));
+      setMaxPrice(Math.max(max));
+    }
+  }, [data]);
+
+  const showPrice = () => {
+    if (minPrice === maxPrice) {
+      return formatCurrency(minPrice);
+    } else {
+      return `${minPrice.toLocaleString("vi-VN")} - ${formatCurrency(
+        maxPrice
+      )}`;
+    }
+  };
+
   return (
     <CustomCard $border={border} className={small ? "small" : undefined}>
       <ImgCard>
         <img src={data.imageCover} alt={data.id} />
-        <img src={data.secondImage ? data.secondImage : data.imageCover} alt={data.id} />
+        <img
+          src={data.secondImage ? data.secondImage : data.imageCover}
+          alt={data.id}
+        />
       </ImgCard>
       <Content>
         <h3>
           <p>{data.name || "Hololivex9090 COLLAB MERCH hololivex9090"}</p>
         </h3>
-        <Price>
-          {data?.items?.length > 1 ? " ~ " : ""}{" "}
-          {data?.minPrice ? formatCurrency(data.minPrice) : "0"}
-        </Price>
+        <Price>{showPrice()}</Price>
       </Content>
       {isNew && <NewStyled>new</NewStyled>}
     </CustomCard>
-  )
+  );
 }
 
-export default CustomSlider
+export default CustomSlider;
 
 //Styled Components
 const CustomCard = styled.div`
@@ -51,9 +85,10 @@ const CustomCard = styled.div`
   }
 
   &:hover {
-    border: 0.3rem solid ${(props) => (props.$border ? props.$border : "var(--primary-color)")};
+    border: 0.3rem solid
+      ${(props) => (props.$border ? props.$border : "var(--primary-color)")};
   }
-`
+`;
 
 const ImgCard = styled.div`
   position: relative;
@@ -80,7 +115,7 @@ const ImgCard = styled.div`
   &:hover img:last-child {
     opacity: 1;
   }
-`
+`;
 
 const Content = styled.div`
   display: flex;
@@ -102,7 +137,7 @@ const Content = styled.div`
       overflow: hidden;
     }
   }
-`
+`;
 
 const Price = styled.p`
   margin-top: 1rem;
@@ -110,7 +145,7 @@ const Price = styled.p`
   font-weight: 500;
   color: var(--primary-color);
   font-family: "Viga", sans-serif;
-`
+`;
 
 const NewStyled = styled.div`
   position: absolute;
@@ -123,4 +158,4 @@ const NewStyled = styled.div`
   text-transform: uppercase;
   font-weight: 500;
   font-family: "Viga", sans-serif;
-`
+`;

@@ -17,9 +17,9 @@ export default function FilterDropList({ onChange }) {
 
   const getSortLabel = (option) => {
     switch (option) {
-      case "lowToHigh":
+      case "asc":
         return "Price: Low to High";
-      case "highToLow":
+      case "des":
         return "Price: High to Low";
       case "default":
         return "Default";
@@ -38,10 +38,10 @@ export default function FilterDropList({ onChange }) {
         <DropdownItem onClick={() => handleSort("default")}>
           Default
         </DropdownItem>
-        <DropdownItem onClick={() => handleSort("lowToHigh")}>
+        <DropdownItem onClick={() => handleSort("asc")}>
           Price: Low to High
         </DropdownItem>
-        <DropdownItem onClick={() => handleSort("highToLow")}>
+        <DropdownItem onClick={() => handleSort("des")}>
           Price: High to Low
         </DropdownItem>
       </DropdownContent>

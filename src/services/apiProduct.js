@@ -9,11 +9,12 @@ export async function getHomeProducts() {
   }
 }
 
-export async function getProducts(page, brands) {
+export async function getProducts(page, brands, sortOption) {
   const brandQuery = brands ? `&brands=${brands}` : "";
+  const sortQuery = sortOption ? `&sortByPrice=${sortOption}` : "";
   try {
     const response = await axiosInstance.get(
-      `/products?page=${page}&limit=12${brandQuery}`
+      `/products?page=${page}&limit=12${brandQuery}${sortQuery}`
     );
     return response.data;
   } catch (error) {
@@ -24,14 +25,6 @@ export async function getProducts(page, brands) {
 export async function getProductBySlug(slug) {
   try {
     const response = await axiosInstance.get(`/products/${slug}`);
-    const productData = response.data.data[0];
-
-    productData.items.forEach((itemCategory) => {
-      itemCategory.items.forEach((item) => {
-        item.slug = productData.productInfo.slug;
-        item.productName = productData.productInfo.name;
-      });
-    });
     return response.data;
   } catch (error) {
     console.error(error);

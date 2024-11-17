@@ -1,16 +1,16 @@
 /* eslint-disable react/prop-types */
-import styled from "styled-components"
-import { useState } from "react"
-import { FaChevronDown } from "react-icons/fa"
+import styled from "styled-components";
+import { useState } from "react";
+import { FaChevronDown } from "react-icons/fa";
 
 const CollapsibleDescription = ({ items }) => {
-  const [openItems, setOpenItems] = useState({})
+  const [openItems, setOpenItems] = useState({});
   const toggleItem = (index) => {
     setOpenItems((prevState) => ({
       ...prevState,
       [index]: !prevState[index],
-    }))
-  }
+    }));
+  };
 
   return (
     <CollapsibleList>
@@ -26,19 +26,19 @@ const CollapsibleDescription = ({ items }) => {
                 return (
                   <DetailItem key={index}>
                     <h5>&lt;{item.name}&gt;</h5>
-                    <p>{item.description}</p>
+                    <p>{item?.description}</p>
                   </DetailItem>
-                )
+                );
               })}
             </CollapsibleContent>
           )}
         </CollapsibleItem>
       ))}
     </CollapsibleList>
-  )
-}
+  );
+};
 
-export default CollapsibleDescription
+export default CollapsibleDescription;
 
 // Define the color palette
 const colors = {
@@ -48,7 +48,7 @@ const colors = {
   fourth: "#E9EFEC",
   warmAccent: "#D68060",
   coolAccent: "#60A1D6",
-}
+};
 
 const CollapsibleList = styled.div`
   width: 100%;
@@ -56,14 +56,14 @@ const CollapsibleList = styled.div`
   margin: 0 auto;
   background-color: white;
   overflow: hidden;
-`
+`;
 
 const CollapsibleItem = styled.div`
   border-bottom: 1px solid ${colors.third};
   &:last-child {
     border-bottom: none;
   }
-`
+`;
 
 const CollapsibleTrigger = styled.button`
   display: flex;
@@ -81,26 +81,26 @@ const CollapsibleTrigger = styled.button`
   &:hover {
     background-color: ${colors.fourth};
   }
-`
+`;
 
 const CollapsibleTitle = styled.span`
   font-weight: 600;
   text-transform: uppercase;
   color: ${colors.primary};
-`
+`;
 
 const CollapsibleIcon = styled(FaChevronDown)`
   color: ${colors.primary};
   transition: transform 0.3s ease;
   ${(props) => props.$isOpen && "transform: rotate(180deg);"}
-`
+`;
 
 const CollapsibleContent = styled.div`
   padding: 16px;
   background-color: white;
   color: ${colors.primary};
-`
+`;
 const DetailItem = styled.div`
   color: #516677;
   padding: 0rem 2rem;
-`
+`;

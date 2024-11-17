@@ -1,45 +1,45 @@
-import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
-import styled from "styled-components"
-import { useNavigate, useLocation } from "react-router-dom"
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import { useNavigate, useLocation } from "react-router-dom";
 
-import { login } from "../services/apiAuth"
-import { useAuth } from "../hooks/useAuth"
+import { login } from "../services/apiAuth";
+import { useAuth } from "../hooks/useAuth";
 
 export default function LoginPage() {
-  const { user, setUser, userLoading } = useAuth()
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const { user, setUser, userLoading } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate()
-  const location = useLocation()
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (user && !userLoading) {
-      navigate("/home", { replace: true })
+      navigate("/home", { replace: true });
     }
-  }, [user, navigate, userLoading])
+  }, [user, navigate, userLoading]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
     try {
-      const currentUser = await login({ email, password })
+      const currentUser = await login({ email, password });
       if (currentUser) {
-        setUser(currentUser.data.user)
-        const { from } = location.state || { from: { pathname: "/home" } }
-        navigate(from, { replace: true })
+        setUser(currentUser.data.user);
+        const { from } = location.state || { from: { pathname: "/home" } };
+        navigate(from, { replace: true });
       }
     } catch (error) {
-      setError(error.message)
+      setError(error.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <PageContainer>
@@ -67,19 +67,23 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder="Enter your password"
+              autoComplete="on"
             />
           </div>
-          <ForgotPassword href="/forgot-password">Forgot password?</ForgotPassword>
+          <ForgotPassword href="/forgot-password">
+            Forgot password?
+          </ForgotPassword>
           <Button type="submit" disabled={loading}>
             Log In
           </Button>
         </Form>
         <SignUpPrompt>
-          Don&apos;t have an account? <SignUpLink to="/signup">Sign up</SignUpLink>
+          Don&apos;t have an account?{" "}
+          <SignUpLink to="/signup">Sign up</SignUpLink>
         </SignUpPrompt>
       </LoginCard>
     </PageContainer>
-  )
+  );
 }
 
 // Styled Components
@@ -92,7 +96,7 @@ const PageContainer = styled.div`
   min-height: 60vh;
   background-color: var(--pale-mint);
   font-size: 1.6rem;
-`
+`;
 
 const LoginCard = styled.div`
   background-color: var(--off-white);
@@ -101,7 +105,7 @@ const LoginCard = styled.div`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 480px;
-`
+`;
 
 const Title = styled.h1`
   color: var(--darkest-teal);
@@ -111,19 +115,19 @@ const Title = styled.h1`
   text-transform: uppercase;
   font-family: "Viga", sans-serif;
   letter-spacing: 0.2rem;
-`
+`;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-`
+`;
 
 const Label = styled.label`
   color: var(--dark-teal);
   font-weight: bold;
   font-size: 1.5rem;
-`
+`;
 
 const Input = styled.input`
   width: 100%;
@@ -137,7 +141,7 @@ const Input = styled.input`
     border-color: var(--medium-teal);
     box-shadow: 0 0 0 3px var(--light-mint);
   }
-`
+`;
 
 const Button = styled.button`
   background-color: var(--medium-teal);
@@ -157,7 +161,7 @@ const Button = styled.button`
     outline: none;
     box-shadow: 0 0 0 3px var(--light-mint);
   }
-`
+`;
 
 const ForgotPassword = styled.a`
   color: var(--medium-sage);
@@ -168,14 +172,14 @@ const ForgotPassword = styled.a`
   &:hover {
     text-decoration: underline;
   }
-`
+`;
 
 const SignUpPrompt = styled.p`
   color: var(--medium-gray);
   text-align: center;
   margin-top: 1.5rem;
   font-size: 1.4rem; // 16px
-`
+`;
 
 const SignUpLink = styled(Link)`
   color: var(--warm-accent);
@@ -185,4 +189,4 @@ const SignUpLink = styled(Link)`
   &:hover {
     text-decoration: underline;
   }
-`
+`;

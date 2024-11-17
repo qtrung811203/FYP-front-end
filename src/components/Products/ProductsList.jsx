@@ -3,13 +3,12 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 import CustomSlider from "../Swiper/CustomSlider";
-// import data from "../../data/data"
 
 function ProductsList({ data }) {
   return (
     <ProductsContainer>
       {data.map((item) => (
-        <Link to={`/product/${item.slug}`} key={item.id}>
+        <Link to={`/product/${item.slug}`} key={item._id}>
           <CustomSlider small={true} data={item} />
         </Link>
       ))}

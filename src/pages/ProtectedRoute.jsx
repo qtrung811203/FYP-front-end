@@ -1,16 +1,22 @@
 /* eslint-disable react/prop-types */
-import { useAuth } from "../hooks/useAuth"
-import { Navigate, useLocation } from "react-router-dom"
+import { useAuth } from "../hooks/useAuth";
+import { Navigate, useLocation } from "react-router-dom";
+import NotFoundPage from "./NotFoundPage";
 
-function ProtectedRoute({ children }) {
-  const { user, userLoading } = useAuth()
-  const location = useLocation()
+function ProtectedRoute({ children, inRole }) {
+  const { user, userLoading } = useAuth();
+  const location = useLocation();
 
-  if (userLoading) return <div>Loading...</div>
+  if (inRole && user && user.role !== inRole) {
+    return <NotFoundPage />;
+  }
 
-  if (!user) return <Navigate to="/login" state={{ from: location.pathname }} />
+  if (userLoading) return <div>Loading...</div>;
 
-  return children
+  if (!user)
+    return <Navigate to="/login" state={{ from: location.pathname }} />;
+
+  return children;
 }
 
-export default ProtectedRoute
+export default ProtectedRoute;

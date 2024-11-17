@@ -1,14 +1,13 @@
 /* eslint-disable react/prop-types */
-import styled from "styled-components"
-import { Link } from "react-router-dom"
-import { Swiper, SwiperSlide } from "swiper/react"
-import { Thumbs, Navigation } from "swiper/modules"
-import "swiper/css"
-import "swiper/css/thumbs"
-import "swiper/css/navigation"
+import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Thumbs, Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/thumbs";
+import "swiper/css/navigation";
 
-//data
-import data from "../../../data/data2"
+import { useHomeProducts } from "../../../hooks/useHomeProducts";
 
 const settings = {
   loop: true,
@@ -25,9 +24,13 @@ const settings = {
       spaceBetween: 20,
     },
   },
-}
+};
 
 function SwiperMain({ thumbRef }) {
+  const { newProducts: data } = useHomeProducts();
+
+  if (!data) return null;
+
   return (
     <SwiperStyled
       {...settings}
@@ -36,17 +39,17 @@ function SwiperMain({ thumbRef }) {
       thumbs={thumbRef ? { swiper: thumbRef } : undefined}
     >
       {data.map((item) => (
-        <SwiperSlideStyled key={item.id}>
-          <LinkStyled to="/product">
-            <img src={item.img} />
+        <SwiperSlideStyled key={item._id}>
+          <LinkStyled to={`/product/${item.slug}`}>
+            <img src={item.imageCover} />
           </LinkStyled>
         </SwiperSlideStyled>
       ))}
     </SwiperStyled>
-  )
+  );
 }
 
-export default SwiperMain
+export default SwiperMain;
 
 //Styled Components
 const LinkStyled = styled(Link)`
@@ -55,7 +58,7 @@ const LinkStyled = styled(Link)`
   height: 100%;
   display: flex;
   align-items: center;
-`
+`;
 
 //Slide Wrap
 const SwiperStyled = styled(Swiper)`
@@ -87,7 +90,7 @@ const SwiperStyled = styled(Swiper)`
       font-size: 3rem;
     }
   }
-`
+`;
 
 //Slide items
 const SwiperSlideStyled = styled(SwiperSlide)`
@@ -122,4 +125,4 @@ const SwiperSlideStyled = styled(SwiperSlide)`
     height: 35.1rem;
     border: 3px solid #c7ffd8;
   }
-`
+`;

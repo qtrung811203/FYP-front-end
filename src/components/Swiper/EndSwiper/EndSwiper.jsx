@@ -1,16 +1,21 @@
-import styled from "styled-components"
-import { Swiper, SwiperSlide } from "swiper/react"
-import { Autoplay, FreeMode } from "swiper/modules"
-import "swiper/css"
+import styled from "styled-components";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, FreeMode } from "swiper/modules";
+import { Link } from "react-router-dom";
+import "swiper/css";
 
-import Heading from "./Heading"
-import CustomSlider from "../CustomSlider"
-import RandomNumber from "./RandomNumber"
+import Heading from "./Heading";
+import CustomSlider from "../CustomSlider";
+import RandomNumber from "./RandomNumber";
 
 //Sample data
-import data from "../../../data/data"
+import { useHomeProducts } from "../../../hooks/useHomeProducts";
 
 function EndSwiper() {
+  const { almostEnd: data } = useHomeProducts();
+
+  if (!data) return null;
+
   return (
     <EndContainer>
       <MainContainer>
@@ -28,8 +33,10 @@ function EndSwiper() {
           speed={7000}
         >
           {data.map((item) => (
-            <SwiperSlide key={item.id}>
-              <CustomSlider data={item} border="#ff0" />
+            <SwiperSlide key={item._id}>
+              <Link to={`/product/${item.slug}`}>
+                <CustomSlider data={item} border="#ff0" />
+              </Link>
             </SwiperSlide>
           ))}
         </SwiperContainer>
@@ -37,10 +44,10 @@ function EndSwiper() {
         <TopRandomNumber className="bot-random-number" />
       </MainContainer>
     </EndContainer>
-  )
+  );
 }
 
-export default EndSwiper
+export default EndSwiper;
 
 //Styled Components
 const EndContainer = styled.div`
@@ -58,14 +65,14 @@ const EndContainer = styled.div`
     background: url("./end-line.png ") no-repeat center;
     background-size: cover;
   }
-`
+`;
 const MainContainer = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding-bottom: 3.5rem;
-`
+`;
 
 const SwiperContainer = styled(Swiper)`
   width: 100%;
@@ -75,7 +82,7 @@ const SwiperContainer = styled(Swiper)`
   .swiper-slide {
     width: auto;
   }
-`
+`;
 const TopRandomNumber = styled(RandomNumber)`
   &.top-random-number {
     top: -110px;
@@ -85,4 +92,4 @@ const TopRandomNumber = styled(RandomNumber)`
     bottom: -200px;
     right: -200px;
   }
-`
+`;

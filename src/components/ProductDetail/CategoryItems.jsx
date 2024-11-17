@@ -1,29 +1,32 @@
 /* eslint-disable react/prop-types */
-import styled from "styled-components"
-import { useSelector, useDispatch } from "react-redux"
-import { FaCartPlus } from "react-icons/fa"
-import { FaMinus } from "react-icons/fa"
-import { FaPlus } from "react-icons/fa"
+import styled from "styled-components";
+import { useSelector, useDispatch } from "react-redux";
+import { FaCartPlus } from "react-icons/fa";
+import { FaMinus } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 
-import { formatCurrency } from "../../utils/formatCurrency"
-import { addToCart, increaseQuantity, decreaseQuantity } from "../../features/cartSlice"
+import { formatCurrency } from "../../utils/formatCurrency";
+import {
+  addToCart,
+  increaseQuantity,
+  decreaseQuantity,
+} from "../../features/cartSlice";
 
 function CategoryItems({ categoryItems }) {
-  const cart = useSelector((state) => state.cart)
-  const dispatch = useDispatch()
+  const cart = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
 
   //Find item in cart
   const findItemInCart = (id) => {
-    return cart.items.find((item) => item._id === id)
-  }
+    return cart.items.find((item) => item._id === id);
+  };
 
   //If there is no categoryItems return null
-  if (!categoryItems) return null
 
   return (
     <CategoryItemsStyled>
-      {categoryItems.items.map((item, index) => {
-        const cartItem = findItemInCart(item._id)
+      {categoryItems.map((item, index) => {
+        const cartItem = findItemInCart(item._id);
         return (
           <ItemStyled key={index}>
             <h4>{item.name}</h4>
@@ -33,9 +36,13 @@ function CategoryItems({ categoryItems }) {
                 <SoldOut>Sold Out</SoldOut>
               ) : cartItem ? (
                 <Quantity>
-                  <MinusIcon onClick={() => dispatch(decreaseQuantity(cartItem._id))} />
+                  <MinusIcon
+                    onClick={() => dispatch(decreaseQuantity(cartItem._id))}
+                  />
                   <ItemQuantity>{cartItem.quantity}</ItemQuantity>
-                  <AddIcon onClick={() => dispatch(increaseQuantity(cartItem._id))} />
+                  <AddIcon
+                    onClick={() => dispatch(increaseQuantity(cartItem._id))}
+                  />
                 </Quantity>
               ) : (
                 <CartIcon onClick={() => dispatch(addToCart(item))}>
@@ -44,13 +51,13 @@ function CategoryItems({ categoryItems }) {
               )}
             </PriceEnd>
           </ItemStyled>
-        )
+        );
       })}
     </CategoryItemsStyled>
-  )
+  );
 }
 
-export default CategoryItems
+export default CategoryItems;
 
 //Styled Component
 const CategoryItemsStyled = styled.div`
@@ -76,7 +83,7 @@ const CategoryItemsStyled = styled.div`
   &::-webkit-scrollbar-track {
     background: #f1f1f1;
   }
-`
+`;
 
 const ItemStyled = styled.div`
   background-color: white;
@@ -97,7 +104,7 @@ const ItemStyled = styled.div`
     border-color: var(--primary-color);
     background: #eaf9ff;
   }
-`
+`;
 
 const PriceEnd = styled.div`
   display: flex;
@@ -108,7 +115,7 @@ const PriceEnd = styled.div`
     color: var(--color-danger);
     font-family: Viga, sans-serif;
   }
-`
+`;
 const CartIcon = styled.div`
   display: flex;
   cursor: pointer;
@@ -120,7 +127,7 @@ const CartIcon = styled.div`
   height: 30px;
   background: var(--secondary-color);
   border-radius: 50%;
-`
+`;
 
 //Quantity for each item
 const Quantity = styled.div`
@@ -137,7 +144,7 @@ const Quantity = styled.div`
   svg {
     color: var(--secondary-color);
   }
-`
+`;
 
 //Sold out
 const SoldOut = styled.div`
@@ -148,17 +155,17 @@ const SoldOut = styled.div`
   padding: 5px 10px;
   border-radius: 30px;
   text-transform: uppercase;
-`
+`;
 
 //Add Icon
 const AddIcon = styled(FaPlus)`
   cursor: pointer;
-`
+`;
 
 //Remove Icon
 const MinusIcon = styled(FaMinus)`
   cursor: pointer;
-`
+`;
 
 //Item Quantity
 const ItemQuantity = styled.span`
@@ -166,4 +173,4 @@ const ItemQuantity = styled.span`
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-`
+`;

@@ -1,18 +1,29 @@
 /* eslint-disable react/prop-types */
-import styled from "styled-components"
+import styled from "styled-components";
+import { useEffect, useState } from "react";
 
-import CollapsibleDescription from "./CollapsibleDescription"
+import CollapsibleDescription from "./CollapsibleDescription";
+import groupCategoryItems from "../../utils/groupCategoryItems";
 
 function ProductDetailDescription({ product }) {
+  const [groupItems, setGroupItems] = useState();
+
+  useEffect(() => {
+    const grouped = groupCategoryItems(product.items);
+    setGroupItems(grouped);
+  }, [product]);
+
+  if (!groupItems) return null;
+
   return (
     <>
-      <DetailContainer>{product.productInfo.description}</DetailContainer>
-      <CollapsibleDescription items={product.items} />
+      <DetailContainer>{product.description}</DetailContainer>
+      <CollapsibleDescription items={groupItems} />
     </>
-  )
+  );
 }
 
-export default ProductDetailDescription
+export default ProductDetailDescription;
 
 //Styled Components
 const DetailContainer = styled.div`
@@ -26,4 +37,4 @@ const DetailContainer = styled.div`
   font-weight: 400;
   white-space: pre-wrap;
   word-wrap: break-word;
-`
+`;

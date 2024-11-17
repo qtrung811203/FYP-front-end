@@ -12,8 +12,6 @@ import { getProducts } from "../services/apiProduct";
 
 function ProductsPage() {
   const [products, setProducts] = useState([]);
-  const [sortedProducts, setSortedProducts] = useState([]);
-
   const [brands, setBrands] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -24,36 +22,19 @@ function ProductsPage() {
   useEffect(() => {
     async function fetchProducts() {
       setLoading(true);
-      const response = await getProducts(page, brands);
+      const response = await getProducts(page, brands, sortOption);
       setProducts(response.data);
       setTotalPages(response.totalPages);
       setLoading(false);
     }
     fetchProducts();
-  }, [page, brands]);
-
-  useEffect(() => {
-    let sortedProducts = [...products];
-    switch (sortOption) {
-      case "lowToHigh":
-        sortedProducts.sort((a, b) => a.minPrice - b.minPrice);
-        break;
-      case "highToLow":
-        sortedProducts.sort((a, b) => b.minPrice - a.minPrice);
-        break;
-      case "default":
-        break;
-      default:
-        break;
-    }
-    setSortedProducts(sortedProducts);
-  }, [products, sortOption]);
+  }, [page, brands, sortOption]);
 
   function handlePageChange(page) {
     setPage(page);
   }
 
-  function handleSearch(option) {
+  function handleSort(option) {
     setSortOption(option);
   }
 
@@ -72,10 +53,10 @@ function ProductsPage() {
         {/* Header */}
         <HeaderContainer>
           <Title />
-          <FilterDropList onChange={handleSearch} />
+          <FilterDropList onChange={handleSort} />
         </HeaderContainer>
         {/* ProductList */}
-        {loading ? <Loading /> : <ProductsList data={sortedProducts} />}
+        {loading ? <Loading /> : <ProductsList data={products} />}
         {/* Pagination */}
         <Pagination
           totalPages={totalPages}

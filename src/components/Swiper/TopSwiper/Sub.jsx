@@ -1,12 +1,11 @@
 /* eslint-disable react/prop-types */
-import styled, { keyframes } from "styled-components"
-import { Swiper, SwiperSlide } from "swiper/react"
-import { Thumbs } from "swiper/modules"
-import "swiper/css"
-import "swiper/css/thumbs"
+import styled, { keyframes } from "styled-components";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Thumbs } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/thumbs";
 
-//data
-import data from "../../../data/data2"
+import { useHomeProducts } from "../../../hooks/useHomeProducts";
 
 const settings = {
   loop: true,
@@ -29,21 +28,30 @@ const settings = {
       spaceBetween: 20,
     },
   },
-}
+};
 
 function SwiperSub({ setSwiper }) {
+  const { newProducts: data } = useHomeProducts();
+
+  if (!data) return null;
+
   return (
-    <Swiper {...settings} modules={[Thumbs]} onSwiper={setSwiper} initialSlide={data.length / 2}>
+    <Swiper
+      {...settings}
+      modules={[Thumbs]}
+      onSwiper={setSwiper}
+      initialSlide={data.length / 2}
+    >
       {data.map((item) => (
-        <SubSlideStyle key={item.id}>
-          <img src={item.img} />
+        <SubSlideStyle key={item._id}>
+          <img src={item.imageCover} />
         </SubSlideStyle>
       ))}
     </Swiper>
-  )
+  );
 }
 
-export default SwiperSub
+export default SwiperSub;
 
 //Styled Components
 const anime = keyframes`
@@ -53,7 +61,7 @@ const anime = keyframes`
   100% {
     transform: rotate(-6deg);
   }
-`
+`;
 
 const SubSlideStyle = styled(SwiperSlide)`
   position: relative;
@@ -93,4 +101,4 @@ const SubSlideStyle = styled(SwiperSlide)`
       animation: ${anime} 0.5s linear;
     }
   }
-`
+`;

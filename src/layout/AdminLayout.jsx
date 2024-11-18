@@ -24,6 +24,7 @@ import BrandManagement from "../components/Admin/Brands/BrandManagement";
 import UsersManagement from "../components/Admin/Users/UsersManagement";
 import OrdersManagement from "../components/Admin/Orders/OrdersManagement";
 import ProductsManagement from "../components/Admin/Products/ProductsManagement";
+import DashboardManagement from "../components/Admin/Dashboard/DashboardManagement";
 
 const menuItems = [
   { text: "Dashboard", icon: <DashboardIcon />, path: "/admin" },
@@ -34,8 +35,6 @@ const menuItems = [
 ];
 
 // Sample components for each route
-const DashboardComponent = () => <h1>Dashboard</h1>;
-// const ProductsComponent = () => <h1>Products Management</h1>;
 
 function AdminLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -83,7 +82,7 @@ function AdminLayout() {
       </Sidebar>
       <MainContent>
         <Routes>
-          <Route path="/" element={<DashboardComponent />} />
+          <Route path="/" element={<DashboardManagement />} />
           <Route path="users" element={<UsersManagement />} />
           <Route path="orders" element={<OrdersManagement />} />
           <Route path="products" element={<ProductsManagement />} />

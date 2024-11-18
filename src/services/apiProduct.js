@@ -9,12 +9,13 @@ export async function getHomeProducts() {
   }
 }
 
-export async function getProducts(page, brands, sortOption) {
+export async function getProducts(page, brands, sortOption, searchQuery) {
   const brandQuery = brands ? `&brands=${brands}` : "";
   const sortQuery = sortOption ? `&sortByPrice=${sortOption}` : "";
+  const search = searchQuery ? `&searchQuery=${searchQuery}` : "";
   try {
     const response = await axiosInstance.get(
-      `/products?page=${page}&limit=12${brandQuery}${sortQuery}`
+      `/products?page=${page}&limit=12${brandQuery}${sortQuery}${search}`
     );
     return response.data;
   } catch (error) {

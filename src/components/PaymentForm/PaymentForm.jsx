@@ -5,19 +5,21 @@ import { loadStripe } from "@stripe/stripe-js";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useAuth } from "../../hooks/useAuth";
 
-import Loading from "../Loading/Loading";
-import LoadingModal from "../Loading/LoadingModal";
-import DropList from "./DropList";
 import {
   getProvinces,
   getDistrictsByProvinceId,
   getWardsByDistrictId,
 } from "../../services/apiLocation";
-import { checkout, checkoutCod } from "../../services/apiCheckout";
 import emailValidation from "../../utils/emailValidation";
+import { checkout, checkoutCod } from "../../services/apiCheckout";
 
-import { useAuth } from "../../hooks/useAuth";
+//COMPONENTS
+import CodModal from "./CodModal";
+import Loading from "../Loading/Loading";
+import LoadingModal from "../Loading/LoadingModal";
+import DropList from "./DropList";
 
 const stripePromise = loadStripe(
   "pk_test_51Q7T5KHxv792P1FeVX2530832RhslIDMtKZbqcDFOmoCrK76ZUeoJgDvyVgPZaxlzLi1xLKQcH0hMIjkuN6Jqx2D00FleKVO8J"
@@ -31,9 +33,9 @@ export default function PaymentForm({ isOpen, onClose }) {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [codSuccess, setCodSuccess] = useState(false);
 
   const cart = useSelector((state) => state.cart);
-  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -166,14 +168,13 @@ export default function PaymentForm({ isOpen, onClose }) {
           user: formData,
           items: cart.items,
         });
+        console.log(codResponse);
         if (!codResponse) {
           alert("Checkout failed, please try again");
           return;
+        } else {
+          setCodSuccess(true);
         }
-        navigate("/checkout/cod-success", {
-          state: { order: codResponse.data.order },
-        });
-        onClose();
       } else {
         try {
           setLoading(true);
@@ -296,6 +297,7 @@ export default function PaymentForm({ isOpen, onClose }) {
         </Form>
       </ModalContent>
       <LoadingModal isOpen={loading} />
+      <CodModal open={codSuccess} onClose={handleCloseModal} />
     </ModalOverlay>
   );
 }

@@ -57,7 +57,7 @@ function App() {
                   element={<CheckoutSuccessPage />}
                 />
                 <Route
-                  path="/checkout/cod-success"
+                  path="/checkout/cod-success/:token"
                   element={<CodSuccessPage />}
                 />
                 <Route

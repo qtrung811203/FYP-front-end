@@ -56,6 +56,7 @@ export default function OrdersManagement() {
               <StyledTableCell>Payment Method</StyledTableCell>
               <StyledTableCell>Total Price</StyledTableCell>
               <StyledTableCell>Order Date</StyledTableCell>
+              <StyledTableCell>Status</StyledTableCell>
               <StyledTableCell align="right">Actions</StyledTableCell>
             </TableRow>
           </TableHead>
@@ -69,6 +70,7 @@ export default function OrdersManagement() {
                   {formatCurrency(order.totalPrice)}
                 </StyledTableCell>
                 <StyledTableCell>{formatDate(order.createdAt)}</StyledTableCell>
+                <StyledTableCell>{order.status}</StyledTableCell>
                 <StyledTableCell align="right">
                   <Button
                     startIcon={<VisibilityIcon />}

@@ -89,7 +89,6 @@ export default function LoginPage() {
 // Styled Components
 const PageContainer = styled.div`
   display: flex;
-  position: fixed;
   width: 100%;
   justify-content: center;
   align-items: center;

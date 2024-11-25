@@ -50,8 +50,8 @@ function App() {
                 <Route path="/all" element={<ProductsPage />} />
                 <Route path="/product/:slug" element={<ProductDetailPage />} />
                 <Route path="/login" element={<LoginPage />} />
-                <Route path="/cart" element={<CartPage />} />
                 <Route path="/signup" element={<SignupPage />} />
+                <Route path="/cart" element={<CartPage />} />
                 <Route
                   path="/checkout/success"
                   element={<CheckoutSuccessPage />}
@@ -73,17 +73,17 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
-                <Route
-                  path="/admin/*"
-                  element={
-                    <ProtectedRoute inRole={"admin"}>
-                      <AdminLayout />
-                    </ProtectedRoute>
-                  }
-                />
                 {/*Handle Not Found Path*/}
                 <Route path="*" element={<PageNotFound />} />
               </Route>
+              <Route
+                path="/admin/*"
+                element={
+                  <ProtectedRoute inRole={"admin"}>
+                    <AdminLayout />
+                  </ProtectedRoute>
+                }
+              />
             </Routes>
           </BrowserRouter>
 

@@ -76,7 +76,7 @@ const PageContainer = styled.div`
   display: grid;
   grid-template-columns: 280px 1fr;
   column-gap: 20px;
-  grid-template-rows: 55px 1fr;
+  grid-template-rows: 55px 1fr 1fr 1fr;
   width: min(128rem, 100%);
   margin: 5rem auto;
 

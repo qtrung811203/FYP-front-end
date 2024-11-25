@@ -10,6 +10,8 @@ import {
   MdMenu as MenuIcon,
 } from "react-icons/md";
 
+import { IoIosArrowBack } from "react-icons/io";
+
 import {
   List,
   ListItem,
@@ -32,6 +34,7 @@ const menuItems = [
   { text: "Orders", icon: <ShoppingCartIcon />, path: "/admin/orders" },
   { text: "Products", icon: <InventoryIcon />, path: "/admin/products" },
   { text: "Brand", icon: <BrandIcon />, path: "/admin/brand" },
+  { text: "Back", icon: <IoIosArrowBack />, path: "/" },
 ];
 
 // Sample components for each route

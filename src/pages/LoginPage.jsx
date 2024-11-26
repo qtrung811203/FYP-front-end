@@ -70,7 +70,7 @@ export default function LoginPage() {
               autoComplete="on"
             />
           </div>
-          <ForgotPassword href="/forgot-password">
+          <ForgotPassword to="/forgot-password">
             Forgot password?
           </ForgotPassword>
           <Button type="submit" disabled={loading}>
@@ -162,7 +162,7 @@ const Button = styled.button`
   }
 `;
 
-const ForgotPassword = styled.a`
+const ForgotPassword = styled(Link)`
   color: var(--medium-sage);
   text-align: right;
   font-size: 1.4rem; // 16px

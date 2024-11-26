@@ -1,4 +1,4 @@
-import axiosInstance from "../config/axiosConfig"
+import axiosInstance from "../config/axiosConfig";
 
 export async function login({ email, password }) {
   const response = await axiosInstance.post(
@@ -7,8 +7,8 @@ export async function login({ email, password }) {
     {
       withCredentials: true,
     }
-  )
-  return response.data
+  );
+  return response.data;
 }
 
 export async function register({ email, password, passwordConfirm }) {
@@ -22,18 +22,22 @@ export async function register({ email, password, passwordConfirm }) {
     {
       withCredentials: true,
     }
-  )
-  return response.data
+  );
+  return response.data;
 }
 
 export async function logout() {
   const response = await axiosInstance.get("/users/logout", {
     withCredentials: true,
-  })
-  return response.data
+  });
+  return response.data;
 }
 
-export async function updatePassword({ passwordCurrent, password, passwordConfirm }) {
+export async function updatePassword({
+  passwordCurrent,
+  password,
+  passwordConfirm,
+}) {
   const response = await axiosInstance.patch(
     "/users/updateMyPassword",
     {
@@ -44,6 +48,19 @@ export async function updatePassword({ passwordCurrent, password, passwordConfir
     {
       withCredentials: true,
     }
-  )
-  return response.data
+  );
+  return response.data;
+}
+
+export async function forgotPassword({ email }) {
+  const response = await axiosInstance.post("/users/forgotPassword", { email });
+  return response.data;
+}
+
+export async function resetPassword({ password, passwordConfirm }, token) {
+  const response = await axiosInstance.patch(`/users/resetPassword/${token}`, {
+    password,
+    passwordConfirm,
+  });
+  return response.data;
 }

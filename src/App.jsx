@@ -17,8 +17,10 @@ import CheckoutSuccessPage from "./pages/CheckoutSuccessPage";
 import CheckoutCancelPage from "./pages/CheckoutCancelPage";
 import CodSuccessPage from "./pages/CodSuccessPage";
 import ProfilePage from "./pages/ProfilePage";
-import ProtectedRoute from "./pages/ProtectedRoute";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
+import ProtectedRoute from "./pages/ProtectedRoute";
 import ScrollToTop from "./utils/scrollToTop";
 
 //Redux Store
@@ -51,6 +53,14 @@ function App() {
                 <Route path="/product/:slug" element={<ProductDetailPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/signup" element={<SignupPage />} />
+                <Route
+                  path="/forgot-password"
+                  element={<ForgotPasswordPage />}
+                />
+                <Route
+                  path="/reset-password/:token"
+                  element={<ResetPasswordPage />}
+                />
                 <Route path="/cart" element={<CartPage />} />
                 <Route
                   path="/checkout/success"

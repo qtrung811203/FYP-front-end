@@ -10,7 +10,6 @@ export const getBrands = async () => {
 
 // Create brand
 export const createBrand = async (data) => {
-  console.log("data to create", data);
   const response = await axiosInstance.post("/brands", data);
   return response.data;
 };

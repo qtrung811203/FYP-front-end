@@ -16,6 +16,7 @@ function CodSuccessPage() {
   useEffect(() => {
     const fetchOrder = async () => {
       const data = await confirmCod(token);
+      console.log(data);
       setOrder(data.data.order);
     };
 

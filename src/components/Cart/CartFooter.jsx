@@ -1,21 +1,21 @@
-import styled from "styled-components"
-import { useDispatch, useSelector } from "react-redux"
-import { FaRegTrashAlt } from "react-icons/fa"
-import { useState } from "react"
+import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { useState } from "react";
 
-import { removeAllFromCart } from "../../features/cartSlice"
-import { formatCurrency } from "../../utils/formatCurrency"
-import PaymentForm from "../PaymentForm/PaymentForm"
+import { removeAllFromCart } from "../../features/cartSlice";
+import { formatCurrency } from "../../utils/formatCurrency";
+import PaymentForm from "../PaymentForm/PaymentForm";
 
 function CartFooter() {
-  const cart = useSelector((state) => state.cart)
-  const dispatch = useDispatch()
-  const [checkoutFormOpen, setCheckoutFormOpen] = useState(false)
+  const cart = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
+  const [checkoutFormOpen, setCheckoutFormOpen] = useState(false);
 
   const handleOpenCheckoutForm = () => {
-    setCheckoutFormOpen(true)
-    document.body.style.overflow = "hidden"
-  }
+    setCheckoutFormOpen(true);
+    document.body.style.overflow = "hidden";
+  };
 
   return (
     <Footer>
@@ -32,20 +32,23 @@ function CartFooter() {
         <h3>SUBTOTAL</h3>
         <p>{formatCurrency(cart.totalPrice)}</p>
       </SubTotal>
-      <Checkout>
-        <button onClick={handleOpenCheckoutForm}>Checkout</button>
-      </Checkout>
+      {cart.totalPrice > 0 && (
+        <Checkout>
+          <button onClick={handleOpenCheckoutForm}>Checkout</button>
+        </Checkout>
+      )}
+
       {<PaymentForm isOpen={checkoutFormOpen} onClose={setCheckoutFormOpen} />}
     </Footer>
-  )
+  );
 }
 
-export default CartFooter
+export default CartFooter;
 
 // Styled Components
 const Footer = styled.div`
   position: relative;
-`
+`;
 
 const CartInfo = styled.div`
   display: flex;
@@ -59,7 +62,7 @@ const CartInfo = styled.div`
       font-weight: 700;
     }
   }
-`
+`;
 
 const RemoveAllLink = styled.div`
   display: flex;
@@ -68,7 +71,7 @@ const RemoveAllLink = styled.div`
   cursor: pointer;
   color: #d60000;
   border-bottom: 1px solid #d60000;
-`
+`;
 const SubTotal = styled.div`
   display: flex;
   justify-content: end;
@@ -87,7 +90,7 @@ const SubTotal = styled.div`
     font-family: "Viga", sans-serif;
     font-size: 3rem;
   }
-`
+`;
 
 const Checkout = styled.div`
   display: flex;
@@ -105,4 +108,4 @@ const Checkout = styled.div`
     padding: 0 96px;
     margin-top: 40px;
   }
-`
+`;

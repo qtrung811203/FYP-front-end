@@ -31,9 +31,7 @@ export default function ProductManagement() {
   const querryClient = useQueryClient();
   const [openProductModal, setOpenProductModal] = useState(false);
   const [openItemModal, setOpenItemModal] = useState(false);
-
   const [choosenProduct, setChoosenProduct] = useState(null);
-
   const [chooseProductForItem, setChooseProductForItem] = useState(null);
 
   const { isLoading, data: products } = useQuery({
@@ -124,7 +122,8 @@ export default function ProductManagement() {
                   {formatDateSelection(product?.openTime)}
                 </StyledTableCell>
                 <StyledTableCell>
-                  {formatDateSelection(product?.closeTime)}
+                  {product?.closeTime &&
+                    formatDateSelection(product?.closeTime)}
                 </StyledTableCell>
                 <StyledTableCell align="right">
                   <IconButton

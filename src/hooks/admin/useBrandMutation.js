@@ -6,8 +6,8 @@ const useBrandMutation = (mutationFn, successMessage) => {
   return useMutation({
     mutationFn,
     onSuccess: () => {
-      toast.success(successMessage);
       querryClient.invalidateQueries("brands");
+      toast.success(successMessage);
     },
     onError: () => {
       toast.error("Something went wrong");

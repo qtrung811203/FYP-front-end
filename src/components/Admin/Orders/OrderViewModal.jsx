@@ -110,7 +110,7 @@ const OrderViewModal = ({ order: selectedOrder, open, onClose }) => {
                   <StyledTableCell>
                     {formatCurrency(product.itemId.price)}
                   </StyledTableCell>
-                  <StyledTableCell>{product.itemId.quantity}</StyledTableCell>
+                  <StyledTableCell>{product.quantity}</StyledTableCell>
                 </TableRow>
               ))}
             </TableBody>

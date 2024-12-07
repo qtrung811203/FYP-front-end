@@ -53,9 +53,10 @@ export default function BrandsManagement() {
     "Brand deleted successfully"
   );
 
-  const { mutate: updateBrandMutation } = useBrandMutation(({ _id, data }) => {
-    updateBrand(_id, data);
-  }, "Brand updated successfully");
+  const { mutate: updateBrandMutation } = useBrandMutation(
+    ({ _id, data }) => updateBrand(_id, data),
+    "Brand updated successfully"
+  );
 
   // Open modal
   const handleOpenModal = (mode, brand) => {
@@ -82,7 +83,7 @@ export default function BrandsManagement() {
       const { _id, name } = data;
       updateBrandMutation({ _id, data: { name } });
     }
-    handleCloseModal();
+    // handleCloseModal();
   };
 
   // Delete brand

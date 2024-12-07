@@ -29,7 +29,7 @@ function ProductDetail({ product }) {
       {isCloseTime(product.openTime, product.closeTime) && (
         <SalePreiod>
           <p>
-            `${formatDate(product.openTime)} - ${formatDate(product.closeTime)}`
+            {formatDate(product.openTime)} - {formatDate(product.closeTime)}
           </p>
         </SalePreiod>
       )}

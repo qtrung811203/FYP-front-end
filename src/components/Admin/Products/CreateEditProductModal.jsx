@@ -14,6 +14,7 @@ import {
 import LoadingModal from "../../Loading/LoadingModal";
 import { formatDateSelection } from "../../../utils/formatDate";
 
+//COMPONENT
 export default function ProductModal({
   open,
   setOpen,
@@ -49,6 +50,7 @@ export default function ProductModal({
     }
   }, [choosenProduct, setValue, reset, brands, setChoosenProduct]);
 
+  // Create Product Mutation
   const { mutate: createProductMutation, isPending: isCreating } = useMutation({
     mutationFn: createProduct,
     onSuccess: () => {
@@ -320,7 +322,7 @@ export default function ProductModal({
               type="submit"
               style={{ float: "right" }}
             >
-              {!choosenProduct === "create" ? "Create" : "Update"}
+              {!choosenProduct ? "Create" : "Update"}
             </Button>
           </ModalContent>
         </form>

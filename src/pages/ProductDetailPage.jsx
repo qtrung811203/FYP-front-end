@@ -26,6 +26,7 @@ function Product() {
     const fetchProduct = async () => {
       const data = await getProductBySlug(slug);
       const productData = data.data;
+      console.log(productData);
       setProduct(productData);
       const combinedImages = [productData.imageCover, ...productData.images];
       setImages(combinedImages);
@@ -35,6 +36,7 @@ function Product() {
   }, [slug, dispatch]);
 
   if (!product) return <Loading />;
+  if (product.items.length === 0) return <div>Not find items</div>;
 
   return (
     <ProductContainer>
